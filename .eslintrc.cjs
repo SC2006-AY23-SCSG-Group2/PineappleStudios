@@ -8,10 +8,14 @@ module.exports = {
     // extraFileExtensions: [".tsx"],
   },
   rules: {
-    "@typescript-eslint/no-unused-vars": "warn",
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "no-unused-vars": "warn",
+    // "react/prop-types": "off",
+    // "react/react-in-jsx-scope": "off",
   },
   env: {
     browser: true,
@@ -24,11 +28,4 @@ module.exports = {
     "prettier",
     "plugin:prettier/recommended",
   ],
-  parserOptions: {
-    ecmaVersion: 2020,
-  },
-  rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-  },
 };
