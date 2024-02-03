@@ -5,7 +5,30 @@ const config: CapacitorConfig = {
   appName: "PineappleStudios",
   webDir: "dist",
   server: {
-    androidScheme: "https",
+    androidScheme: "http",
+  },
+  plugins: {
+    CapacitorSQLite: {
+      iosDatabaseLocation:
+        "Library/Application Support/PineappleStudio/database",
+      iosIsEncryption: false,
+      iosKeychainPrefix: "pineapple-studio",
+      iosBiometric: {
+        biometricAuth: false,
+        biometricTitle: "Biometric login for Pineapple Studio databse.",
+      },
+      androidIsEncryption: false,
+      androidBiometric: {
+        biometricAuth: false,
+        biometricTitle: "Biometric login for Pineapple Studio databse.",
+        biometricSubTitle: "Log in using your biometric",
+      },
+      electronIsEncryption: true,
+      electronWindowsLocation: "%appdata%/Local/PineappleStudio/database",
+      electronMacLocation:
+        "~/Library/Application Support/PineappleStudio/database",
+      electronLinuxLocation: "~/.local/share/PineappleStudio/databse",
+    },
   },
 };
 

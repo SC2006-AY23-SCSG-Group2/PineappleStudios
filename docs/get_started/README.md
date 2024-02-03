@@ -1,7 +1,3 @@
-# PineappleStudios
-
-Software Engineering Group 2 for SCSG
-
 # Get Started
 
 ## Install `fnm`, a tool for Node.js environment
@@ -41,8 +37,6 @@ eval "$(fnm env --use-on-cd)"
 
 ### For macOS/Linux user
 
-#### install `fnm`
-
 ```sh
 curl -fsSL https://fnm.vercel.app/install | bash
 ```
@@ -69,7 +63,7 @@ eval "$(fnm env --use-on-cd)"
 
 ## Clone code
 
-### Fork the main branch into your own account
+### Fork the main branch into your own account.
 
 Do it on the GitHub website.
 
