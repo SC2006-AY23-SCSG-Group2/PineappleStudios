@@ -20,8 +20,14 @@ fnm use           # to use the current node version
 
 # On Windows Powershell, there maybe some errors with pnpm, then you just use npm as well.
 
+
 pnpm install      # install dependencies
 pnpm i            # short for pnpm install
+
+# if you are using npm, you need to use npm run.
+#   npm run dev
+#   npm run format:lint
+# etc.
 
 pnpm dev          # starting a dev server
 pnpm build        # build for production
