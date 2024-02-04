@@ -1,7 +1,0 @@
-{
-  "name": "PineappleStudios",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}

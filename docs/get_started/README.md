@@ -72,12 +72,14 @@ Do it on the GitHub website.
 ```sh
 git clone git@github.com/<your_user_name>/PineappleStudio.git # This link is only for example, it may be different depending on how you name your own repo.
 
-cd PineappleStudio
+cd PineappleStudios
 ```
 
 ### Install Node.js
 
 > Warn: make sure you are in side the `PineappleStudio` project directory.
+
+When you `cd` into the folder, `fnm` will ask you if you want to install node, answer `y` to install.
 
 Under the project folder, run the following:
 

@@ -2,146 +2,52 @@
 
 Software Engineering Group 2 for SCSG
 
-# Get Started
+## Get Started
 
-## Install `fnm`, a tool for Node.js environment
+Find the instructions in `./docs/get_started/README.md`
 
-- If you want full and detailed instructions, head to [fnm homepage](https://github.com/Schniz/fnm#Installation)
-
-### For Windows user
-
-#### install using `winget`
-
-```powershell
-winget install Schniz.fnm
-```
-
-#### configuring your shell
-
-##### Powershell users
-
-Add the following to the end of your profile file:
-
-```powershell
-fnm env --use-on-cd | Out-String | Invoke-Expression
-```
-
-- For macOS/Linux, the profile is located at `~/.config/powershell/Microsoft.PowerShell_profile.ps1`
-- On Windows, PowerShell comes pre-installed, but there are two versions of it. Read more about it here. The profile is located at different places depending on which version you're using:
-  - Built in PowerShell (aka "Windows PowerShell"): `~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`
-  - The newer, PowerShell >= 7, that's not built in: `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`
-
-##### Bash users
-
-Add the following to your `.bashrc` file.
-
-```bash
-eval "$(fnm env --use-on-cd)"
-```
-
-### For macOS/Linux user
-
-#### install `fnm`
+## Commands you often use
 
 ```sh
-curl -fsSL https://fnm.vercel.app/install | bash
+git add <files>
+git push
+git fetch
+git pull
+
+fnm use           # to use the current node version
+
+pnpm install      # install dependencies
+pnpm i            # short for pnpm install
+
+pnpm dev          # starting a dev server
+pnpm build        # build for production
+pnpm start        # preview for production
+pnpm format       # formatting code
+pnpm lint         # linting code
+pnpm format:lint  # formatting and linting code
 ```
 
-#### configuring your shell
+## Technologies we are using
 
-> If you do not what shell is running, type `echo $SHELL` to check.
-
-##### Zsh users (macOS default)
-
-Add the following to your `.zshrc` file.
-
-```sh
-eval "$(fnm env --use-on-cd)"
-```
-
-##### Bash users
-
-Add the following to your `.bashrc` file.
-
-```bash
-eval "$(fnm env --use-on-cd)"
-```
-
-## Clone code
-
-### Fork the main branch into your own account
-
-Do it on the GitHub website.
-
-### Git Clone
-
-```sh
-git clone git@github.com/<your_user_name>/PineappleStudio.git # This link is only for example, it may be different depending on how you name your own repo.
-
-cd PineappleStudio
-```
-
-### Install Node.js
-
-> Warn: make sure you are in side the `PineappleStudio` project directory.
-
-Under the project folder, run the following:
-
-```sh
-fnm install
-```
-
-Check your node version:
-
-```sh
-node --version
-```
-
-It should be `20.11.0`.
-
-Additionally, you may set the version as default using the following commands:
-
-```sh
-fnm default 20.11.0
-```
-
-### Install Package Manager
-
-Make sure you are running `node@20.11.0`, and run the following.
-
-```sh
-corepack enable
-corepack prepare pnpm@8.15.1 --activate
-```
-
-### Install Dependencies
-
-Under the project folder, run the following:
-
-```sh
-pnpm install
-```
-
-## Start coding (Web Platform)
-
-### For debugging
-
-Under the project folder, run the following:
-
-```sh
-pnpm dev
-```
-
-### For production
-
-Under the project folder, run the following:
-
-```sh
-pnpm build
-```
-
-## Remember to use Pull Request
-
-## What if you want to update dependencies/add additional dependencies?
-
-We may discuss it on Telegram.
+- `Remix.run`: Full stack framework
+  - Website: [Remix.run](https://remix.run/)
+  - Learn it at: [Quick Start](https://remix.run/docs/en/main/start/quickstart) or [Tutorial](https://remix.run/docs/en/main/start/tutorial)
+- `React`: UI Framework
+  - Website: [React.dev](https://react.dev/)
+  - Learn it at: [Quick Start](https://react.dev/learn) or [Tic-Tac-Toe](https://react.dev/learn/tutorial-tic-tac-toe)
+  - It may be confusing what is the relationship between React and Remix.run, to be simple: React is the UI part(HTML + CSS + some interactions with UI); Remix.run is full stack, which provides server, routing, data fetch, etc.
+- `TailwindCSS`: CSS framework
+  - Website: [Tailwindcss.com](https://tailwindcss.com/)
+- `DaisyUI`: UI components library
+  - Website: [DaisyUI.com](https://daisyui.com/)
+  - Tutorial: [How to use](https://daisyui.com/docs/use/)
+  - This library is based on TailwindCSS, so that means we can use its components with original TailwindCSS.
+  - What you need to know: in `.jsx/tsx`, it is `className` instead of `class`
+- `Prisma`: For database, and ORM
+  - Website: [Prisma.io](https://www.prisma.io/)
+  - Learn it at: [Quick Start](https://www.prisma.io/docs/getting-started/quickstart) or [Tutorial](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-postgresql)
+    - The tutorial is based on postgresql, but the main concept is the same.
+  - `sqlite`: We are using sqlite database, because it is just a file, need no outside database server.
+    - More info at: [Prima + sqlite](https://www.prisma.io/docs/orm/overview/databases/sqlite)
+  - Create a file called `.env`, write `DATABASE_URL="file:./dev.db"`.
+  - For now(Feb 2nd), `prisma` is just initialized, but not using in the codebase, because we are not yet implemented our database schema yet.

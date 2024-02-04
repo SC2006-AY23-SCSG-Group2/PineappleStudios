@@ -1,31 +1,86 @@
+/**
+ * This is intended to be a basic starting point for linting in your app.
+ * It relies on recommended configs out of the box for simplicity, but you can
+ * and should modify this configuration to best suit your team's needs.
+ */
+
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
-  parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
   parserOptions: {
+    ecmaVersion: "latest",
     sourceType: "module",
-    ecmaVersion: 2020,
-    // extraFileExtensions: [".tsx"],
-  },
-  rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    // "react/prop-types": "off",
-    // "react/react-in-jsx-scope": "off",
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
   env: {
     browser: true,
-    es2017: true,
-    node: true,
+    commonjs: true,
+    es6: true,
   },
-  extends: [
-    "plugin:react/recommended",
-    "eslint:recommended",
-    "prettier",
-    "plugin:prettier/recommended",
+
+  // Base config
+  extends: ["prettier", "eslint:recommended"],
+  plugins: ["prettier"],
+  rules: {
+    "prettier/prettier": ["error"],
+  },
+  overrides: [
+    // React
+    {
+      files: ["**/*.{js,jsx,ts,tsx}"],
+      plugins: ["react", "jsx-a11y"],
+      extends: [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
+        "plugin:jsx-a11y/recommended",
+      ],
+      settings: {
+        "react": {
+          version: "detect",
+        },
+        "formComponents": ["Form"],
+        "linkComponents": [
+          {name: "Link", linkAttribute: "to"},
+          {name: "NavLink", linkAttribute: "to"},
+        ],
+        "import/resolver": {
+          typescript: {},
+        },
+      },
+    },
+
+    // Typescript
+    {
+      files: ["**/*.{ts,tsx}"],
+      plugins: ["@typescript-eslint", "import"],
+      parser: "@typescript-eslint/parser",
+      settings: {
+        "import/internal-regex": "^~/",
+        "import/resolver": {
+          node: {
+            extensions: [".ts", ".tsx"],
+          },
+          typescript: {
+            alwaysTryTypes: true,
+          },
+        },
+      },
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+      ],
+    },
+
+    // Node
+    {
+      files: [".eslintrc.js"],
+      env: {
+        node: true,
+      },
+    },
   ],
 };
