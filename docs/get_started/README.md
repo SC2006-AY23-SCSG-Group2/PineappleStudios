@@ -101,7 +101,9 @@ Additionally, you may set the version as default using the following commands:
 fnm default 20.11.0
 ```
 
-### Install Package Manager
+### Install PNPM
+
+> On Windows Powershell, there maybe some errors with pnpm, then you just use npm as well. So you do not need to do the following process.
 
 Make sure you are running `node@20.11.0`, and run the following.
 

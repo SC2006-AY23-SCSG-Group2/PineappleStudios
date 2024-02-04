@@ -8,6 +8,8 @@ Find the instructions in `./docs/get_started/README.md`
 
 ## Commands you often use
 
+> On Windows Powershell, there maybe some errors with pnpm, then you just use npm as well.
+
 ```sh
 git add <files>
 git push
@@ -15,6 +17,8 @@ git fetch
 git pull
 
 fnm use           # to use the current node version
+
+# On Windows Powershell, there maybe some errors with pnpm, then you just use npm as well.
 
 pnpm install      # install dependencies
 pnpm i            # short for pnpm install
