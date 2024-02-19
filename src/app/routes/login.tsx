@@ -1,7 +1,6 @@
-import { LoaderFunction } from "@remix-run/node";
-import { Link, useActionData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Layout} from "src/components/layoutlogin";
+import { Layout } from "src/components/layoutlogin";
 import { Textfield } from "src/components/textfield";
 
 export default function Login() {
@@ -25,8 +24,9 @@ export default function Login() {
   }
 
   return (
+
     <Layout>
-      <div className="h-full flex justify-start items-center ml-20">
+      <div className="h-full flex justify-center items-center">
       <div className="flex flex-col gap-y-5">
         <form method="POST" className="rounded-2xl bg-black p-6 w-96">
           <h2 className="text-3xl font-extrabold text-white mb-5">Login</h2>
@@ -55,8 +55,8 @@ export default function Login() {
       <span className="font-semibold text-lg">Don't have an account?&nbsp;&nbsp;</span>
       <Link to="/signup" className="text-red-500 underline hover:text-red-700 font-semibold text-lg">Sign up</Link>
     </p>
-    <p className="my-4">
-      -----------------------&nbsp;&nbsp;or&nbsp;&nbsp;------------------------
+    <p className="my-4 text-lg">
+      --------------------&nbsp;&nbsp;or&nbsp;&nbsp;---------------------
     </p>
     <div className="w-full text-center my-1">
               <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Email</button>
