@@ -1,74 +1,146 @@
-import { Link } from "@remix-run/react";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { Layout } from "src/components/layoutlogin";
-import { Textfield } from "src/components/textfield";
+import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
+import {Form, useActionData, useNavigation} from "@remix-run/react";
+import React, {useEffect, useState} from "react";
+
+import {TextField} from "../../components/textField";
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+export async function action({request}: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const data: FormData = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
+
+  console.log(data);
+
+  await new Promise((f) => setTimeout(f, 2000));
+
+  if (data.email === "make_me_login") {
+    return redirect("/");
+  }
+
+  const errors = {
+    email: "wrong name: " + data.email,
+    password: "wrong password: " + data.password,
+  };
+
+  const value = {
+    email: data.email,
+    password: data.password,
+  };
+
+  return json({
+    errors,
+    value,
+  });
+}
 
 export default function Login() {
-  
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [formData]: [FormData, React.Dispatch<React.SetStateAction<FormData>>] =
+    useState({
+      email: "",
+      password: "",
+    });
 
-  // Updates the form data when an input changes
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>, field: string) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [field]: event.target.value
-    }));
-  }
+  const navigation = useNavigation();
+  const actionData = useActionData<typeof action>();
 
-  // Handles form submission
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  }
+  useEffect(() => {
+    console.log(useActionData);
+  }, [actionData]);
 
   return (
-
-    <Layout>
-      <div className="h-full flex justify-center items-center">
-      <div className="flex flex-col gap-y-5">
-        <form method="POST" className="rounded-2xl bg-black p-6 w-96">
-          <h2 className="text-3xl font-extrabold text-white mb-5">Login</h2>
-          <Textfield
-            htmlFor="username"
-            label="Username"
-            value={formData.email || ''}
-            onChange={e => handleInputChange(e, 'email')}
-          />
-          <Textfield
-            htmlFor="password"
-            type="password"
-            label="Password"
-            value={formData.password || ''}
-            onChange={e => handleInputChange(e, 'password')}
-          />
-          <div className="flex flex-row justify-end text-red-400 hover:text-red-600">
-            <p>Forgot Password?</p>
+    <>
+      <div
+        className="hero min-h-screen bg-base-200"
+        // style={{backgroundImage: `url(/images/loginbg.png)`}}
+      >
+        <div className="hero-content flex-col lg:flex-row-reverse">
+          <div
+            id={"login-Title"}
+            className=" text-center max-lg:mt-10 lg:text-left mx-7">
+            <h1 className="text-5xl font-bold">Login now!</h1>
+            <p className="py-6">A place for your entertainment contents.</p>
           </div>
-          <div className="w-full text-center mt-5">
-            <button type="submit" name="_action" value="Sign In" className="w-1/2 rounded-xl mt-2 bg-red-500 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-red-600">
-            <Link to="/">Login</Link>
-            </button>
-          </div>
-          <p className="text-center text-white mt-4">
-      <span className="font-semibold text-lg">Don't have an account?&nbsp;&nbsp;</span>
-      <Link to="/signup" className="text-red-500 underline hover:text-red-700 font-semibold text-lg">Sign up</Link>
-    </p>
-    <p className="my-4 text-lg">
-      --------------------&nbsp;&nbsp;or&nbsp;&nbsp;---------------------
-    </p>
-    <div className="w-full text-center my-1">
-              <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Email</button>
-    </div>
-    <div className="w-full text-center my-1">
-        <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Spotify</button>
-    </div>
-        </form>
-            
+          <div id={"login-form"}>
+            <div className="card shrink-0 w-full shadow-2xl bg-base-100">
+              <Form className="card-body" method={"POST"}>
+                <fieldset
+                  className="card-body p-0"
+                  disabled={navigation.state === "submitting"}>
+                  <TextField
+                    id={"email"}
+                    label={"Email"}
+                    value={formData.email}
+                  />
 
+                  {actionData ? (
+                    <p className="form-control">
+                      <label
+                        htmlFor={"wrong-email"}
+                        className="label text-error">
+                        {actionData?.errors.email}
+                      </label>
+                    </p>
+                  ) : null}
+
+                  <TextField
+                    id={"password"}
+                    label={"Password"}
+                    value={formData.password}
+                  />
+
+                  {actionData ? (
+                    <p className="form-control">
+                      <label
+                        htmlFor={"wrong-password"}
+                        className="label text-error">
+                        {actionData?.errors.password}
+                      </label>
+                    </p>
+                  ) : null}
+
+                  <p className="form-control">
+                    <label htmlFor={"forget-password"} className="label">
+                      <a
+                        id="forget-password"
+                        href="/login/forgot-password"
+                        className="label-text-alt link link-hover">
+                        forget password?
+                      </a>
+                    </label>
+                  </p>
+                  <p className="form-control mt-6">
+                    <button type={"submit"} className="btn btn-primary">
+                      {navigation.state === "submitting" ? "Login..." : "Login"}
+                    </button>
+                  </p>
+                </fieldset>
+              </Form>
+            </div>
+            <div className="divider">OR</div>
+            <div className="card shrink-0 w-full shadow-2xl bg-base-100">
+              <Form className="card-body">
+                <div className="form-control mt-6">
+                  <button className="btn btn-primary">
+                    Login with Spotify
+                  </button>
+                </div>
+                <div className="form-control mt-6">
+                  <button className="btn disabled btn-primary">
+                    Login with Microsoft
+                  </button>
+                </div>
+              </Form>
+            </div>
+          </div>
+        </div>
       </div>
-      </div>
-    </Layout>
+    </>
   );
 }
