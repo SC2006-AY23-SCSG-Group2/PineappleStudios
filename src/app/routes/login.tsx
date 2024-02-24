@@ -59,7 +59,7 @@ export default function Login() {
       --------------------&nbsp;&nbsp;or&nbsp;&nbsp;---------------------
     </p>
     <div className="w-full text-center my-1">
-              <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Email</button>
+            <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Email</button>
     </div>
     <div className="w-full text-center my-1">
         <button type="button" name="_action" value="Sign In" className="w-5/6 rounded-xl mt-2 bg-slate-100 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-slate-300">Login with Spotify</button>
