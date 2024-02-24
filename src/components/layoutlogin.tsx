@@ -1,11 +1,10 @@
-import loginBg from '../app/assets/loginbg.png';
+import loginBg from "../app/assets/loginbg.png";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({children}: {children: React.ReactNode}) {
   return (
     <div
       className="bg-cover h-screen w-full"
-      style={{ backgroundImage: `url(${loginBg})` }}
-    >
+      style={{backgroundImage: `url(${loginBg})`}}>
       {children}
     </div>
   );
