@@ -41,11 +41,11 @@ export async function action({request}: ActionFunctionArgs) {
 }
 
 export default function Login() {
-  const [formData]: [FormData, React.Dispatch<React.SetStateAction<FormData>>] =
-    useState({
-      email: "",
-      password: "",
-    });
+  // const [formData]: [FormData, React.Dispatch<React.SetStateAction<FormData>>] =
+  //   useState({
+  //     email: "",
+  //     password: "",
+  //   });
 
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
@@ -76,7 +76,7 @@ export default function Login() {
                   <TextField
                     id={"email"}
                     label={"Email"}
-                    value={formData.email}
+                    type={"email"}
                   />
 
                   {actionData ? (
@@ -92,7 +92,7 @@ export default function Login() {
                   <TextField
                     id={"password"}
                     label={"Password"}
-                    value={formData.password}
+                    type={"password"}
                   />
 
                   {actionData ? (

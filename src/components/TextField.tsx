@@ -4,7 +4,7 @@ interface FormFieldProps {
   id: string;
   label: string;
   type?: string;
-  value: string;
+  value?: string;
 }
 
 // eslint-disable-next-line react/prop-types
@@ -12,7 +12,7 @@ export function TextField({
   id,
   label,
   type = "text",
-  value,
+  value = "",
   ...rest
 }: FormFieldProps) {
   const input = useRef(null);
@@ -29,7 +29,7 @@ export function TextField({
 
   return (
     <>
-      <p className="form-control">
+      <p className="form-control max-sm:max-w-64 max-xs:max-w-48">
         <label className="label" htmlFor={id}>
           <span className="label-text">{label}</span>
         </label>
