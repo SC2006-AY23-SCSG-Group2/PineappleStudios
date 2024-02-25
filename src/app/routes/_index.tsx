@@ -1,6 +1,6 @@
 import type {MetaFunction} from "@remix-run/node";
 
-import TestComponent from "../../components/TestComponent";
+import TestComponent from "../components/TestComponent";
 
 export const meta: MetaFunction = () => {
   return [

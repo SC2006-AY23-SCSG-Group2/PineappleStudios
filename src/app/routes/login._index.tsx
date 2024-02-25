@@ -1,50 +1,10 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, NavLink, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {TextField} from "../../components/TextField";
-
-type FormData = {
-  email: string;
-  password: string;
-};
-
-export async function action({request}: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const data: FormData = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
-
-  console.log(data);
-
-  await new Promise((f) => setTimeout(f, 2000));
-
-  if (data.email === "make_me_login") {
-    return redirect("/");
-  }
-
-  const errors = {
-    email: "wrong name: " + data.email,
-    password: "wrong password: " + data.password,
-  };
-
-  const value = {
-    email: data.email,
-    password: data.password,
-  };
-
-  return json({
-    errors,
-    value,
-  });
-}
+import {TextField} from "../components/TextField";
+import {action} from "./login._index.server";
 
 export default function Login(): React.JSX.Element {
-  // const [formData]: [FormData,
-  // React.Dispatch<React.SetStateAction<FormData>>] = useState({ email: "",
-  // password: "", });
-
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
 

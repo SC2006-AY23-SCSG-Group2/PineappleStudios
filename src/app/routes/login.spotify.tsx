@@ -2,7 +2,7 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {TextField} from "../../components/TextField";
+import {TextField} from "../components/TextField";
 
 type FormData = {
   email: string;
