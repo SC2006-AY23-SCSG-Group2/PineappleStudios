@@ -18,6 +18,7 @@ export async function action({request}: ActionFunctionArgs) {
   };
 
   const user = await getUserByEmail(data.email);
+
   let errors = {
     email: "",
     password: "",
@@ -27,22 +28,7 @@ export async function action({request}: ActionFunctionArgs) {
     password: data.password,
   };
 
-  if (user) {
-    if (user.password === data.password) {
-      return redirect("/tab");
-    } else {
-      // Incorrect password, show only wrong password error
-      errors = {
-        email: "",
-        password: "Wrong password",
-      };
-
-      return json({
-        errors,
-        value,
-      });
-    }
-  } else {
+  if (!user) {
     errors = {
       email: "User not found",
       password: "",
@@ -53,6 +39,20 @@ export async function action({request}: ActionFunctionArgs) {
       value,
     });
   }
+
+  if (user.password !== data.password) {
+    errors = {
+      email: "",
+      password: "Wrong password",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  return redirect("/tab");
 }
 
 export default function Login(): React.JSX.Element {
