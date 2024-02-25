@@ -10,16 +10,11 @@ export default function BtmNav(): React.JSX.Element {
     } else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      setHeight(ref.current.clientHeight);
-      // setHeight(ref.current.getBoundingClientRect().height);
+      // setHeight(ref.current.clientHeight);
+      setHeight(ref.current.getBoundingClientRect().height);
     }
   }, []);
 
-  // return (
-  //   <div ref={ref}>
-  //     {height}
-  //   </div>
-  // )
   return (
     <>
       <div className={"lg:hidden"} style={{height: height}}>

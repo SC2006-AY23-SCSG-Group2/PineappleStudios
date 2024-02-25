@@ -21,8 +21,12 @@ export function TextField({
     if (
       input.current !== undefined &&
       input.current !== null &&
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       input?.current.value !== value
     ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       input.current.value = value;
     }
   }, [value]);
