@@ -13,7 +13,7 @@ export default function Index() {
   return (
     <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
 
-      <h1>Welcome to PineappleStudios</h1>
+      <h1>Welcome to Login</h1>
       <TestComponent />
     </div>
   );
