@@ -1,9 +1,10 @@
-import {Outlet} from "@remix-run/react";
 import React from "react";
 
-import BtmNav from "../../components/layout/BtmNav";
-
-export default function tab(): React.JSX.Element {
+export default function TopNav({
+  activate,
+}: {
+  activate: string;
+}): React.JSX.Element {
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -15,17 +16,26 @@ export default function tab(): React.JSX.Element {
         <div className="navbar-center lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <a href={"/tab/1"}>Item 1</a>
+              <a
+                className={activate === "1" ? "btn-active" : ""}
+                href={"/tab/1"}>
+                Item 1
+              </a>
             </li>
             <li>
-              <a href={"/tab"}>Item 1</a>
+              <a className={activate === "2" ? "btn-active" : ""} href={"/tab"}>
+                Item 2
+              </a>
             </li>
             <li>
-              <a href={"/tab"}>Item 1</a>
+              <a className={activate === "3" ? "btn-active" : ""} href={"/tab"}>
+                Item 3
+              </a>
             </li>
           </ul>
         </div>
         <div className="navbar-end">
+          {/*<ThemeChanger />*/}
           <div role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
               <img
@@ -36,29 +46,6 @@ export default function tab(): React.JSX.Element {
           </div>
         </div>
       </nav>
-
-      <Outlet />
-      <BtmNav />
     </>
   );
 }
-
-// const Favorite: FunctionComponent<{}> = ({contact}) => {
-//
-//
-//   return (
-//     <Form method="post">
-//       <button
-//         aria-label={
-//           favorite
-//             ? "Remove from favorites"
-//             : "Add to favorites"
-//         }
-//         name="favorite"
-//         value={favorite ? "false" : "true"}
-//       >
-//         {favorite ? "★" : "☆"}
-//       </button>
-//     </Form>
-//   );
-// };

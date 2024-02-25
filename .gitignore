@@ -7,5 +7,12 @@ node_modules
 .env
 pnpm-lock.yaml
 .idea
+dev.db
+*.db
+*.sqlite
+*.sqlite3
+/prisma/migrations
+/prisma/*.db-journal
+!/prisma/schema.prisma
 
 package-lock.json
