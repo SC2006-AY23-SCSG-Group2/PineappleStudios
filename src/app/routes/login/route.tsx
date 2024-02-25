@@ -1,20 +1,7 @@
 import {Outlet} from "@remix-run/react";
 import React from "react";
 
-export default function Login(): React.JSX.Element {
-  // const [formData]: [FormData, React.Dispatch<React.SetStateAction<FormData>>] =
-  //   useState({
-  //     email: "",
-  //     password: "",
-  //   });
-
-  // const navigation = useNavigation();
-  // const actionData = useActionData<typeof action>();
-  //
-  // useEffect(() => {
-  //   console.log(useActionData);
-  // }, [actionData]);
-
+export default function LoginLayout(): React.JSX.Element {
   return (
     <>
       <div
