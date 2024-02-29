@@ -33,7 +33,7 @@ export function TextField({
 
   return (
     <>
-      <p className="form-control max-sm:max-w-64 max-xs:max-w-48">
+      <p className="form-control sm:w-80 max-sm:max-w-64 max-xs:max-w-48">
         <label className="label" htmlFor={id}>
           <span className="label-text">{label}</span>
         </label>
