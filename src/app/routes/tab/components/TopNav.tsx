@@ -24,7 +24,6 @@ export default function TopNav(): React.JSX.Element {
           </ul>
         </div>
         <div className="navbar-end">
-          {/*<ThemeChanger />*/}
           <NavLink
             to={"/tab/4"}
             role="button"

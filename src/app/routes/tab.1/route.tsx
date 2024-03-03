@@ -47,23 +47,3 @@ export default function tab_index(): React.JSX.Element {
     </>
   );
 }
-
-// const Favorite: FunctionComponent<{}> = ({contact}) => {
-//
-//
-//   return (
-//     <Form method="post">
-//       <button
-//         aria-label={
-//           favorite
-//             ? "Remove from favorites"
-//             : "Add to favorites"
-//         }
-//         name="favorite"
-//         value={favorite ? "false" : "true"}
-//       >
-//         {favorite ? "★" : "☆"}
-//       </button>
-//     </Form>
-//   );
-// };

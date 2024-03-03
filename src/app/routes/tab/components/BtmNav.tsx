@@ -2,22 +2,18 @@ import {NavLink} from "@remix-run/react";
 import React, {useEffect, useRef, useState} from "react";
 
 export default function BtmNav(): React.JSX.Element {
-  const [height, setHeight] = useState(0);
-  const ref = useRef(null);
+  const [height, setHeight]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>,
+  ] = useState(0);
+  const ref: React.MutableRefObject<null> = useRef(null);
 
-  useEffect(() => {
-    // if (ref.current === null) {
-    //   setHeight(0);
-    // } else {
-    //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //   // @ts-expect-error
-    //   // setHeight(ref.current.clientHeight);
-    //   setHeight(ref.current.getBoundingClientRect().height);
-    // }
+  useEffect((): undefined | (() => void) => {
+    if (!ref.current) {
+      return;
+    }
 
-    if (!ref.current) return;
-    const resizeObserver = new ResizeObserver(() => {
-      // Do what you want to do when the size of the element changes
+    const resizeObserver: ResizeObserver = new ResizeObserver((): void => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       setHeight(ref.current.clientHeight);
