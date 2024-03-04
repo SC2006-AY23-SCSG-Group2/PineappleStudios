@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
 export default function ThemeChanger(): React.JSX.Element {
-  const [isdark, setIsdark] = useState(
+  const [isdark] = useState(
     JSON.parse(localStorage.getItem("isdark") as string),
   );
   useEffect(() => {
@@ -22,9 +22,7 @@ export default function ThemeChanger(): React.JSX.Element {
             <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
           </svg>
         </div>
-        <ul
-          tabIndex={0}
-          className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52">
+        <ul className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52">
           <li>
             <input
               type="radio"
