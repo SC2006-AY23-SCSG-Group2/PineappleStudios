@@ -7,7 +7,7 @@ import TopNav from "./components/TopNav";
 export default function tab(): React.JSX.Element {
   return (
     <>
-      <TopNav activate={"1"} />
+      <TopNav />
       <Outlet />
       <BtmNav />
     </>

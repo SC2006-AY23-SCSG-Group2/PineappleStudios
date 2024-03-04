@@ -1,8 +1,8 @@
 // import {Link} from "@remix-run/react";
 // import {ChangeEvent, useState} from "react";
-// import {Layout} from "src/components/layoutlogin";
+// import {Layout} from "src/_components/layoutlogin";
 //
-// import {TextField} from "../../components/textField";
+// import {TextField} from "../../_components/textField";
 //
 // export default function Signup() {
 //   const [formData, setFormData] = useState({
