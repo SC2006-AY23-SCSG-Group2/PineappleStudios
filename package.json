@@ -7,8 +7,8 @@
     "build": "remix build",
     "dev": "remix dev --manual",
     "start": "remix-serve ./build/index.js",
-    "format": "prettier --use-tabs=false --plugin @trivago/prettier-plugin-sort-imports --write .",
-    "lint": "prettier --check --use-tabs=false --plugin @trivago/prettier-plugin-sort-imports . && eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "format": "prettier --use-tabs=false --plugin @trivago/prettier-plugin-sort-imports --plugin prettier-plugin-tailwindcss --write .",
+    "lint": "prettier --check --use-tabs=false --plugin @trivago/prettier-plugin-sort-imports --plugin prettier-plugin-tailwindcss . && eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "format:lint": "pnpm format && pnpm lint"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.12",
     "prisma": "^5.9.1",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",

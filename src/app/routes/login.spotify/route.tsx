@@ -51,7 +51,7 @@ export default function Login(): React.JSX.Element {
   return (
     <>
       <div id={"login-form"}>
-        <div className="card shrink-0 w-full shadow-2xl bg-base-100">
+        <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body" method={"POST"} action={"/login/spotify"}>
             <fieldset
               className="card-body p-0"
@@ -87,7 +87,7 @@ export default function Login(): React.JSX.Element {
                   <a
                     id="forget-password"
                     href="/login/forgot-password"
-                    className="label-text-alt link link-hover">
+                    className="link-hover link label-text-alt">
                     forget password?
                   </a>
                 </label>
