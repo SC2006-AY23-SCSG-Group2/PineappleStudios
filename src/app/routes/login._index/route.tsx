@@ -62,10 +62,10 @@ export default function Login(): React.JSX.Element {
   return (
     <>
       <div id={"login-form"}>
-        <div className="w-full shrink-0 shadow-2xl card bg-base-100">
+        <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body" method={"POST"} action={"/login?index"}>
             <fieldset
-              className="p-0 card-body"
+              className="card-body p-0"
               disabled={navigation.state === "submitting"}>
               <TextField id={"email"} label={"Email"} type={"username"} />
 
@@ -94,12 +94,12 @@ export default function Login(): React.JSX.Element {
                   <a
                     id="forget-password"
                     href="/login/forgot-password"
-                    className="label-text-alt link link-hover">
+                    className="link-hover link label-text-alt">
                     forget password?
                   </a>
                 </label>
               </p>
-              <p className="mt-6 form-control">
+              <p className="form-control mt-6">
                 <button type={"submit"} className="btn btn-primary">
                   {navigation.state === "submitting" ? "Login..." : "Login"}
                 </button>
@@ -108,14 +108,14 @@ export default function Login(): React.JSX.Element {
           </Form>
         </div>
         <div className="divider">OR</div>
-        <div className="w-full shrink-0 shadow-2xl card bg-base-100">
+        <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
-            <div className="mt-6 form-control">
+            <div className="form-control mt-6">
               <NavLink className="btn btn-primary" to={"/login/spotify"}>
                 Login with Spotify
               </NavLink>
             </div>
-            <div className="mt-6 form-control">
+            <div className="form-control mt-6">
               <button className="btn btn-disabled btn-primary">
                 Login with Microsoft
               </button>

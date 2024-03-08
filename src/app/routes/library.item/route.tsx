@@ -21,7 +21,7 @@ export default function LibraryItem(): React.JSX.Element {
       <p>aaaa</p>
       <Form method={"POST"} action={"/library/item"}>
         <fieldset
-          className="p-0 card-body"
+          className="card-body p-0"
           disabled={navigation.state === "submitting"}>
           <TopNav
             leftSection={[

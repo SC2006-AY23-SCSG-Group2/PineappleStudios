@@ -10,8 +10,8 @@ export default function ThemeChanger(): React.JSX.Element {
 
   return (
     <>
-      <div className="mb-72 dropdown">
-        <div tabIndex={0} role="button" className="m-1 btn">
+      <div className="dropdown mb-72">
+        <div tabIndex={0} role="button" className="btn m-1">
           Theme
           <svg
             width="12px"
@@ -22,12 +22,12 @@ export default function ThemeChanger(): React.JSX.Element {
             <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
           </svg>
         </div>
-        <ul className="w-52 p-2 shadow-2xl dropdown-content z-[1] bg-base-300 rounded-box">
+        <ul className="dropdown-content z-[1] w-52 rounded-box bg-base-300 p-2 shadow-2xl">
           <li>
             <input
               type="radio"
               name="theme-dropdown"
-              className="justify-start theme-controller btn btn-sm btn-block btn-ghost"
+              className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
               aria-label="Default"
               value="default"
             />
@@ -36,7 +36,7 @@ export default function ThemeChanger(): React.JSX.Element {
             <input
               type="radio"
               name="theme-dropdown"
-              className="justify-start theme-controller btn btn-sm btn-block btn-ghost"
+              className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
               aria-label="Retro"
               value="retro"
             />
@@ -45,7 +45,7 @@ export default function ThemeChanger(): React.JSX.Element {
             <input
               type="radio"
               name="theme-dropdown"
-              className="justify-start theme-controller btn btn-sm btn-block btn-ghost"
+              className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
               aria-label="Cyberpunk"
               value="cyberpunk"
             />
@@ -54,7 +54,7 @@ export default function ThemeChanger(): React.JSX.Element {
             <input
               type="radio"
               name="theme-dropdown"
-              className="justify-start theme-controller btn btn-sm btn-block btn-ghost"
+              className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
               aria-label="Valentine"
               value="valentine"
             />
@@ -63,7 +63,7 @@ export default function ThemeChanger(): React.JSX.Element {
             <input
               type="radio"
               name="theme-dropdown"
-              className="justify-start theme-controller btn btn-sm btn-block btn-ghost"
+              className="theme-controller btn btn-ghost btn-sm btn-block justify-start"
               aria-label="Aqua"
               value="aqua"
             />

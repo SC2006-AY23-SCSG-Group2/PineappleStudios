@@ -4,21 +4,21 @@ import React from "react";
 export default function TopNav(): React.JSX.Element {
   return (
     <>
-      <nav className="sticky top-0 z-40 max-lg:hidden navbar bg-base-100 lg:visible">
+      <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
         <div className="navbar-start">
-          <a href={"/"} className="text-xl btn btn-ghost">
+          <a href={"/"} className="btn btn-ghost text-xl">
             daisyUI
           </a>
         </div>
         <div className="navbar-center lg:flex">
-          <ul className="px-1 menu menu-horizontal">
-            <li className="px-2 menu-item">
+          <ul className="menu menu-horizontal px-1">
+            <li className="menu-item px-2">
               <NavLink to={"/tab/1"}>Item 1</NavLink>
             </li>
-            <li className="px-2 menu-item">
+            <li className="menu-item px-2">
               <NavLink to={"/tab/2"}>Item 2</NavLink>
             </li>
-            <li className="px-2 menu-item">
+            <li className="menu-item px-2">
               <NavLink to={"/tab/3"}>Item 3</NavLink>
             </li>
           </ul>
@@ -27,7 +27,7 @@ export default function TopNav(): React.JSX.Element {
           <NavLink
             to={"/tab/4"}
             role="button"
-            className="btn btn-ghost btn-circle avatar">
+            className="avatar btn btn-circle btn-ghost">
             <div className="avatar">
               <div className="w-24 rounded-full">
                 <img

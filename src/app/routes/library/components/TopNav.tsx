@@ -11,7 +11,7 @@ export default function TopNav({
 }: TopNavProps): React.JSX.Element {
   return (
     <>
-      <nav className="absolute top-0 z-40 navbar bg-base-100">
+      <nav className="navbar absolute top-0 z-40 bg-base-100">
         <div className="navbar-start">
           {leftSection === undefined
             ? null
@@ -33,7 +33,7 @@ export default function TopNav({
           {/*</NavLink>*/}
         </div>
         <div className="navbar-center lg:flex">
-          <a href={"/"} className="text-xl btn btn-ghost">
+          <a href={"/"} className="btn btn-ghost text-xl">
             daisyUI
           </a>
         </div>

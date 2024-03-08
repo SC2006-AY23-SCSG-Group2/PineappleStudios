@@ -4,8 +4,8 @@ export default function tab_index(): React.JSX.Element {
   return (
     <>
       <p>aaaa</p>
-      <div className="min-h-screen hero bg-base-200">
-        <div className="text-center hero-content">
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content text-center">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">Hello there</h1>
             <p className="py-6">
@@ -17,8 +17,8 @@ export default function tab_index(): React.JSX.Element {
           </div>
         </div>
       </div>
-      <div className="min-h-screen hero bg-base-200">
-        <div className="text-center hero-content">
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content text-center">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">Hello there</h1>
             <p className="py-6">
@@ -30,8 +30,8 @@ export default function tab_index(): React.JSX.Element {
           </div>
         </div>
       </div>
-      <div className="min-h-screen hero bg-base-200">
-        <div className="text-center hero-content">
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content text-center">
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">Hello there</h1>
             <p className="py-6">

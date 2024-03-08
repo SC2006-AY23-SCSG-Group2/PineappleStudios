@@ -29,7 +29,7 @@ export default function BtmNav(): React.JSX.Element {
       </div>
       <footer
         ref={ref}
-        className="fixed bottom-0 z-50 btm-nav text-base-content lg:hidden">
+        className="btm-nav fixed bottom-0 z-50 text-base-content lg:hidden">
         <NavLink to={"/tab/1"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
