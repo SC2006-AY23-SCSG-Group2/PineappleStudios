@@ -51,10 +51,10 @@ export default function Login(): React.JSX.Element {
   return (
     <>
       <div id={"login-form"}>
-        <div className="card shrink-0 w-full shadow-2xl bg-base-100">
+        <div className="w-full shrink-0 shadow-2xl card bg-base-100">
           <Form className="card-body" method={"POST"} action={"/login/spotify"}>
             <fieldset
-              className="card-body p-0"
+              className="p-0 card-body"
               disabled={navigation.state === "submitting"}>
               <TextField
                 id={"spotify-account"}
@@ -92,7 +92,7 @@ export default function Login(): React.JSX.Element {
                   </a>
                 </label>
               </p>
-              <p className="form-control mt-6">
+              <p className="mt-6 form-control">
                 <button type={"submit"} className="btn btn-primary">
                   {navigation.state === "submitting" ? "Login..." : "Login"}
                 </button>

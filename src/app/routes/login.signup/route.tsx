@@ -25,10 +25,10 @@
 //
 //   return (
 //     <Layout>
-//       <div className="h-full flex justify-start items-center ml-20">
+//       <div className="ml-20 flex h-full items-center justify-start">
 //         <div className="flex flex-col gap-y-5">
-//           <form method="POST" className="rounded-2xl bg-black p-6 w-96">
-//             <h2 className="text-3xl font-extrabold text-white mb-5">
+//           <form method="POST" className="w-96 rounded-2xl bg-black p-6">
+//             <h2 className="mb-5 text-3xl font-extrabold text-white">
 //               Create an account
 //             </h2>
 //             <TextField
@@ -51,23 +51,23 @@
 //               value={formData.password}
 //               onChange={(e) => handleInputChange(e, "password")}
 //             />
-//             <div className="w-full text-center mt-5">
+//             <div className="mt-5 w-full text-center">
 //               {/* Comment out the link to stuff here when actually coding authentication */}
 //               <Link to="/">
 //                 <button
 //                   type="submit"
 //                   name="_action"
 //                   value="Sign In"
-//                   className="w-full rounded-xl mt-2 bg-red-500 px-3 py-2 text-black font-semibold transition duration-300 ease-in-out hover:bg-red-600">
+//                   className="mt-2 w-full rounded-xl bg-red-500 px-3 py-2 font-semibold text-black transition duration-300 ease-in-out hover:bg-red-600">
 //                   Create an account
 //                 </button>
 //               </Link>
 //             </div>
-//             <p className="text-white mt-4 flex justify-center font-semibold text-lg">
+//             <p className="mt-4 flex justify-center text-lg font-semibold text-white">
 //               Already have an account?&nbsp;&nbsp;
 //               <Link
 //                 to="/login"
-//                 className="text-red-500 underline hover:text-red-700 font-semibold text-lg">
+//                 className="text-lg font-semibold text-red-500 underline hover:text-red-700">
 //                 Sign in
 //               </Link>
 //             </p>
