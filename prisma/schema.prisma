@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:dev.db"
 }
 
 model User {
@@ -16,3 +16,43 @@ model User {
   name     String?
   password String
 }
+
+// Define an abstract model called `Item` that serves as the base for movies, books, and songs.
+model Item {
+  id          Int      @id @default(autoincrement())
+  itemType    String   // This field specifies the type of item (e.g., "movie", "book", "song")
+  title       String
+  genre       String
+}
+
+// Define specific models for movies, books, and songs.
+model Movie {
+  id           Int      @id @default(autoincrement())
+  item         Item     @relation(fields: [itemId], references: [id])
+  releaseDate  DateTime
+  director     String
+  cast         String[]
+  country      String?
+  duration     Int
+  itemId       Int
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  item        Item     @relation(fields: [itemId], references: [id])
+  author      String
+  pages       Int?
+  publicationDate DateTime
+  itemId      Int
+}
+
+model Song {
+  id          Int      @id @default(autoincrement())
+  item        Item     @relation(fields: [itemId], references: [id])
+  artist      String
+  album       String?
+  releaseDate DateTime
+  itemId      Int
+}
+
+
