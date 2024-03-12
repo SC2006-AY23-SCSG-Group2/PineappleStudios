@@ -10,9 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// CONFLICTS
+
 model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
+
+  // CONFLICTS keep
   name     String?
   password String
 }
+
+// CONFLICTS
+// CONFLICTS
+// CONFLICTS
