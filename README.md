@@ -20,7 +20,6 @@ fnm use           # to use the current node version
 
 # On Windows Powershell, there maybe some errors with pnpm, then you just use npm as well.
 
-
 pnpm install      # install dependencies
 pnpm i            # short for pnpm install
 
@@ -35,6 +34,17 @@ pnpm start        # preview for production
 pnpm format       # formatting code
 pnpm lint         # linting code
 pnpm format:lint  # formatting and linting code
+
+# Or for npm
+
+npm install
+
+npm run dev
+npm run build
+npm run start
+npm run format
+npm run lint
+npm run foramt:lint
 ```
 
 ## Folder explanation

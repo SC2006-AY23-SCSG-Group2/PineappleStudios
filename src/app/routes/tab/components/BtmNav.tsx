@@ -1,29 +1,36 @@
+import {NavLink} from "@remix-run/react";
 import React, {useEffect, useRef, useState} from "react";
 
 export default function BtmNav(): React.JSX.Element {
-  const [height, setHeight] = useState(0);
-  const ref = useRef(null);
+  const [height, setHeight]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>,
+  ] = useState(0);
+  const ref: React.MutableRefObject<null> = useRef(null);
 
-  useEffect(() => {
-    if (ref.current === null) {
-      setHeight(0);
-    } else {
+  useEffect((): undefined | (() => void) => {
+    if (!ref.current) {
+      return;
+    }
+
+    const resizeObserver: ResizeObserver = new ResizeObserver((): void => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      // setHeight(ref.current.clientHeight);
-      setHeight(ref.current.getBoundingClientRect().height);
-    }
+      setHeight(ref.current.clientHeight);
+    });
+    resizeObserver.observe(ref.current);
+    return () => resizeObserver.disconnect();
   }, []);
 
   return (
     <>
-      <div className={"lg:hidden"} style={{height: height}}>
+      <div className={"lg:hidden"} style={{height: height.toString() + "px"}}>
         <span></span>
       </div>
       <footer
         ref={ref}
-        className="btm-nav lg:hidden fixed z-50 bottom-0 text-base-content">
-        <button>
+        className="btm-nav fixed bottom-0 z-50 text-base-content lg:hidden">
+        <NavLink to={"/tab/1"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -38,8 +45,8 @@ export default function BtmNav(): React.JSX.Element {
             />
           </svg>
           <span className="btm-nav-label">Home</span>
-        </button>
-        <button className="active">
+        </NavLink>
+        <NavLink to={"/tab/2"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -54,8 +61,8 @@ export default function BtmNav(): React.JSX.Element {
             />
           </svg>
           <span className="btm-nav-label">Warnings</span>
-        </button>
-        <button>
+        </NavLink>
+        <NavLink to={"/tab/3"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -70,7 +77,23 @@ export default function BtmNav(): React.JSX.Element {
             />
           </svg>
           <span className="btm-nav-label">Statics</span>
-        </button>
+        </NavLink>
+        <NavLink to={"/tab/4"}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+          <span className="btm-nav-label">Statics</span>
+        </NavLink>
       </footer>
     </>
   );

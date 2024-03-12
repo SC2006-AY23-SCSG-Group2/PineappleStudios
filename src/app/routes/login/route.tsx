@@ -11,7 +11,7 @@ export default function LoginLayout(): React.JSX.Element {
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div
             id={"login-Title"}
-            className=" text-center max-lg:mt-10 lg:text-left mx-7">
+            className="mx-7 text-center max-lg:mt-10 lg:text-left">
             <h1 className="text-5xl font-bold">Login now!</h1>
             <p className="py-6">A place for your entertainment contents.</p>
           </div>
