@@ -43,10 +43,13 @@ model Cast {
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id              Int      @id @default(autoincrement())
-  itemType        String // This field specifies the type of item (e.g., "movie", "book", "song")
-  title           String
-  genre           String
+  id       Int    @id @default(autoincrement())
+  itemType String // This field specifies the type of item (e.g., "movie", "book", "song")
+  movie    Movie? @relation("MovieItem")
+  book     Book?  @relation("BookItem")
+  song     Song?  @relation("songItem")
+  title    String
+  genre    String
   country         String?
   publicationDate DateTime
 }
@@ -60,6 +63,7 @@ model Movie {
 model Book {
   id    Int  @relation(fields: [itemId], references: [id])
   pages Int?
+  itemId          Int      @id
 }
 
 model Song {
