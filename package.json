@@ -47,5 +47,14 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@8.15.1"
+  "packageManager": "pnpm@8.15.1",
+  "description": "Software Engineering Group 2 for SCSG",
+  "version": "1.0.0",
+  "main": "remix.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": []
 }

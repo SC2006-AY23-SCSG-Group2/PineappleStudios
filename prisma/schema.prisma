@@ -28,10 +28,10 @@ model Item {
 // Define specific models for movies, books, and songs.
 model Movie {
   id           Int      @id @default(autoincrement())
-  item         Item     @relation(fields: [itemId], references: [id])
+  //item         Item     @relation(fields: [itemId], references: [id])
   releaseDate  DateTime
   director     String
-  cast         String[]
+  //cast         String[]
   country      String?
   duration     Int
   itemId       Int
@@ -39,7 +39,7 @@ model Movie {
 
 model Book {
   id          Int      @id @default(autoincrement())
-  item        Item     @relation(fields: [itemId], references: [id])
+  //item        Item     @relation(fields: [itemId], references: [id])
   author      String
   pages       Int?
   publicationDate DateTime
@@ -48,7 +48,7 @@ model Book {
 
 model Song {
   id          Int      @id @default(autoincrement())
-  item        Item     @relation(fields: [itemId], references: [id])
+  //item        Item     @relation(fields: [itemId], references: [id])
   artist      String
   album       String?
   releaseDate DateTime
