@@ -7,9 +7,8 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:dev.db"
+  url      = env("DATABASE_URL")
 }
-
 
 model User {
   id       Int     @id @default(autoincrement())
@@ -18,42 +17,52 @@ model User {
   password String
 }
 
+model Cast {
+  // id
+  // name
+}
+
+// Cast A
+//
+// Cast B
+//
+// Movie alpha
+// Movie beta
+//
+// CastItemRelation records
+// A Alpha actor
+// B alpha director
+// A Beta director, actor
+//
+// model CastItemRelation {
+//   // <cast, item>
+//   // cast  @related to Cast[id]
+//   // item @related to Item[id]
+//   // relation string
+// }
+
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id          Int      @id @default(autoincrement())
-  itemType    String   // This field specifies the type of item (e.g., "movie", "book", "song")
-  title       String
-  genre       String
+  id              Int      @id @default(autoincrement())
+  itemType        String // This field specifies the type of item (e.g., "movie", "book", "song")
+  title           String
+  genre           String
+  country         String?
+  publicationDate DateTime
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  id           Int      @id @default(autoincrement())
-  //item         Item     @relation(fields: [itemId], references: [id])
-  releaseDate  DateTime
-  director     String
-  //cast         String[]
-  country      String?
-  duration     Int
-  itemId       Int
+  id       Int @relation(fields: [itemId], references: [id]) // itemId      Int
+  duration Int
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  //item        Item     @relation(fields: [itemId], references: [id])
-  author      String
-  pages       Int?
-  publicationDate DateTime
-  itemId      Int
+  id    Int  @relation(fields: [itemId], references: [id])
+  pages Int?
 }
 
 model Song {
-  id          Int      @id @default(autoincrement())
-  //item        Item     @relation(fields: [itemId], references: [id])
-  artist      String
-  album       String?
-  releaseDate DateTime
-  itemId      Int
+  id    Int     @relation(fields: [itemId], references: [id])
+  album String?
 }
-
-
