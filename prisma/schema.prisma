@@ -19,40 +19,44 @@ model User {
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id          Int      @id @default(autoincrement())
-  itemType    String   // This field specifies the type of item (e.g., "movie", "book", "song")
-  title       String
-  genre       String
+  id       Int    @id @default(autoincrement())
+  itemType String // This field specifies the type of item (e.g., "movie", "book", "song")
+  movie    Movie? @relation("MovieItem")
+  book     Book?  @relation("BookItem")
+  song     Song?  @relation("songItem")
+  title    String
+  genre    String
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  id           Int      @id @default(autoincrement())
-  item         Item     @relation(fields: [itemId], references: [id])
-  releaseDate  DateTime
-  director     String
-  cast         String[]
-  country      String?
-  duration     Int
-  itemId       Int
+  item        Item     @relation("MovieItem", fields: [itemId], references: [id])
+  releaseDate DateTime
+  itemId      Int      @id
+  director    String
+  castMembers Cast[]
+  country     String?
+  duration    Int
+}
+
+model Cast {
+  id    Int    @id
+  name  String
+  movie Movie  @relation(fields: [id], references: [itemId])
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  item        Item     @relation(fields: [itemId], references: [id])
-  author      String
-  pages       Int?
+  item            Item     @relation("BookItem", fields: [itemId], references: [id])
+  itemId          Int      @id
+  author          String
+  pages           Int?
   publicationDate DateTime
-  itemId      Int
 }
 
 model Song {
-  id          Int      @id @default(autoincrement())
-  item        Item     @relation(fields: [itemId], references: [id])
+  item        Item     @relation("songItem", fields: [itemId], references: [id])
+  itemId      Int      @id
   artist      String
   album       String?
   releaseDate DateTime
-  itemId      Int
 }
-
-
