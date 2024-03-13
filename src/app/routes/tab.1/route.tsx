@@ -1,10 +1,4 @@
 import React from "react";
-const CLIENT_ID = "8cdca6a867134003b59e00ba30b939e5";
-const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize"
-const REDIRECT_URL_AFTER_LOGIN = "https:://localhost:3000/tab/1"
-const SCOPES = ["user-read-currently-playing", "user-read-playback-state"]
-const SPACE_DELIMETER = "%20";
-const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMETER);
 
 export default function tab_index(): React.JSX.Element {
   return (

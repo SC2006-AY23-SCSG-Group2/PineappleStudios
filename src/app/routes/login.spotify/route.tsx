@@ -1,13 +1,38 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, useActionData, useNavigation} from "@remix-run/react";
-import React from "react";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  json,
+  redirect,
+} from "@remix-run/node";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "@remix-run/react";
 
-import {TextField} from "../_components/TextField";
+import {get_spotify_login_url} from "./spofityUrl.server";
+
+/// NOTE:
+/// TODO:
+/// 1. Spotify Authorization code found --> login the user(create session id
+// --> redirect to home page) / 2. using Authorization code to request email /
+//  2.1 email not found /       2.1.1 let the user sign up(pre-fill default
+// username and email get from spotify) /   2.2 email found /        return
+// error. --> error(EASY)? or additional functions? /       2.2.1 ask the user
+// to login using email and password, and link two accounts /
+// (forget password ... renew ... login ... link, not issue for this) /
+// 2.2.2 user do not want to link /         2.2.2.1 create a user account using
+// a fake email(ramdon_string@fake.email.fake). EASYY
 
 type FormData = {
   email: string;
   password: string;
 };
+
+export async function loader({request}: LoaderFunctionArgs) {
+  return json({spotify_login_url: get_spotify_login_url(request.url)});
+}
 
 export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -47,6 +72,7 @@ export default function Login(): React.JSX.Element {
 
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -56,42 +82,18 @@ export default function Login(): React.JSX.Element {
             <fieldset
               className="card-body p-0"
               disabled={navigation.state === "submitting"}>
-              <TextField
-                id={"spotify-account"}
-                label={"Spotify Account"}
-                type={"username"}
-              />
-
-              {actionData ? (
-                <p className="form-control">
-                  <label htmlFor={"wrong-email"} className="label text-error">
-                    {actionData?.errors.email}
-                  </label>
-                </p>
-              ) : null}
-
-              <TextField id={"password"} label={"Password"} type={"password"} />
-
-              {actionData ? (
-                <p className="form-control">
-                  <label
-                    htmlFor={"wrong-password"}
-                    className="label text-error">
-                    {actionData?.errors.password}
-                  </label>
-                </p>
-              ) : null}
-
               <p className="form-control">
-                <label htmlFor={"forget-password"} className="label">
-                  <a
-                    id="forget-password"
-                    href="/login/forgot-password"
-                    className="link-hover link label-text-alt">
-                    forget password?
-                  </a>
+                <label htmlFor={"wrong-email"} className="label">
+                  {data?.spotify_login_url}
                 </label>
               </p>
+
+              <p className="form-control">
+                <label htmlFor={"wrong-email"} className="label">
+                  {actionData?.value.email}
+                </label>
+              </p>
+
               <p className="form-control mt-6">
                 <button type={"submit"} className="btn btn-primary">
                   {navigation.state === "submitting" ? "Login..." : "Login"}
