@@ -2,6 +2,14 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, NavLink, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
+const CLIENT_ID = "8cdca6a867134003b59e00ba30b939e5";
+export const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize"
+const REDIRECT_URL_AFTER_LOGIN = 'http://localhost:3000/tab/1'
+const SCOPES = ["user-read-currently-playing", "user-read-playback-state", "user-read-recently-played","user-top-read", "user-modify-playback-state"]
+const SPACE_DELIMETER = "%20";
+const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMETER);
+const LOGIN_URL = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URL_AFTER_LOGIN}&scoope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`
+
 import {getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
 
@@ -111,9 +119,10 @@ export default function Login(): React.JSX.Element {
         <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
             <div className="form-control mt-6">
-              <NavLink className="btn btn-primary" to={"/login/spotify"}>
+              {<NavLink className="btn btn-primary" to={LOGIN_URL}>
                 Login with Spotify
-              </NavLink>
+              </NavLink>  
+              }
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-disabled btn-primary">
