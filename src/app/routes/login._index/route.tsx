@@ -1,5 +1,5 @@
 import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, NavLink, useActionData, useNavigation} from "@remix-run/react";
+import {Form, Link, NavLink, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
 import {getUserByEmail} from "../../../lib/database/user";
@@ -91,20 +91,23 @@ export default function Login(): React.JSX.Element {
 
             <p className="form-control">
               <label htmlFor={"forget-password"} className="label">
-                <a
+                <Link
                   id="forget-password"
-                  href="/login/forgot-password"
+                  to="/login/forgot-password"
                   className="link-hover link label-text-alt">
-                  forget password?
-                </a>
+                  Forget password?
+                </Link>
               </label>
             </p>
-            <p className="form-control mt-6">
+            <p className="form-control mt-3 mb-3">
               <button
                 type={"submit"}
                 className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-30">
                 {navigation.state === "submitting" ? "Login..." : "Login"}
               </button>
+            </p>
+            <p className="text-center">
+                Don't have an account? <Link className="underline" to="/login/signup">Register</Link>
             </p>
           </fieldset>
         </Form>
@@ -114,9 +117,9 @@ export default function Login(): React.JSX.Element {
           <Form className="card-body">
             <div className="form-control mt-6">
               <NavLink
-                className="btn btn-disabled btn-primary"
-                to="/login/spotify">
-                Login with Spotify
+                className="btn btn-neutral"
+                to="/login/gmail">
+                Login with Gmail
               </NavLink>
             </div>
             <div className="form-control mt-6">

@@ -1,7 +1,10 @@
-import {NavLink} from "@remix-run/react";
-import React from "react";
+import {Link, NavLink} from "@remix-run/react";
+import React, { useState } from "react";
 
 export default function TopNav(): React.JSX.Element {
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -24,19 +27,33 @@ export default function TopNav(): React.JSX.Element {
           </ul>
         </div>
         <div className="navbar-end">
-          <NavLink
-            to={"/tab/4"}
-            role="button"
-            className="avatar btn btn-circle btn-ghost">
-            <div className="avatar">
-              <div className="w-24 rounded-full">
+        <div className="dropdown dropdown-end dropdown-hover">
+        <div tabIndex={0} role="button" className="m-1">
+        <div
+            className="avatar btn btn-circle btn-ghost mr-2" onMouseEnter={() => setIsOpen(true)}>
+              <div className="w-11 rounded-full">
+                <Link to="/tab/4">
                 <img
                   src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
                   alt="Avatar"
                 />
-              </div>
+                </Link>
             </div>
-          </NavLink>
+          </div>
+        </div>
+        {isOpen && (
+        <ul
+          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+          tabIndex={0}
+        >
+          <li><a href="/tab/4">Account</a></li>
+          <li><a href="/tab/3">Settings</a></li>
+          <li><a href="/login">Logout</a></li>
+        </ul>
+      )}
+    </div>
+
+          
         </div>
       </nav>
     </>
