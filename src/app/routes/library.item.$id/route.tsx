@@ -13,8 +13,6 @@ export async function action({request}: ActionFunctionArgs) {
 
 export default function LibraryItem(): React.JSX.Element {
   const navigation = useNavigation();
-  // const actionData = useActionData<typeof action>();
-  // absolute top-2 left-3 z-50
 
   return (
     <>

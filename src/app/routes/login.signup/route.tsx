@@ -1,79 +1,118 @@
-// import {Link} from "@remix-run/react";
-// import {ChangeEvent, useState} from "react";
-// import {Layout} from "src/_components/layoutlogin";
-//
-// import {TextField} from "../../_components/textField";
-//
-// export default function Signup() {
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     password: "",
-//   });
-//
-//   // Updates the form data when an input changes
-//   const handleInputChange = (
-//     event: ChangeEvent<HTMLInputElement>,
-//     field: string,
-//   ) => {
-//     const {name, value} = event.target;
-//     setFormData((prevFormData) => ({
-//       ...prevFormData,
-//       [name]: value,
-//     }));
-//   };
-//
-//   return (
-//     <Layout>
-//       <div className="ml-20 flex h-full items-center justify-start">
-//         <div className="flex flex-col gap-y-5">
-//           <form method="POST" className="w-96 rounded-2xl bg-black p-6">
-//             <h2 className="mb-5 text-3xl font-extrabold text-white">
-//               Create an account
-//             </h2>
-//             <TextField
-//               htmlFor="name"
-//               type="name"
-//               label="Name"
-//               value={formData.name}
-//               onChange={(e) => handleInputChange(e, "name")}
-//             />
-//             <TextField
-//               htmlFor="email"
-//               label="Email"
-//               value={formData.email}
-//               onChange={(e) => handleInputChange(e, "email")}
-//             />
-//             <TextField
-//               htmlFor="password"
-//               type="password"
-//               label="Password"
-//               value={formData.password}
-//               onChange={(e) => handleInputChange(e, "password")}
-//             />
-//             <div className="mt-5 w-full text-center">
-//               {/* Comment out the link to stuff here when actually coding authentication */}
-//               <Link to="/">
-//                 <button
-//                   type="submit"
-//                   name="_action"
-//                   value="Sign In"
-//                   className="mt-2 w-full rounded-xl bg-red-500 px-3 py-2 font-semibold text-black transition duration-300 ease-in-out hover:bg-red-600">
-//                   Create an account
-//                 </button>
-//               </Link>
-//             </div>
-//             <p className="mt-4 flex justify-center text-lg font-semibold text-white">
-//               Already have an account?&nbsp;&nbsp;
-//               <Link
-//                 to="/login"
-//                 className="text-lg font-semibold text-red-500 underline hover:text-red-700">
-//                 Sign in
-//               </Link>
-//             </p>
-//           </form>
-//         </div>
-//       </div>
-//     </Layout>
-//   );
-// }
+import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
+import {Form, useActionData, useNavigation} from "@remix-run/react";
+import React from "react";
+
+import {createUser} from "../../../lib/database/user";
+import {TextField} from "../_components/TextField";
+
+type FormData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export async function action({request}: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const data: FormData = {
+    name: formData.get("username") as string,
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
+
+  const user = await createUser(data);
+
+  let errors = {
+    email: "",
+    password: "",
+  };
+  const value = {
+    email: data.email,
+    password: data.password,
+  };
+
+  if (!user) {
+    errors = {
+      email: "User not found",
+      password: "",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  if (user.password !== data.password) {
+    errors = {
+      email: "",
+      password: "Wrong password",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  return redirect("/tab");
+}
+
+export default function tab_index(): React.JSX.Element {
+  const navigation = useNavigation();
+  const actionData = useActionData<typeof action>();
+
+  return (
+    <>
+      <div id={"login-form"}>
+        <Form
+          className="card w-full shrink-0 bg-base-100 shadow-2xl"
+          method={"POST"}
+          action={"/login?index"}>
+          <fieldset
+            className="card-body"
+            disabled={navigation.state === "submitting"}>
+            <TextField id={"username"} label={"Username"} type={"username"} />
+
+            {actionData ? (
+              <p className="form-control">
+                <label htmlFor={"wrong-email"} className="label text-error">
+                  {actionData?.errors.email}
+                </label>
+              </p>
+            ) : null}
+
+            <TextField id={"email"} label={"Email"} type={"email"} />
+
+            {actionData ? (
+              <p className="form-control">
+                <label htmlFor={"wrong-email"} className="label text-error">
+                  {actionData?.errors.email}
+                </label>
+              </p>
+            ) : null}
+
+            <TextField id={"password"} label={"Password"} type={"password"} />
+
+            {actionData ? (
+              <p className="form-control">
+                <label htmlFor={"wrong-password"} className="label text-error">
+                  {actionData?.errors.password}
+                </label>
+              </p>
+            ) : null}
+
+            <p className="form-control mt-6">
+              <button
+                type={"submit"}
+                className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-30">
+                {navigation.state === "submitting"
+                  ? "Signing up..."
+                  : "Sign Up"}
+              </button>
+            </p>
+          </fieldset>
+        </Form>
+      </div>
+    </>
+  );
+}
