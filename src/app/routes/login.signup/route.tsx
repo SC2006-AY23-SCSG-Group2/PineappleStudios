@@ -1,5 +1,5 @@
 import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, useActionData, useNavigation} from "@remix-run/react";
+import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
 import {createUser} from "../../../lib/database/user";
@@ -101,7 +101,7 @@ export default function tab_index(): React.JSX.Element {
               </p>
             ) : null}
 
-            <p className="form-control mt-6">
+            <p className="form-control mt-6 mb-3">
               <button
                 type={"submit"}
                 className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-30">
@@ -109,6 +109,9 @@ export default function tab_index(): React.JSX.Element {
                   ? "Signing up..."
                   : "Sign Up"}
               </button>
+            </p>
+            <p className="text-center">
+                Already have an account? <Link className="underline text-blue-700" to="/login">Login</Link>
             </p>
           </fieldset>
         </Form>
