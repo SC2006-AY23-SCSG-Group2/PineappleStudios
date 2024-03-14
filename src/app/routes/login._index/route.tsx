@@ -62,51 +62,53 @@ export default function Login(): React.JSX.Element {
   return (
     <>
       <div id={"login-form"}>
-        <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
-          <Form className="card-body" method={"POST"} action={"/login?index"}>
-            <fieldset
-              className="card-body p-0"
-              disabled={navigation.state === "submitting"}>
-              <TextField id={"email"} label={"Email"} type={"username"} />
+        <Form
+          className="card w-full shrink-0 bg-base-100 shadow-2xl"
+          method={"POST"}
+          action={"/login?index"}>
+          <fieldset
+            className="card-body"
+            disabled={navigation.state === "submitting"}>
+            <TextField id={"email"} label={"Email"} type={"username"} />
 
-              {actionData ? (
-                <p className="form-control">
-                  <label htmlFor={"wrong-email"} className="label text-error">
-                    {actionData?.errors.email}
-                  </label>
-                </p>
-              ) : null}
-
-              <TextField id={"password"} label={"Password"} type={"password"} />
-
-              {actionData ? (
-                <p className="form-control">
-                  <label
-                    htmlFor={"wrong-password"}
-                    className="label text-error">
-                    {actionData?.errors.password}
-                  </label>
-                </p>
-              ) : null}
-
+            {actionData ? (
               <p className="form-control">
-                <label htmlFor={"forget-password"} className="label">
-                  <a
-                    id="forget-password"
-                    href="/login/forgot-password"
-                    className="link-hover link label-text-alt">
-                    forget password?
-                  </a>
+                <label htmlFor={"wrong-email"} className="label text-error">
+                  {actionData?.errors.email}
                 </label>
               </p>
-              <p className="form-control mt-6">
-                <button type={"submit"} className="btn btn-primary">
-                  {navigation.state === "submitting" ? "Login..." : "Login"}
-                </button>
+            ) : null}
+
+            <TextField id={"password"} label={"Password"} type={"password"} />
+
+            {actionData ? (
+              <p className="form-control">
+                <label htmlFor={"wrong-password"} className="label text-error">
+                  {actionData?.errors.password}
+                </label>
               </p>
-            </fieldset>
-          </Form>
-        </div>
+            ) : null}
+
+            <p className="form-control">
+              <label htmlFor={"forget-password"} className="label">
+                <a
+                  id="forget-password"
+                  href="/login/forgot-password"
+                  className="link-hover link label-text-alt">
+                  forget password?
+                </a>
+              </label>
+            </p>
+            <p className="form-control mt-6">
+              <button
+                type={"submit"}
+                className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-30">
+                {navigation.state === "submitting" ? "Login..." : "Login"}
+              </button>
+            </p>
+          </fieldset>
+        </Form>
+
         <div className="divider">OR</div>
         <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
