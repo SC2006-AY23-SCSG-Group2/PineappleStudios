@@ -1,5 +1,11 @@
 import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, Link, NavLink, useActionData, useNavigation} from "@remix-run/react";
+import {
+  Form,
+  Link,
+  NavLink,
+  useActionData,
+  useNavigation,
+} from "@remix-run/react";
 import React from "react";
 
 import {getUserByEmail} from "../../../lib/database/user";
@@ -99,7 +105,7 @@ export default function Login(): React.JSX.Element {
                 </Link>
               </label>
             </p>
-            <p className="form-control mt-3 mb-3">
+            <p className="form-control mb-3 mt-3">
               <button
                 type={"submit"}
                 className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-30">
@@ -107,7 +113,10 @@ export default function Login(): React.JSX.Element {
               </button>
             </p>
             <p className="text-center">
-                Don't have an account? <Link className="underline" to="/login/signup">Register</Link>
+              Don't have an account?{" "}
+              <Link className="underline" to="/login/signup">
+                Register
+              </Link>
             </p>
           </fieldset>
         </Form>
@@ -116,9 +125,7 @@ export default function Login(): React.JSX.Element {
         <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
             <div className="form-control mt-6">
-              <NavLink
-                className="btn btn-neutral"
-                to="/login/gmail">
+              <NavLink className="btn btn-neutral" to="/login/gmail">
                 Login with Gmail
               </NavLink>
             </div>
