@@ -2,8 +2,9 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {createUser} from "../../../lib/database/user";
+import {getUserByEmail, createUser} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
+//import {action} from "../../../lib/connection/signup"
 
 type FormData = {
   name: string;
@@ -11,7 +12,7 @@ type FormData = {
   password: string;
 };
 
-export async function action({request}: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
     name: formData.get("username") as string,
@@ -19,41 +20,32 @@ export async function action({request}: ActionFunctionArgs) {
     password: formData.get("password") as string,
   };
 
-  const user = await createUser(data);
+  const errors: { [key: string]: string } = {};
 
-  let errors = {
-    email: "",
-    password: "",
-  };
-  const value = {
-    email: data.email,
-    password: data.password,
-  };
-
-  if (!user) {
-    errors = {
-      email: "User not found",
-      password: "",
-    };
-
-    return json({
-      errors,
-      value,
-    });
+  if (!data.name) {
+    errors.name = "Invalid Name";
   }
 
-  if (user.password !== data.password) {
-    errors = {
-      email: "",
-      password: "Wrong password",
-    };
-
-    return json({
-      errors,
-      value,
-    });
+  if (!data.email) {
+    errors.email = "Invalid Email";
   }
 
+  if (!data.password) {
+    errors.password = "Invalid Password";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return json({ errors, value: data });
+  }
+
+  const user = await getUserByEmail(data.email);
+
+  if (user) {
+    errors.email = "You already have an account";
+    return json({ errors, value: data });
+  }
+
+  await createUser(data);
   return redirect("/tab");
 }
 
@@ -67,7 +59,7 @@ export default function tab_index(): React.JSX.Element {
         <Form
           className="card w-full shrink-0 bg-base-100 shadow-2xl"
           method={"POST"}
-          action={"/login?index"}>
+          action={"/login/signup"}>
           <fieldset
             className="card-body"
             disabled={navigation.state === "submitting"}>
@@ -76,7 +68,7 @@ export default function tab_index(): React.JSX.Element {
             {actionData ? (
               <p className="form-control">
                 <label htmlFor={"wrong-email"} className="label text-error">
-                  {actionData?.errors.email}
+                  {actionData?.errors.name}
                 </label>
               </p>
             ) : null}
