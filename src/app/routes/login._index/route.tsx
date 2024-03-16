@@ -100,7 +100,7 @@ export default function Login(): React.JSX.Element {
               <label htmlFor={"forget-password"} className="label">
                 <Link
                   id="forget-password"
-                  to="/login/forgot-password"
+                  to="/login/forgot_password"
                   className="link-hover link label-text-alt">
                   Forget password?
                 </Link>
