@@ -17,10 +17,10 @@ model User {
   password String
 }
 
-model Cast {
-  // id
-  // name
-}
+// model Cast {
+//   // id
+//   // name
+// }
 
 // Cast A
 //
@@ -43,30 +43,35 @@ model Cast {
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id       Int    @id @default(autoincrement())
-  itemType String // This field specifies the type of item (e.g., "movie", "book", "song")
-  movie    Movie? @relation("MovieItem")
-  book     Book?  @relation("BookItem")
-  song     Song?  @relation("songItem")
-  title    String
-  genre    String
+  id              Int      @id @default(autoincrement())
+  itemType        String   // This field specifies the type of item (e.g., "movie", "book", "song")
+  movie           Movie[]
+  book            Book[]   
+  song            Song[]    
+  title           String
+  genre           String
   country         String?
   publicationDate DateTime
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  id       Int @relation(fields: [itemId], references: [id]) // itemId      Int
+  id       Int   @id
   duration Int
+  movieId  Int
+  item     Item  @relation(fields: [movieId], references: [id])
 }
 
 model Book {
-  id    Int  @relation(fields: [itemId], references: [id])
-  pages Int?
-  itemId          Int      @id
+  id       Int   @id
+  pages    Int?
+  bookId   Int
+  item     Item  @relation(fields: [bookId], references: [id])
 }
 
 model Song {
-  id    Int     @relation(fields: [itemId], references: [id])
-  album String?
+  id       Int   @id
+  album    String?
+  songId   Int
+  item     Item  @relation(fields: [songId], references: [id])
 }

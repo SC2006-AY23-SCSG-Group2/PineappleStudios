@@ -52,6 +52,17 @@ export async function updateUser(id: number, user: User) {
   });
 }
 
+export async function updatePassword(email: string, newPassword: string) {
+  return await prismaClient.user.update({
+    where: {
+      email,
+    },
+    data: {
+      password: newPassword,
+    },
+  });
+}
+
 export async function deleteUser(id: number) {
   return await prismaClient.user.delete({
     where: {

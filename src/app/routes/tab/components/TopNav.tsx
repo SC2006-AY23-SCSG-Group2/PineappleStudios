@@ -1,5 +1,6 @@
 import {Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
+import React, {useState} from "react";
 
 export default function TopNav(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
