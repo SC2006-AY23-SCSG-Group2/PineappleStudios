@@ -50,7 +50,7 @@ export default function TopNav(): React.JSX.Element {
                   <a href="/tab/4">Account</a>
                 </li>
                 <li>
-                  <a href="/tab/3">Settings</a>
+                  <a href="/settings/general">Settings</a>
                 </li>
                 <li>
                   <a href="/login">Logout</a>

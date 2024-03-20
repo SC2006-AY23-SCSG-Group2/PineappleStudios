@@ -2,7 +2,12 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {getUserByEmail, createUser, updateUser, updatePassword} from "../../../lib/database/user";
+import {
+  createUser,
+  getUserByEmail,
+  updatePassword,
+  updateUser,
+} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
 
 //import {email} from "../login.otp"
@@ -11,7 +16,7 @@ type FormData = {
   email: string;
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
     email: formData.get("email") as string,
@@ -19,21 +24,24 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const user = await getUserByEmail(data.email);
 
-  const errors: { [key: string]: string } = {};
+  const errors: {[key: string]: string} = {};
 
   if (!user) {
     errors.email = "Sorry you are not registered yet!";
   }
-  if(data.email == ""){
-    errors.email = "Invalid email: Email cannot be empty"
+  if (data.email == "") {
+    errors.email = "Invalid email: Email cannot be empty";
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({ errors, value: data });
+    return json({errors, value: data});
   }
 
-  if(user){
-  return redirect('/login/change_password?email=${encodeURIComponent(user.email)}');}
+  if (user) {
+    return redirect(
+      "/login/change_password?email=${encodeURIComponent(user.email)}",
+    );
+  }
 }
 
 export default function tab_index(): React.JSX.Element {
