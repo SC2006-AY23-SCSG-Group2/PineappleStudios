@@ -2,39 +2,44 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {getUserByEmail, createUser, updateUser, updatePassword} from "../../../lib/database/user";
+import {
+  createUser,
+  getUserByEmail,
+  updatePassword,
+  updateUser,
+} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
 
 //import {email} from "../login.otp"
 
 type FormData = {
   password: string;
-  confirm_password: string
+  confirm_password: string;
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
     password: formData.get("password") as string,
     confirm_password: formData.get("confirm_password") as string,
   };
 
-  const errors: { [key: string]: string } = {};
+  const errors: {[key: string]: string} = {};
 
   if (!data.password) {
     errors.password = "Invalid Password: Password cannot be empty";
   }
 
-  if(data.confirm_password != data.password){
-    errors.confirm_password = "Passwords Mismatch"
+  if (data.confirm_password != data.password) {
+    errors.confirm_password = "Passwords Mismatch";
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({ errors, value: data });
+    return json({errors, value: data});
   }
   const email = "john@gmail.com";
   const user = await getUserByEmail(email);
-  await updatePassword(email, data.password );
+  await updatePassword(email, data.password);
   return redirect("/login");
 }
 
@@ -52,7 +57,11 @@ export default function tab_index(): React.JSX.Element {
           <fieldset
             className="card-body"
             disabled={navigation.state === "submitting"}>
-            <TextField id={"password"} label={"New Password"} type={"password"} />
+            <TextField
+              id={"password"}
+              label={"New Password"}
+              type={"password"}
+            />
 
             {actionData ? (
               <p className="form-control">
@@ -62,7 +71,11 @@ export default function tab_index(): React.JSX.Element {
               </p>
             ) : null}
 
-            <TextField id={"confirm_password"} label={"Confirm Password"} type={"password"} />
+            <TextField
+              id={"confirm_password"}
+              label={"Confirm Password"}
+              type={"password"}
+            />
 
             {actionData ? (
               <p className="form-control">
