@@ -80,28 +80,33 @@ export const loader = async () => {
 };
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {user} = useLoaderData<typeof loader>();
 
   const colors = ["success", "warning", "error"]; // Define an array of colors
 
   return (
-    <div className="flex justify-between bg-base-200">
-      <UserProfileCard user={user} />
-      <div className="flex h-1/2 w-7/12 min-w-0 flex-col shadow-xl">
-        <div className="card mb-4 bg-gray-200">
-          <div className="card-body">
-            <h2 className="card-title mx-2 text-3xl">Preferences</h2>
-            <div className="flex flex-row flex-wrap overflow-x-auto">
-              <TagList
-                tag={user.preferences}
-                colors={colors}
-                buttonType="close"
-              />
+    <>
+      <div className="hero min-h-screen bg-base-200 ">
+        <div className="hero-content max-lg:m-12 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end">
+          <UserProfileCard user={user} />
+          <div className="flex min-w-0 flex-col shadow-xl max-lg:w-full lg:w-7/12">
+            <div className="card mb-4 bg-gray-200">
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-3xl">Preferences</h2>
+                <div className="flex flex-row flex-wrap overflow-x-auto">
+                  <TagList
+                    tag={user.preferences}
+                    colors={colors}
+                    buttonType="close"
+                  />
+                </div>
+              </div>
             </div>
+            <ViewItems title="View History" items={user.HistoryItems} />
           </div>
         </div>
-        <ViewItems title="View History" items={user.HistoryItems} />
       </div>
-    </div>
+    </>
   );
 }
