@@ -2,8 +2,9 @@ import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {getUserByEmail, createUser} from "../../../lib/database/user";
+import {createUser, getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
+
 //import {action} from "../../../lib/connection/signup"
 
 type FormData = {
@@ -12,7 +13,7 @@ type FormData = {
   password: string;
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
     name: formData.get("username") as string,
@@ -20,7 +21,7 @@ export async function action({ request }: ActionFunctionArgs) {
     password: formData.get("password") as string,
   };
 
-  const errors: { [key: string]: string } = {};
+  const errors: {[key: string]: string} = {};
 
   if (!data.name) {
     errors.name = "Invalid Name";
@@ -35,14 +36,14 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({ errors, value: data });
+    return json({errors, value: data});
   }
 
   const user = await getUserByEmail(data.email);
 
   if (user) {
     errors.email = "You already have an account";
-    return json({ errors, value: data });
+    return json({errors, value: data});
   }
 
   await createUser(data);
