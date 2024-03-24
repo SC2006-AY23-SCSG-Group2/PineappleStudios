@@ -52,6 +52,8 @@ model Item {
   genre           String
   country         String?
   publicationDate DateTime
+  rate            Float?   
+  reviews         String?  
 }
 
 // Define specific models for movies, books, and songs.
