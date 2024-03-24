@@ -30,8 +30,7 @@ export default function TopNav(): React.JSX.Element {
             <div tabIndex={0} role="button" className="m-1">
               <div
                 className="avatar btn btn-circle btn-ghost mr-2"
-                onMouseEnter={() => setIsOpen(true)}
-                onClick={() => setIsOpen(false)}>
+                onMouseEnter={() => setIsOpen(true)}>
                 <div className="w-11 rounded-full">
                   <Link to="/tab/4">
                     <img
