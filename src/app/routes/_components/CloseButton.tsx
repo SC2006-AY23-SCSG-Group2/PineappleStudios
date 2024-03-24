@@ -1,4 +1,5 @@
-import React, {FC, ReactNode} from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, {FC} from "react";
 
 const CloseButton: FC<{onClick: () => void}> = ({onClick}) => {
   return (

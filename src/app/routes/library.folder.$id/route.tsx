@@ -1,9 +1,16 @@
+import {LoaderFunctionArgs, json} from "@remix-run/node";
 import React from "react";
+
+export function loader({params}: LoaderFunctionArgs) {
+  const id = params.id;
+  return json({id: id});
+}
 
 export default function tab_index(): React.JSX.Element {
   return (
     <>
       <p>aaaa</p>
+
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content text-center">
           <div className="max-w-md">

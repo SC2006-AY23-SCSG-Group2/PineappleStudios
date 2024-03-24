@@ -3,7 +3,7 @@ import {Form, useNavigation} from "@remix-run/react";
 import React from "react";
 
 import {TextField} from "../_components/TextField";
-import TopNav from "../library/components/TopNav";
+import LibraryTopNav from "../library/components/LibraryTopNav";
 
 export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -21,7 +21,7 @@ export default function LibraryItem(): React.JSX.Element {
         <fieldset
           className="card-body p-0"
           disabled={navigation.state === "submitting"}>
-          <TopNav
+          <LibraryTopNav
             leftSection={[
               <>
                 <button type={"submit"} className={"btn btn-square"}>
