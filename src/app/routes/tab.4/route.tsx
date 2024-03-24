@@ -31,47 +31,47 @@ export const loader = async () => {
       ],
       HistoryItems: [
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://m.media-amazon.com/images/I/71EodKggiQL.png",
+          imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
       ],
@@ -83,8 +83,7 @@ export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const {user} = useLoaderData<typeof loader>();
 
-  const colors = ["success", "warning", "error"]; // Define an array of colors
-
+  const colors = ["neutral", "primary", "secondary"];
   return (
     <>
       <div className="hero min-h-screen bg-base-200 ">
@@ -94,11 +93,11 @@ export default function tab_index(): React.JSX.Element {
             <div className="card mb-4 bg-gray-200">
               <div className="card-body">
                 <h2 className="card-title mx-2 text-3xl">Preferences</h2>
-                <div className="flex flex-row flex-wrap overflow-x-auto">
+                <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
                   <TagList
                     tag={user.preferences}
                     colors={colors}
-                    buttonType="close"
+                    buttonType="none"
                   />
                 </div>
               </div>

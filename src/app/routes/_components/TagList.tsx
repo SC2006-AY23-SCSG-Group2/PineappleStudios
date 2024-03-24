@@ -21,8 +21,8 @@ export const TagList: React.FC<TagsProps> = ({tag, colors, buttonType}) => {
           {tag.values.map((value, j) => (
             <Tag
               key={`${i}-${j}`}
-              color={colors[i % colors.length]}
-              buttonType={buttonType} // Pass the button type to each Tag
+              color={colors[Math.floor(Math.random() * 100) % colors.length]}
+              buttonType={buttonType} // Pass the button type to each TagEditing
             >
               {value}
             </Tag>
