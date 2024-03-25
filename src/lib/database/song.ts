@@ -1,5 +1,6 @@
 import {Song} from "@prisma/client";
 import { prismaClient } from "./prisma";
+import { url } from "inspector";
 
 // getAllSongs
 export const getAllSongs = async () => {
@@ -78,5 +79,24 @@ export const deleteSong = async (request: any) => {
     return song;
   } catch (e) {
     console.log(e);
+  }
+};
+export const searchSongs = async (searchValue: string, accessToken: string) => {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(searchValue)}&type=track`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch songs');
+    }
+
+    const responseData = await response.json();
+    return responseData.tracks.items;
+  } catch (error) {
+    console.error('Error fetching songs:', error);
+    return [];
   }
 };
