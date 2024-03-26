@@ -1,4 +1,4 @@
-import {Song} from "@prisma/client";
+import { deleteItem,createItem } from "./item";
 import { prismaClient } from "./prisma";
 
 // getAllSongs
@@ -18,7 +18,7 @@ export const getAllSongs = async () => {
 // getSongById
 export const getSongById = async (request: any) => {
   try {
-    const songId = request.params.id;
+    const songId = request.params.itemId;
     const song = await prismaClient.song.findUnique({
       where: {
         id: songId,
@@ -34,17 +34,24 @@ export const getSongById = async (request: any) => {
 };
 
 // createSong
-export const createSong = async (request: any) => {
+export const createSong = async (reqSong: any, reqItem: any) => {
   try {
-    const songData = request.body;
+    const songData = reqSong.body;
+    const itemData = reqItem.body;
+
+    // Create the song
     const song = await prismaClient.song.create({
       data: songData,
     });
-    return song;
-  } catch (e) {
-    console.log(e);
+
+    // Create the associated item
+    const item = await createItem(itemData);
+    return { song , item};
+  } catch (error) {
+    console.error("Error occurred while creating song:", error);
   }
 };
+
 
 // updateSong
 export const updateSong = async (request: any) => {
@@ -69,14 +76,20 @@ export const updateSong = async (request: any) => {
 // deleteSong
 export const deleteSong = async (request: any) => {
   try {
-    const songId = request.params.id;
-    const song = await prismaClient.song.delete({
-      where: {
-        id: songId,
-      },
-    });
-    return song;
+    const songId = request.params.itemId;
+    let result = await deleteItem(songId); // Await the deleteItem function directly
+    if(result){
+      await prismaClient.song.delete({
+        where: {
+          id: songId,
+        },
+      });
+      return {success:true};
+    }else{
+      return { success: false, error : "Unable to delete item" };
+    }
   } catch (e) {
     console.log(e);
+    return { success: false };
   }
 };
