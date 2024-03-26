@@ -13,65 +13,136 @@ datasource db {
 model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
-  name     String?
+  userName String?
   password String
+
+  //Must create a profile whenever create a new user
+  profile   Profile @relation(fields: [profileId], references: [id]) // references `id` of `Profile`
+  profileId Int     @unique
+
+  //Must create a library whenever create a new user
+  library   Library  @relation(fields: [libraryId], references: [id])
+  libraryId Int      @unique
+  reviews   Review[]
 }
 
-// model Cast {
-//   // id
-//   // name
-// }
-
-// Cast A
-//
-// Cast B
-//
-// Movie alpha
-// Movie beta
-//
-// CastItemRelation records
-// A Alpha actor
-// B alpha director
-// A Beta director, actor
-//
-// model CastItemRelation {
-//   // <cast, item>
-//   // cast  @related to Cast[id]
-//   // item @related to Item[id]
-//   // relation string
-// }
+model Profile {
+  id             Int      @id @default(autoincrement())
+  user           User?
+  registeredDate DateTime @default(now())
+  timeUsedInApp  Int      @default(0) //Total time used in minute
+  likedItem      Int
+  preferences    Tag[]
+  history        Item[]
+}
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id              Int      @id @default(autoincrement())
-  itemType        String   // This field specifies the type of item (e.g., "movie", "book", "song")
-  movie           Movie[]
-  book            Book[]   
-  song            Song[]    
-  title           String
-  genre           String
-  country         String?
-  publicationDate DateTime
+  id        Int                @id @default(autoincrement())
+  itemType  String // This field specifies the type of item (e.g., "movie", "book", "song")
+  movie     Movie?
+  book      Book?
+  song      Song?
+  title     String
+  genre     String
+  tags      Tag[]
+  language  String
+  avgRate   Float?
+  reviews   Review[]
+  People    People[]
+  folder    ItemsInFolders[]
+  libraries ItemsInLibraries[]
+  Profile   Profile?           @relation(fields: [profileId], references: [id])
+  profileId Int?
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  id       Int   @id
+  id       Int  @id @default(autoincrement())
   duration Int
-  movieId  Int
-  item     Item  @relation(fields: [movieId], references: [id])
+  itemId   Int  @unique
+  item     Item @relation(fields: [itemId], references: [id])
 }
 
 model Book {
-  id       Int   @id
-  pages    Int?
-  bookId   Int
-  item     Item  @relation(fields: [bookId], references: [id])
+  id     Int  @id @default(autoincrement())
+  pages  Int?
+  itemId Int  @unique
+  item   Item @relation(fields: [itemId], references: [id])
 }
 
 model Song {
-  id       Int   @id
-  album    String?
-  songId   Int
-  item     Item  @relation(fields: [songId], references: [id])
+  id     Int     @id @default(autoincrement())
+  album  String?
+  itemId Int     @unique
+  item   Item    @relation(fields: [itemId], references: [id])
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  itemId    Int
+  Item      Item     @relation(fields: [itemId], references: [id])
+  Profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId Int?
+}
+
+model People {
+  id     Int    @id @default(autoincrement())
+  name   String
+  role   String
+  itemId Int
+  item   Item   @relation(fields: [itemId], references: [id])
+}
+
+model Review {
+  id      Int    @id @default(autoincrement())
+  content String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  itemId  Int
+  item    Item   @relation(fields: [itemId], references: [id])
+}
+
+model Library {
+  id      Int                @id @default(autoincrement())
+  items   ItemsInLibraries[]
+  folders Folder[]
+  user    User?
+}
+
+model ItemsInLibraries {
+  library   Library  @relation(fields: [libraryId], references: [id])
+  libraryId Int
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  addedAt   DateTime @default(now())
+
+  @@id([libraryId, itemId])
+}
+
+model ItemsInFolders {
+  folder   Folder   @relation(fields: [folderId], references: [id])
+  folderId Int
+  item     Item     @relation(fields: [itemId], references: [id])
+  itemId   Int
+  addedAt  DateTime @default(now())
+
+  @@id([folderId, itemId])
+}
+
+model Folder {
+  id        Int              @id @default(autoincrement())
+  name      String
+  series    Series?
+  items     ItemsInFolders[]
+  Library   Library?         @relation(fields: [libraryId], references: [id])
+  libraryId Int?
+}
+
+model Series {
+  id       Int    @id @default(autoincrement())
+  name     String
+  folder   Folder @relation(fields: [folderId], references: [id])
+  folderId Int    @unique
 }
