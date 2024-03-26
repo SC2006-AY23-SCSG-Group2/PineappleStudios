@@ -21,9 +21,10 @@ model User {
   profileId Int     @unique
 
   //Must create a library whenever create a new user
-  library   Library  @relation(fields: [libraryId], references: [id])
-  libraryId Int      @unique
-  reviews   Review[]
+  library   Library @relation(fields: [libraryId], references: [id])
+  libraryId Int     @unique
+
+  reviews Review[]
 }
 
 model Profile {
@@ -58,21 +59,18 @@ model Item {
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  id       Int  @id @default(autoincrement())
   duration Int
   itemId   Int  @unique
   item     Item @relation(fields: [itemId], references: [id])
 }
 
 model Book {
-  id     Int  @id @default(autoincrement())
   pages  Int?
   itemId Int  @unique
   item   Item @relation(fields: [itemId], references: [id])
 }
 
 model Song {
-  id     Int     @id @default(autoincrement())
   album  String?
   itemId Int     @unique
   item   Item    @relation(fields: [itemId], references: [id])
