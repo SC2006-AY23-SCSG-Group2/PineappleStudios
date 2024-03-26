@@ -1,7 +1,5 @@
-import {Movie} from "@prisma/client";
-
 import {prismaClient} from "./prisma";
-
+import { deleteItem,  createItem} from "./item";
 //CRUD
 //getAllMovies
 export const getAllMovies = async () => {
@@ -21,7 +19,7 @@ export const getAllMovies = async () => {
 //getMovieById
 export const getMovieById = async (request: any) => {
   try {
-    const movieId = request.params.id;
+    const movieId = request.params.itemId;
     const movie = await prismaClient.movie.findUnique({
       where: {
         id: movieId, //id equals to movieid
@@ -35,19 +33,22 @@ export const getMovieById = async (request: any) => {
     console.log(e);
   }
 };
-//createMovie
 
-export const createMovie = async (request: any) => {
+//createMovie
+export const createMovie = async (reqMovie: any, reqItem: any) => {
   try {
-    const movieData = request.body; //contain all movie's data for a movie
+    const movieData = reqMovie.body; //contain all movie's data for a movie
+    const itemData = reqItem.body;
     const movie = await prismaClient.movie.create({
       data: movieData,
     });
-    return movie;
-  } catch (e) {
-    console.log(e);
+    const item = await createItem(itemData); 
+    return {movie, item};
+  } catch (error) {
+    console.error("Error occurred while creating movie:", error);
   }
 };
+
 //updateMovie
 export const updateMovie = async (request: any) => {
   try {
@@ -72,15 +73,22 @@ export const updateMovie = async (request: any) => {
 //deleteMovie
 export const deleteMovie = async (request: any) => {
   try {
-    const movieId = request.params.id; //contain all movie's data for a movie
-    const movie = await prismaClient.movie.delete({
-      where: {
-        id: movieId,
-      },
-    });
-    return movie;
+    const movieId = request.params.itemId; //contain all movie's data for a movie
+    let result = await deleteItem(movieId); // Await the deleteItem function directly
+    if(result){
+      await prismaClient.movie.delete({
+        where: {
+          id: movieId,
+        },
+      });
+      return {success:true};
+    }
+    else{
+      return {success:false, error : "Unable to delete item"};
+    }
   } catch (e) {
     console.log(e);
+    return { success: false };
   }
 };
 
