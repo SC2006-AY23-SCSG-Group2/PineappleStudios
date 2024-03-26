@@ -1,5 +1,5 @@
-import {Book} from "@prisma/client";
 import { prismaClient } from "./prisma";
+import { deleteItem , createItem} from "./item";
 
 // getAllBooks
 export const getAllBooks = async () => {
@@ -18,7 +18,7 @@ export const getAllBooks = async () => {
 // getBookById
 export const getBookById = async (request: any) => {
   try {
-    const bookId = request.params.id;
+    const bookId = request.params.itemId;
     const book = await prismaClient.book.findUnique({
       where: {
         id: bookId,
@@ -34,15 +34,19 @@ export const getBookById = async (request: any) => {
 };
 
 // createBook
-export const createBook = async (request: any) => {
+export const createBook = async (reqBook: any, reqItem: any) => {
   try {
-    const bookData = request.body;
+    const bookData = reqBook.body;
+    const itemData = reqItem.body;
     const book = await prismaClient.book.create({
       data: bookData,
     });
-    return book;
+
+    // Create the associated item
+    const item = await createItem(itemData);
+    return {book, item};
   } catch (e) {
-    console.log(e);
+    console.error("Error occurred while creating book:", e);
   }
 };
 
@@ -69,17 +73,24 @@ export const updateBook = async (request: any) => {
 // deleteBook
 export const deleteBook = async (request: any) => {
   try {
-    const bookId = request.params.id;
-    const book = await prismaClient.book.delete({
-      where: {
-        id: bookId,
-      },
-    });
-    return book;
+    const bookId = request.params.itemId;
+    let result = await deleteItem(bookId); // Await the deleteItem function directly
+    if (result) {
+      await prismaClient.book.delete({
+        where: {
+          id: bookId,
+        },
+      });
+      return { success: true };
+    }else{
+      return { success: false, error : "Unable to delete item" };
+    }
   } catch (e) {
     console.log(e);
+    return { success: false };
   }
 };
+
 // // Add a review to a book
 // export const addBookReview = async (bookId: number, review: String) => {
 //   try {
