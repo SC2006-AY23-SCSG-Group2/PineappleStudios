@@ -110,3 +110,24 @@ export const deleteBook = async (request: any) => {
 //     throw new Error("Failed to add review to book");
 //   }
 // };
+import React, { useState, useEffect } from 'react';
+import request from 'superagent';
+
+export const getBookRequest = async (searchValue: string) => {
+  //const url = `http://openlibrary.org/search.json?q=${searchValue}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${searchValue}`;
+  try {
+    const response = await fetch(url);
+    const responseJson = await response.json();
+
+    if (responseJson.docs) {
+      // Assuming the response structure has an array called 'docs' containing books
+      return responseJson.docs;
+    } else {
+      return []; // If no books found, return an empty array
+    }
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    return []; // Return empty array in case of errors
+  }
+};
