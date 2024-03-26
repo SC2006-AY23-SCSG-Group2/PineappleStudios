@@ -24,17 +24,37 @@ export async function action({request}: ActionFunctionArgs) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-
-  const user = await getUserByEmail(data.email);
-
   let errors = {
     email: "",
     password: "",
   };
-  const value = {
-    email: data.email,
-    password: data.password,
-  };
+  const value = {};
+
+  if (!data.email) {
+    errors = {
+      email: "Empty Email",
+      password: "",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  if (!data.password) {
+    errors = {
+      email: "",
+      password: "Empty Password",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  const user = await getUserByEmail(data.email);
 
   if (!user) {
     errors = {
@@ -114,8 +134,8 @@ export default function Login(): React.JSX.Element {
                 {navigation.state === "submitting" ? "Login..." : "Login"}
               </button>
             </p>
-            <p className="text-center">
-              Don't have an account?{" "}
+            <p className="form-control text-center">
+              {"Don't have an account? "}
               <Link className="underline" to="/login/signup">
                 Register
               </Link>

@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useState} from "react";
+import {FC, ReactNode, useState} from "react";
 
 import CloseButton from "./CloseButton";
 import PlusButton from "./PlusButton";
@@ -11,7 +11,7 @@ interface TagProps {
   buttonType: "close" | "plus" | "none"; // New prop for button type
 }
 
-const Tag: FC<TagProps> = ({children, color, buttonType}) => {
+const TagEditing: FC<TagProps> = ({children, color, buttonType}) => {
   const [isVisible, setIsVisible] = useState(true);
 
   const handleCloseClick = () => {
@@ -34,14 +34,14 @@ const Tag: FC<TagProps> = ({children, color, buttonType}) => {
     }
   };
 
+  const btnClass = `btn btn-${color} no-animation w-full text-lg`;
+
   return (
     <div
       className={`mx-1 my-2 flex items-center justify-center ${isVisible ? "block" : "hidden"}`}>
       <div className="relative">
         <div className="flex min-w-40 items-center justify-center text-xs">
-          <button className={`btn btn-${color} no-animation w-full text-lg`}>
-            {children}
-          </button>
+          <button className={btnClass}>{children}</button>
         </div>
         {renderButton()}
       </div>
@@ -49,4 +49,4 @@ const Tag: FC<TagProps> = ({children, color, buttonType}) => {
   );
 };
 
-export default Tag;
+export default TagEditing;
