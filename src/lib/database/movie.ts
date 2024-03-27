@@ -1,3 +1,6 @@
+//http://www.omdbapi.com/?s=star wars&apikey=411ddaa2
+import React, {useEffect, useState} from "react";
+
 import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
@@ -93,8 +96,6 @@ export const deleteMovie = async (request: any) => {
   }
 };
 
-//http://www.omdbapi.com/?s=star wars&apikey=411ddaa2
-import React, { useState, useEffect } from 'react';
 const [movies, setMovies] = useState([]);
 
 export const getMovieRequest = async (searchValue: any) => {
@@ -105,7 +106,7 @@ export const getMovieRequest = async (searchValue: any) => {
   if (responseJson.Search) {
     setMovies(responseJson.Search);
   }
-}
+};
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {
 //   try {

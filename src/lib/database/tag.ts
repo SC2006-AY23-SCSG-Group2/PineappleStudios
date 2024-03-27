@@ -63,7 +63,7 @@ export const updateTag = async (request: any) => {
 //delete tag
 export const deleteMovie = async (request: any) => {
   try {
-    const tagId = request.params.id; 
+    const tagId = request.params.id;
 
     await prismaClient.tag.delete({
       where: {
