@@ -19,15 +19,18 @@ export const getProfileById = async (request: any) => {
 };
 
 // create profile
-export const createProfile = async (request: any) => {
+export const createProfile = async () => {
   try {
-    const profileData = request.body;
+    // const profileData = request.body;
     const profile = await prismaClient.profile.create({
-      data: profileData,
+      // data: profileData,
+      data : {
+        registeredDate: new Date() // Set the current date and time, workaround
+      }
     });
     return profile;
   } catch (e) {
-    console.log(e);
+    console.error("Error occurred while creating profile:", e);
   }
 };
 
