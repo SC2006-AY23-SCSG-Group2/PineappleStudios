@@ -28,13 +28,13 @@ model User {
 }
 
 model Profile {
-  id             Int      @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   user           User?
-  registeredDate DateTime @default(now())
-  timeUsedInApp  Int      @default(0) //Total time used in minute
+  registeredDate DateTime          @default(now())
+  timeUsedInApp  Int               @default(0) //Total time used in minute
   likedItem      Int
-  preferences    Tag[]
-  history        Item[]
+  preferences    TagsInProfiles[]
+  history        ItemsInProfiles[]
 }
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
@@ -46,51 +46,72 @@ model Item {
   song      Song?
   title     String
   genre     String
-  tags      Tag[]
+  tags      TagInItems[]
   language  String
   avgRate   Float?
   reviews   Review[]
-  People    People[]
+  People    PeopleInItems[]
   folder    ItemsInFolders[]
   libraries ItemsInLibraries[]
-  Profile   Profile?           @relation(fields: [profileId], references: [id])
-  profileId Int?
+  Profile   ItemsInProfiles[]
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
+  srcId    String @unique //id from datasource
   duration Int
-  itemId   Int  @unique
-  item     Item @relation(fields: [itemId], references: [id])
+  itemId   Int    @unique
+  item     Item   @relation(fields: [itemId], references: [id])
 }
 
 model Book {
+  srcId  String @unique //id from datasource
   pages  Int?
-  itemId Int  @unique
-  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int    @unique
+  item   Item   @relation(fields: [itemId], references: [id])
 }
 
 model Song {
+  srcId  String  @unique //id from datasource
   album  String?
   itemId Int     @unique
   item   Item    @relation(fields: [itemId], references: [id])
 }
 
+model TagInItems {
+  item    Item     @relation(fields: [itemId], references: [id])
+  itemId  Int
+  tag     Tag      @relation(fields: [tagId], references: [id])
+  tagId   Int
+  addedAt DateTime @default(now())
+
+  @@id([itemId, tagId])
+}
+
+model PeopleInItems {
+  item     Item     @relation(fields: [itemId], references: [id])
+  itemId   Int
+  people   People   @relation(fields: [peopleId], references: [id])
+  peopleId Int
+  addedAt  DateTime @default(now())
+
+  @@id([itemId, peopleId])
+}
+
 model Tag {
-  id        Int      @id @default(autoincrement())
-  name      String
-  itemId    Int
-  Item      Item     @relation(fields: [itemId], references: [id])
-  Profile   Profile? @relation(fields: [profileId], references: [id])
-  profileId Int?
+  id      Int              @id @default(autoincrement())
+  name    String
+  itemId  Int
+  Item    TagInItems[]
+  Profile TagsInProfiles[]
 }
 
 model People {
-  id     Int    @id @default(autoincrement())
+  id     Int             @id @default(autoincrement())
   name   String
   role   String
   itemId Int
-  item   Item   @relation(fields: [itemId], references: [id])
+  item   PeopleInItems[]
 }
 
 model Review {
@@ -127,6 +148,26 @@ model ItemsInFolders {
   addedAt  DateTime @default(now())
 
   @@id([folderId, itemId])
+}
+
+model ItemsInProfiles {
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  profileId Int
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  addedAt   DateTime @default(now())
+
+  @@id([profileId, itemId])
+}
+
+model TagsInProfiles {
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  profileId Int
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  tagId     Int
+  addedAt   DateTime @default(now())
+
+  @@id([profileId, tagId])
 }
 
 model Folder {
