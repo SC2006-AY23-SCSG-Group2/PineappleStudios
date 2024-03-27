@@ -1,4 +1,4 @@
-import { prismaClient } from "./prisma";
+import {prismaClient} from "./prisma";
 
 // get all items
 export const getAllitems = async () => {
@@ -60,17 +60,16 @@ export const updateItem = async (request: any) => {
 
 // delete item
 export const deleteItem = async (request: any) => {
-    try {
-      const itemId = request.params.id;
-      await prismaClient.item.delete({
-        where: {
-          id: itemId,
-        },
-      });
-      return true
-    } catch (e) {
-      console.log(e);
-      return { success: false };
-    }
+  try {
+    const itemId = request.params.id;
+    await prismaClient.item.delete({
+      where: {
+        id: itemId,
+      },
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return {success: false};
+  }
 };
-

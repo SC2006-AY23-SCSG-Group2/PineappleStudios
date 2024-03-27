@@ -1,5 +1,5 @@
-import { prismaClient } from "./prisma";
-import { deleteItem , createItem} from "./item";
+import {createItem, deleteItem} from "./item";
+import {prismaClient} from "./prisma";
 
 // getAllBooks
 export const getAllBooks = async () => {
@@ -56,7 +56,9 @@ export const updateBook = async (request: any) => {
     const bookId = request.params.itemId;
     const bookData = request.body;
     // Remove bookId from bookData to prevent updating it
-    delete bookData.bookId;
+    delete bookData.itemId;
+    delete bookData.item;
+    delete bookData.srcId;
 
     const book = await prismaClient.book.update({
       where: {
@@ -81,13 +83,13 @@ export const deleteBook = async (request: any) => {
           id: bookId,
         },
       });
-      return { success: true };
-    }else{
-      return { success: false, error : "Unable to delete item" };
+      return {success: true};
+    } else {
+      return {success: false, error: "Unable to delete item"};
     }
   } catch (e) {
     console.log(e);
-    return { success: false };
+    return {success: false};
   }
 };
 

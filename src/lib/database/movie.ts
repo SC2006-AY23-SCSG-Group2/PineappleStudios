@@ -1,9 +1,9 @@
+import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
-import { deleteItem,  createItem} from "./item";
+
 //CRUD
 //getAllMovies
 export const getAllMovies = async () => {
-  //request and response is parameter
   try {
     const allMovies = await prismaClient.movie.findMany({
       include: {
@@ -22,7 +22,7 @@ export const getMovieById = async (request: any) => {
     const movieId = request.params.itemId;
     const movie = await prismaClient.movie.findUnique({
       where: {
-        id: movieId, //id equals to movieid
+        itemId: movieId, //id equals to movieid
       },
       include: {
         item: true,
@@ -42,7 +42,7 @@ export const createMovie = async (reqMovie: any, reqItem: any) => {
     const movie = await prismaClient.movie.create({
       data: movieData,
     });
-    const item = await createItem(itemData); 
+    const item = await createItem(itemData);
     return {movie, item};
   } catch (error) {
     console.error("Error occurred while creating movie:", error);
@@ -56,11 +56,13 @@ export const updateMovie = async (request: any) => {
     const movieData = request.body; //contain all movie's data for a movie
 
     // Remove movieId from movieData to prevent updating it
-    delete movieData.movieId;
+    delete movieData.itemId;
+    delete movieData.item;
+    delete movieData.srcId;
 
     const movie = await prismaClient.movie.update({
       where: {
-        id: movieId,
+        itemId: movieId,
       },
       data: movieData,
     });
@@ -75,20 +77,19 @@ export const deleteMovie = async (request: any) => {
   try {
     const movieId = request.params.itemId; //contain all movie's data for a movie
     let result = await deleteItem(movieId); // Await the deleteItem function directly
-    if(result){
+    if (result) {
       await prismaClient.movie.delete({
         where: {
-          id: movieId,
+          itemId: movieId,
         },
       });
-      return {success:true};
-    }
-    else{
-      return {success:false, error : "Unable to delete item"};
+      return {success: true};
+    } else {
+      return {success: false, error: "Unable to delete item"};
     }
   } catch (e) {
     console.log(e);
-    return { success: false };
+    return {success: false};
   }
 };
 
@@ -138,6 +139,3 @@ export const deleteMovie = async (request: any) => {
 //     throw new Error("Failed to add review to movie");
 //   }
 // };
-
-
-
