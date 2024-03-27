@@ -1,5 +1,6 @@
-import {createItem, deleteItem} from "./item";
-import {prismaClient} from "./prisma";
+import { deleteItem,createItem } from "./item";
+import { prismaClient } from "./prisma";
+import { url } from "inspector";
 
 // getAllSongs
 export const getAllSongs = async () => {
@@ -21,7 +22,7 @@ export const getSongById = async (request: any) => {
     const songId = request.params.itemId;
     const song = await prismaClient.song.findUnique({
       where: {
-        id: songId,
+        itemId: songId,
       },
       include: {
         item: true,
@@ -64,7 +65,7 @@ export const updateSong = async (request: any) => {
 
     const song = await prismaClient.song.update({
       where: {
-        id: songId,
+        itemId: songId,
       },
       data: songData,
     });
@@ -82,7 +83,7 @@ export const deleteSong = async (request: any) => {
     if (result) {
       await prismaClient.song.delete({
         where: {
-          id: songId,
+          itemId: songId,
         },
       });
       return {success: true};
@@ -92,5 +93,24 @@ export const deleteSong = async (request: any) => {
   } catch (e) {
     console.log(e);
     return {success: false};
+  }
+};
+export const searchSongs = async (searchValue: string, accessToken: string) => {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(searchValue)}&type=track`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch songs');
+    }
+
+    const responseData = await response.json();
+    return responseData.tracks.items;
+  } catch (error) {
+    console.error('Error fetching songs:', error);
+    return [];
   }
 };

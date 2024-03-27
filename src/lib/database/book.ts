@@ -21,7 +21,7 @@ export const getBookById = async (request: any) => {
     const bookId = request.params.itemId;
     const book = await prismaClient.book.findUnique({
       where: {
-        id: bookId,
+        itemId: bookId,
       },
       include: {
         item: true,
@@ -62,7 +62,7 @@ export const updateBook = async (request: any) => {
 
     const book = await prismaClient.book.update({
       where: {
-        id: bookId,
+        itemId: bookId,
       },
       data: bookData,
     });
@@ -80,7 +80,7 @@ export const deleteBook = async (request: any) => {
     if (result) {
       await prismaClient.book.delete({
         where: {
-          id: bookId,
+          itemId: bookId,
         },
       });
       return {success: true};
