@@ -46,9 +46,8 @@ export async function action({request}: ActionFunctionArgs) {
     return json({errors, value: data});
   }
 
-  const userResult = await createUser(data.email,data.userName,data.password);
-  if(userResult)
-    return redirect("/tab");
+  const userResult = await createUser(data.email, data.userName, data.password);
+  if (userResult) return redirect("/tab");
 }
 
 export default function tab_index(): React.JSX.Element {
