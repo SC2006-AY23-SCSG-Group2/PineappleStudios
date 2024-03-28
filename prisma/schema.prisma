@@ -25,6 +25,7 @@ model User {
   library   Library @relation(fields: [libraryId], references: [id])
   libraryId Int     @unique
 
+  rate    Rate[]
   reviews Review[]
 }
 
@@ -50,6 +51,7 @@ model Item {
   tags      TagInItems[]
   language  String
   avgRate   Float?
+  rate      Rate[]
   reviews   Review[]
   People    PeopleInItems[]
   folder    ItemsInFolders[]
@@ -113,6 +115,15 @@ model People {
   role   String
   itemId Int
   item   PeopleInItems[]
+}
+
+model Rate {
+  id     Int  @id @default(autoincrement())
+  rating Int
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
 }
 
 model Review {

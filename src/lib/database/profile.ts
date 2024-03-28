@@ -24,9 +24,9 @@ export const createProfile = async () => {
     // const profileData = request.body;
     const profile = await prismaClient.profile.create({
       // data: profileData,
-      data : {
-        registeredDate: new Date() // Set the current date and time, workaround
-      }
+      data: {
+        registeredDate: new Date(), // Set the current date and time, workaround
+      },
     });
     return profile;
   } catch (e) {
