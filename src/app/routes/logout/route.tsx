@@ -2,6 +2,7 @@ import { getSession, destroySession } from "src/app/session";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
 
+
 export const action = async ({request}: ActionFunctionArgs) => {
   const session = await getSession(
     request.headers.get("Cookie")
@@ -13,7 +14,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   });
 };
 
-export default function LogoutRoute() {
+export default function Logout(): React.JSX.Element {
   return (
     <>
       <p>Are you sure you want to log out?</p>
