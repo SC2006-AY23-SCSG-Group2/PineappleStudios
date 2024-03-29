@@ -1,9 +1,14 @@
 import {Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
+import { redirect } from "@remix-run/react";
+
+const handleLogout = async () => {
+  return redirect('/logout');
+};
 
 export default function TopNav(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
-
+  
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -53,7 +58,10 @@ export default function TopNav(): React.JSX.Element {
                   <a href="/settings/general">Settings</a>
                 </li>
                 <li>
-                  <a href="/login">Logout</a>
+                  {/* <a href="/login">Logout</a> */}
+                  <button type="button" onClick={handleLogout}>
+                      logout
+                  </button>
                 </li>
               </ul>
             )}

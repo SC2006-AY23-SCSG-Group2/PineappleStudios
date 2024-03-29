@@ -1,6 +1,9 @@
 import {User} from "@prisma/client";
+import {link} from "fs";
 
+import {createLibrary} from "./library";
 import {prismaClient} from "./prisma";
+import {createProfile, deleteProfile} from "./profile";
 
 export type GetAllUsers = {
   id: number;
@@ -34,12 +37,41 @@ export async function getUserByEmail(email: string) {
   });
 }
 
-export async function createUser(user: CreateUser) {
+export async function createUser(
+  email: string,
+  userName: string,
+  password: string,
+) {
   try {
-    return await prismaClient.user.create({data: user});
+    const profile = await createProfile();
+    const library = await createLibrary();
+    const profileId = profile?.id;
+    const libraryId = library?.id;
+
+    if (profileId !== undefined && libraryId !== undefined) {
+      const data = {
+        email,
+        userName,
+        password,
+        profileId,
+        libraryId,
+      };
+
+      const user = await prismaClient.user.create({
+        data: {
+          email: data.email,
+          userName: data.userName,
+          password: data.password,
+          profileId: data.profileId,
+          libraryId: data.libraryId,
+        },
+      });
+      return user;
+    } else {
+      console.log("Failed to create user");
+    }
   } catch (error) {
     console.error("Error creating user:", error);
-    throw error;
   }
 }
 
@@ -63,7 +95,9 @@ export async function updatePassword(email: string, newPassword: string) {
   });
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser(id: number, request: any) {
+  const profileId = request.params.profileId;
+  await deleteProfile(profileId); // Ensure to await the deletion of profile
   return await prismaClient.user.delete({
     where: {
       id,

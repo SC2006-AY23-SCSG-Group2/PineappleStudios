@@ -8,7 +8,7 @@ import {TextField} from "../_components/TextField";
 //import {action} from "../../../lib/connection/signup"
 
 type FormData = {
-  name: string;
+  userName: string;
   email: string;
   password: string;
 };
@@ -16,15 +16,15 @@ type FormData = {
 export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
-    name: formData.get("username") as string,
     email: formData.get("email") as string,
+    userName: formData.get("username") as string,
     password: formData.get("password") as string,
   };
 
   const errors: {[key: string]: string} = {};
 
-  if (!data.name) {
-    errors.name = "Invalid Name";
+  if (!data.userName) {
+    errors.userName = "Invalid Name";
   }
 
   if (!data.email) {
@@ -46,8 +46,8 @@ export async function action({request}: ActionFunctionArgs) {
     return json({errors, value: data});
   }
 
-  await createUser(data);
-  return redirect("/tab");
+  const userResult = await createUser(data.email, data.userName, data.password);
+  if (userResult) return redirect("/tab");
 }
 
 export default function tab_index(): React.JSX.Element {

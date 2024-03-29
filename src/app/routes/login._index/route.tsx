@@ -1,15 +1,18 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
+import {ActionFunctionArgs, LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {
   Form,
   Link,
   NavLink,
   useActionData,
+  useLoaderData,
   useNavigation,
 } from "@remix-run/react";
 import React from "react";
 
 import {getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
+import { commitSession, getSession } from "src/app/session";
+
 
 //import {action} from "../../../lib/connection/login"
 
@@ -24,17 +27,37 @@ export async function action({request}: ActionFunctionArgs) {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-
-  const user = await getUserByEmail(data.email);
-
   let errors = {
     email: "",
     password: "",
   };
-  const value = {
-    email: data.email,
-    password: data.password,
-  };
+  const value = {};
+
+  if (!data.email) {
+    errors = {
+      email: "Empty Email",
+      password: "",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  if (!data.password) {
+    errors = {
+      email: "",
+      password: "Empty Password",
+    };
+
+    return json({
+      errors,
+      value,
+    });
+  }
+
+  const user = await getUserByEmail(data.email);
 
   if (!user) {
     errors = {
@@ -60,7 +83,22 @@ export async function action({request}: ActionFunctionArgs) {
     });
   }
 
-  return redirect("/tab");
+  let session = await getSession();
+  session.set("isUser", true);
+
+  //returns a redirect response to a specific URL ("/tab"), along with the cookie containing the session information.
+  return redirect("/tab", { 
+    headers : {
+      "Set-Cookie" : await commitSession(session),
+    },
+  });
+}
+
+//loader function may be not neccessary
+export async function loader({request} : LoaderFunctionArgs){
+  let session = await getSession(request.headers.get("cookie"));
+
+  return session.data;
 }
 
 export default function Login(): React.JSX.Element {
@@ -114,8 +152,8 @@ export default function Login(): React.JSX.Element {
                 {navigation.state === "submitting" ? "Login..." : "Login"}
               </button>
             </p>
-            <p className="text-center">
-              Don't have an account?{" "}
+            <p className="form-control text-center">
+              {"Don't have an account? "}
               <Link className="underline" to="/login/signup">
                 Register
               </Link>
