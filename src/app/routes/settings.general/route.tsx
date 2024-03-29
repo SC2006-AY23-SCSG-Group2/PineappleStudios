@@ -56,10 +56,10 @@ export default function tab_index(): React.JSX.Element {
                 Accounts
               </li>
               <li className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-blue-700 hover:text-white">
-                Team
+                Profile
               </li>
               <li className="cursor-pointer px-3 py-2 text-sm text-slate-600 hover:bg-blue-700 hover:text-white">
-                Others
+                Notifications
               </li>
             </ul>
           </div>

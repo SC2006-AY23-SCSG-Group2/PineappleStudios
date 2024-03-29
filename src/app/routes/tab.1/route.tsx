@@ -1,49 +1,89 @@
 import React from "react";
+import { TagList } from "../_components/TagList";
+import { useLoaderData } from "@remix-run/react";
+import { ViewItems } from "../_components/ViewItems";
+
+export const loader = async () => {
+  return {
+    user: {
+      name: "Unknown_Blaze",
+      email: "unknown@e.ntu.edu.sg",
+      time: 2,
+      date: "March 15, 2024",
+      numOfLikes: 107,
+      numOfRatings: 26,
+      preferences: [
+        {
+          name: "Music",
+          values: [
+            "Pop",
+            "Jazz",
+            "Classical",
+            "Indie",
+            "Movie-related",
+            "Indian Classical",
+          ],
+        },
+        {name: "Books", values: ["Dystopian", "Non-fiction"]},
+        {name: "Movies", values: ["Thriller", "Horror"]},
+      ],
+      favorites: [
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+        {
+          imageSrc: "https://picsum.photos/200.webp",
+          placeholder: "Item",
+        },
+      ],
+    },
+  };
+};
 
 export default function tab_index(): React.JSX.Element {
+  const {user} = useLoaderData<typeof loader>();
+
   return (
+    
     <>
-      <p>aaaa</p>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <p>aaaa</p>
+      <ViewItems title="Favourites" items={user.favorites} />
     </>
   );
 }
