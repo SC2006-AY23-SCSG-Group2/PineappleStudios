@@ -1,15 +1,18 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
+import {ActionFunctionArgs, LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {
   Form,
   Link,
   NavLink,
   useActionData,
+  useLoaderData,
   useNavigation,
 } from "@remix-run/react";
 import React from "react";
 
 import {getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
+import { commitSession, getSession } from "src/app/session";
+
 
 //import {action} from "../../../lib/connection/login"
 
@@ -80,7 +83,22 @@ export async function action({request}: ActionFunctionArgs) {
     });
   }
 
-  return redirect("/tab");
+  let session = await getSession();
+  session.set("isUser", true);
+
+  //returns a redirect response to a specific URL ("/tab"), along with the cookie containing the session information.
+  return redirect("/tab", { 
+    headers : {
+      "Set-Cookie" : await commitSession(session),
+    },
+  });
+}
+
+//loader function may be not neccessary
+export async function loader({request} : LoaderFunctionArgs){
+  let session = await getSession(request.headers.get("cookie"));
+
+  return session.data;
 }
 
 export default function Login(): React.JSX.Element {
