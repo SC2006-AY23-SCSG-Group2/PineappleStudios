@@ -1,11 +1,12 @@
-import {Movie} from "@prisma/client";
+//http://www.omdbapi.com/?s=star wars&apikey=411ddaa2
+import React, {useEffect, useState} from "react";
 
+import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
 //CRUD
 //getAllMovies
 export const getAllMovies = async () => {
-  //request and response is parameter
   try {
     const allMovies = await prismaClient.movie.findMany({
       include: {
@@ -21,10 +22,10 @@ export const getAllMovies = async () => {
 //getMovieById
 export const getMovieById = async (request: any) => {
   try {
-    const movieId = request.params.id;
+    const movieId = request.params.itemId;
     const movie = await prismaClient.movie.findUnique({
       where: {
-        id: movieId, //id equals to movieid
+        itemId: movieId, //id equals to movieid
       },
       include: {
         item: true,
@@ -35,19 +36,22 @@ export const getMovieById = async (request: any) => {
     console.log(e);
   }
 };
-//createMovie
 
-export const createMovie = async (request: any) => {
+//createMovie
+export const createMovie = async (reqMovie: any, reqItem: any) => {
   try {
-    const movieData = request.body; //contain all movie's data for a movie
+    const movieData = reqMovie.body; //contain all movie's data for a movie
+    const itemData = reqItem.body;
     const movie = await prismaClient.movie.create({
       data: movieData,
     });
-    return movie;
-  } catch (e) {
-    console.log(e);
+    const item = await createItem(itemData);
+    return {movie, item};
+  } catch (error) {
+    console.error("Error occurred while creating movie:", error);
   }
 };
+
 //updateMovie
 export const updateMovie = async (request: any) => {
   try {
@@ -55,11 +59,13 @@ export const updateMovie = async (request: any) => {
     const movieData = request.body; //contain all movie's data for a movie
 
     // Remove movieId from movieData to prevent updating it
-    delete movieData.movieId;
+    delete movieData.itemId;
+    delete movieData.item;
+    delete movieData.srcId;
 
     const movie = await prismaClient.movie.update({
       where: {
-        id: movieId,
+        itemId: movieId,
       },
       data: movieData,
     });
@@ -72,20 +78,24 @@ export const updateMovie = async (request: any) => {
 //deleteMovie
 export const deleteMovie = async (request: any) => {
   try {
-    const movieId = request.params.id; //contain all movie's data for a movie
-    const movie = await prismaClient.movie.delete({
-      where: {
-        id: movieId,
-      },
-    });
-    return movie;
+    const movieId = request.params.itemId; //contain all movie's data for a movie
+    let result = await deleteItem(movieId); // Await the deleteItem function directly
+    if (result) {
+      await prismaClient.movie.delete({
+        where: {
+          itemId: movieId,
+        },
+      });
+      return {success: true};
+    } else {
+      return {success: false, error: "Unable to delete item"};
+    }
   } catch (e) {
     console.log(e);
+    return {success: false};
   }
 };
 
-//http://www.omdbapi.com/?s=star wars&apikey=411ddaa2
-import React, { useState, useEffect } from 'react';
 const [movies, setMovies] = useState([]);
 
 export const getMovieRequest = async (searchValue: any) => {
@@ -96,7 +106,7 @@ export const getMovieRequest = async (searchValue: any) => {
   if (responseJson.Search) {
     setMovies(responseJson.Search);
   }
-}
+};
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {
 //   try {
@@ -143,6 +153,3 @@ export const getMovieRequest = async (searchValue: any) => {
 //     throw new Error("Failed to add review to movie");
 //   }
 // };
-
-
-
