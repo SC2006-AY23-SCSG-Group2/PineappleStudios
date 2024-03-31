@@ -29,9 +29,6 @@ const LeftCard: React.FC<LeftCardProps> = ({
       </div>
       <div className="card-body">
         {children}
-        <div className="card-actions justify-end">
-          <button className="btn btn-secondary my-2">Edit Profile</button>
-        </div>
       </div>
     </div>
   );

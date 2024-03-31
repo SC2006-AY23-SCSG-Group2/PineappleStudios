@@ -41,6 +41,9 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
             <div className="stat-value">{user.numOfRatings}</div>
           </div>
         </div>
+        <div className="card-actions justify-end">
+          <button className="btn btn-secondary my-2">Edit Profile</button>
+        </div>
       </LeftCard>
     </>
   );
