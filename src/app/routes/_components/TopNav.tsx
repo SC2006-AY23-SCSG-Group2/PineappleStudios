@@ -1,10 +1,34 @@
-import {Link, NavLink} from "@remix-run/react";
+import {Form, Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
-import { redirect } from "@remix-run/react";
+import { getSession, destroySession } from "src/app/session";
+import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import Logout from "./Logout";
 
+// function Logout(): React.JSX.Element {
+//   return (
+//     <>
+//       <p>Are you sure you want to log out?</p>
+//       <Form method="post">
+//         <button type = "submit">Logout</button>
+//       </Form>
+//         <button><Link to="/tab/1">Never mind</Link></button>
+//     </>
+//   );
+// }
 
 export default function TopNav(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+
+  // const action = async ({request}: ActionFunctionArgs) => {
+  //   const session = await getSession(
+  //     request.headers.get("Cookie")
+  //   );
+  //   return redirect("/login", {
+  //     headers: {
+  //       "Set-Cookie": await destroySession(session),
+  //     },
+  //   });
+  // };
   
   return (
     <>
@@ -55,7 +79,7 @@ export default function TopNav(): React.JSX.Element {
                   <a href="/settings/general">Settings</a>
                 </li>
                 <li>
-                  <a href="/logout">Logout</a>
+                  <Logout/>
                 </li>
               </ul>
             )}

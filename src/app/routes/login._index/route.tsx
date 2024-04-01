@@ -152,7 +152,7 @@ export default function Login(): React.JSX.Element {
                 {navigation.state === "submitting" ? "Login..." : "Login"}
               </button>
             </p>
-            <p className="form-control text-center">
+            <p className="text-center">
               {"Don't have an account? "}
               <Link className="underline" to="/login/signup">
                 Register
@@ -168,11 +168,6 @@ export default function Login(): React.JSX.Element {
               <NavLink className="btn btn-neutral" to="/login/gmail">
                 Login with Gmail
               </NavLink>
-            </div>
-            <div className="form-control mt-6">
-              <button className="btn btn-disabled btn-primary">
-                Login with Microsoft
-              </button>
             </div>
           </Form>
         </div>

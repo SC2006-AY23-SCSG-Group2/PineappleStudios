@@ -67,6 +67,7 @@ export const loader = async ({request} : LoaderFunctionArgs) => {
         {
           imageSrc: "https://picsum.photos/200.webp",
           placeholder: "Item",
+          showHeart: true
         },
         {
           imageSrc: "https://picsum.photos/200.webp",
@@ -110,7 +111,7 @@ export default function tab_index(): React.JSX.Element {
                 </div>
               </div>
             </div>
-            <ViewItems title="View History" items={user.HistoryItems} />
+            <ViewItems title="View History" items={user.HistoryItems}/>
           </div>
         </div>
         )}
