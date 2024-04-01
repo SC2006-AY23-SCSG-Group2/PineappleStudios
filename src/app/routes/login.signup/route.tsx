@@ -105,7 +105,7 @@ export default function tab_index(): React.JSX.Element {
             </p>
             <p className="text-center">
               Already have an account?{" "}
-              <Link className="text-blue-700 underline" to="/login">
+              <Link className="underline" to="/login">
                 Login
               </Link>
             </p>
