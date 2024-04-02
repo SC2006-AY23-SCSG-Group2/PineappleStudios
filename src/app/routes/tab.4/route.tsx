@@ -93,7 +93,7 @@ export default function tab_index(): React.JSX.Element {
   return (
     <>
       <div className="hero min-h-screen bg-base-200 ">
-        {session.isUser && (
+        {session.userId !== undefined && session.userId !== null && (
           <div className="hero-content max-lg:m-12 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end">
             <UserProfileCard user={user} />
             <div className="flex min-w-0 flex-col shadow-xl max-lg:w-full lg:w-7/12">
