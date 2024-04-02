@@ -3,8 +3,8 @@ import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
 
+import ItemList from "../_components/ItemList";
 import {TagList} from "../_components/TagList";
-import {ViewItems} from "../_components/ViewItems";
 import UserProfileCard from "./components/UserProfileCard";
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
@@ -86,7 +86,6 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 };
 
 export default function tab_index(): React.JSX.Element {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {session, user} = useLoaderData<typeof loader>();
 
   const colors = ["neutral", "primary", "secondary"];
@@ -109,7 +108,7 @@ export default function tab_index(): React.JSX.Element {
                   </div>
                 </div>
               </div>
-              <ViewItems title="View History" items={user.HistoryItems} />
+              <ItemList title="View History" items={user.HistoryItems} />
             </div>
           </div>
         )}

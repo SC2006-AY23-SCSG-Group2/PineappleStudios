@@ -1,5 +1,3 @@
-import {url} from "inspector";
-
 import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 

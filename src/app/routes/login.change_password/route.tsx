@@ -1,14 +1,13 @@
 import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
+import {Form, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 
-import {
-  createUser,
-  getUserByEmail,
-  updatePassword,
-  updateUser,
-} from "../../../lib/database/user";
+import {getUserByEmail, updatePassword} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
+
+
+//import {email} from "../login.otp"
+
 
 //import {email} from "../login.otp"
 

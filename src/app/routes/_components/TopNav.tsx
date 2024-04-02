@@ -3,6 +3,10 @@ import React, {useState} from "react";
 
 import Logout from "./Logout";
 
+
+// function Logout(): React.JSX.Element {
+
+
 // function Logout(): React.JSX.Element {
 //   return (
 //     <>
@@ -43,10 +47,10 @@ export default function TopNav(): React.JSX.Element {
               <NavLink to={"/tab/1"}>Home</NavLink>
             </li>
             <li className="menu-item px-4">
-              <NavLink to={"/tab/2"}>Library</NavLink>
+              <NavLink to={"/tab/2"}>Browser</NavLink>
             </li>
             <li className="menu-item px-4">
-              <NavLink to={"/tab/3"}>Item 3</NavLink>
+              <NavLink to={"/tab/3"}>Library</NavLink>
             </li>
           </ul>
         </div>
