@@ -1,9 +1,7 @@
 import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
-
 // getAllSongs
-
 
 // getAllSongs
 export const getAllSongs = async () => {
