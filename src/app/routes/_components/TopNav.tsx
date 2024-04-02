@@ -1,7 +1,6 @@
-import {Form, Link, NavLink} from "@remix-run/react";
+import {Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
-import { getSession, destroySession } from "src/app/session";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+
 import Logout from "./Logout";
 
 // function Logout(): React.JSX.Element {
@@ -29,7 +28,7 @@ export default function TopNav(): React.JSX.Element {
   //     },
   //   });
   // };
-  
+
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -79,7 +78,7 @@ export default function TopNav(): React.JSX.Element {
                   <a href="/settings/general">Settings</a>
                 </li>
                 <li>
-                  <Logout/>
+                  <Logout />
                 </li>
               </ul>
             )}

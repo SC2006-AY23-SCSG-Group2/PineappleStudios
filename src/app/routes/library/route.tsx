@@ -1,10 +1,22 @@
-import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
+import {commitSession, getSession} from "../../session";
 import LibraryTopNav from "./components/LibraryTopNav";
 
-export function loader({params, request}: LoaderFunctionArgs) {
+export async function loader({params, request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
+
+  if (!session.has("userId")) {
+    session.flash("error", "User not login");
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
   const id = params.id;
 
   const regex = new RegExp(
@@ -17,7 +29,7 @@ export function loader({params, request}: LoaderFunctionArgs) {
 
   const isEditing: boolean = m ? m.at(2) === "editing" : false;
 
-  console.log(`Found match, group ${type}`);
+  // console.log(`Found match, group ${type}`);
 
   if (!type) {
     return json({
@@ -57,6 +69,7 @@ export default function tab(): React.JSX.Element {
         leftSection={[
           <>
             <button
+              key={"btn-sm"}
               className="btn btn-circle lg:hidden"
               onClick={() => {
                 navigate(-1);
@@ -77,6 +90,7 @@ export default function tab(): React.JSX.Element {
             </button>
 
             <button
+              key={"btn-lg"}
               className="btn max-lg:hidden lg:visible"
               onClick={() => {
                 navigate(-1);
