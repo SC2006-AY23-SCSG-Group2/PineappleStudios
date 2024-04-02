@@ -16,6 +16,6 @@ dev.db
 !/prisma/schema.prisma
 
 package-lock.json
-
+bun.lockb
 *.log
 

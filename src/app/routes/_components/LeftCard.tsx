@@ -27,9 +27,7 @@ const LeftCard: React.FC<LeftCardProps> = ({
           <span className="mt-2 block lg:text-xl">{subtitle}</span>
         </h2>
       </div>
-      <div className="card-body">
-        {children}
-      </div>
+      <div className="card-body">{children}</div>
     </div>
   );
 };

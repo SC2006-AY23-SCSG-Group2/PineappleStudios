@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+
 import HeartButton from "./HeartButton";
 
 interface Item {
@@ -12,17 +13,17 @@ interface ViewItemsProps {
   items: Item[];
 }
 
-export const ViewItems: React.FC<ViewItemsProps> = ({ title, items }) => {
+export const ViewItems: React.FC<ViewItemsProps> = ({title, items}) => {
   const [fav, setFav] = useState(false);
 
   return (
     <div className="card bg-gray-200">
       <div className="card-body">
-        <h2 className="card-title mx-2 text-3xl mb-4">{title}</h2>
+        <h2 className="card-title mx-2 mb-4 text-3xl">{title}</h2>
         <div className="flex flex-row flex-wrap overflow-x-auto">
           {items.map((item, index) => (
             <div key={index} className="avatar flex flex-col">
-              <div className="mx-2 h-44 w-44 rounded-3xl lg:h-48 lg:w-48 my-2 relative">
+              <div className="relative mx-2 my-2 h-44 w-44 rounded-3xl lg:h-48 lg:w-48">
                 <img src={item.imageSrc} alt={item.placeholder} />
                 {(item.showHeart || false) && (
                   <HeartButton onClick={() => setFav(!fav)} />

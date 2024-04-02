@@ -1,7 +1,15 @@
 import {createCookieSessionStorage} from "@remix-run/node";
 
+type SessionData = {
+  userId: string;
+};
+
+type SessionFlashData = {
+  error: string;
+};
+
 export const {getSession, commitSession, destroySession} =
-  createCookieSessionStorage({
+  createCookieSessionStorage<SessionData, SessionFlashData>({
     cookie: {
       name: "work-session",
       secrets: ["pineapple-ui-secret"],
