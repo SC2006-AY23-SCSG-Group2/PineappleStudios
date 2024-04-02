@@ -1,6 +1,10 @@
 import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
+
+// getAllSongs
+
+
 // getAllSongs
 export const getAllSongs = async () => {
   try {
@@ -97,7 +101,9 @@ export const deleteSong = async (request: any) => {
 export const searchSongs = async (searchValue: string, accessToken: string) => {
   try {
     const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchValue)}&type=track`,
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+        searchValue,
+      )}&type=track`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

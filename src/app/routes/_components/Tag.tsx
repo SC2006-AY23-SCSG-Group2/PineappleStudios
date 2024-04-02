@@ -38,7 +38,9 @@ const TagEditing: FC<TagProps> = ({children, color, buttonType}) => {
 
   return (
     <div
-      className={`mx-1 my-2 flex items-center justify-center ${isVisible ? "block" : "hidden"}`}>
+      className={`mx-1 my-2 flex items-center justify-center ${
+        isVisible ? "block" : "hidden"
+      }`}>
       <div className="relative">
         <div className="flex min-w-40 items-center justify-center text-xs">
           <button className={btnClass}>{children}</button>
