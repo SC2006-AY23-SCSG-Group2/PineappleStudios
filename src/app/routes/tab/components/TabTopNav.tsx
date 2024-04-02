@@ -4,17 +4,23 @@ interface TopNavProps {
   leftSection?: [React.JSX.Element];
   title?: string;
   rightSection?: [React.JSX.Element];
+  additionalClassName?: string;
 }
 
-export default function LibraryTopNav({
+export default function TabTopNav({
   leftSection,
   title,
   rightSection,
+  additionalClassName,
   ...rest
 }: TopNavProps): React.JSX.Element {
   return (
     <>
-      <nav className="navbar sticky top-0 z-40 bg-base-100" {...rest}>
+      <nav
+        className={
+          "navbar sticky top-0 z-40 bg-base-100 " + additionalClassName
+        }
+        {...rest}>
         <div className="navbar-start">
           {leftSection === undefined
             ? null
