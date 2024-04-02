@@ -4,7 +4,7 @@ const HeartButton: FC<{onClick: () => void}> = ({onClick}) => {
   return (
     <button
       onClick={onClick}
-      className="absolute bottom-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-pink-200">
+      className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-pink-200">
       <svg
         className="fill-current text-pink-500"
         width="30px"

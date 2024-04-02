@@ -1,6 +1,8 @@
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 
+import ItemList from "../_components/ItemList";
+import {TagList} from "../_components/TagList";
 import {ViewItems} from "../_components/ViewItems";
 
 interface LoaderData {
@@ -13,9 +15,9 @@ interface LoaderData {
     numOfRatings: number;
     preferences: Array<{name: string; values: string[]}>;
     items: Array<{
-      imageSrc: string;
-      placeholder: string;
-      showHeart?: boolean; // Make showHeart optional
+      thumbnailUrl?: string;
+      itemTitle?: string;
+      showHeart?: boolean;
     }>;
   };
 }
@@ -46,52 +48,52 @@ export const loader = async (): Promise<LoaderData> => {
       ],
       items: [
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
           showHeart: true,
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
           showHeart: true,
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
           showHeart: true,
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
           showHeart: true,
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
+          thumbnailUrl: "https://picsum.photos/200.webp",
+          itemTitle: "Item",
         },
       ],
     },
@@ -101,14 +103,13 @@ export const loader = async (): Promise<LoaderData> => {
 export default function tab_index(): React.JSX.Element {
   const {user} = useLoaderData<typeof loader>();
 
-  const favoriteItems = user.items.filter((item) => item.showHeart === true);
-
-  const unfavoriteItems = user.items.filter((item) => item.showHeart !== true);
+  const favoriteItems = user.items.filter((item) => item.showHeart);
+  const unfavoriteItems = user.items.filter((item) => !item.showHeart);
 
   return (
     <>
       <div className="bg-gray-200">
-        <ViewItems title="Favorites" items={favoriteItems} />
+        <ItemList title="Favorites" items={favoriteItems} />
         <div className="divider"></div>
         <h1 className="mx-10 mb-4 text-xl font-extrabold text-black text-gray-900 md:text-3xl lg:text-4xl">
           <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -117,9 +118,9 @@ export default function tab_index(): React.JSX.Element {
           based on PineappleAI🍍
         </h1>
         <div className="divider"></div>
-        <ViewItems title="Music" items={user.items} />
-        <ViewItems title="Movies & TV Shows" items={[user.items[3]]} />
-        <ViewItems title="Books" items={unfavoriteItems} />
+        <ItemList title={"Music"} items={user.items} />
+        <ItemList title="Movies & TV Shows" items={user.items} />
+        <ItemList title="Books" items={unfavoriteItems} />
       </div>
     </>
   );

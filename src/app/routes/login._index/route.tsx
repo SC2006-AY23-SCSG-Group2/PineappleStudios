@@ -99,9 +99,8 @@ export async function action({request}: ActionFunctionArgs) {
 
 //loader function may be not neccessary
 export async function loader({request}: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("cookie"));
-  // console.log(session.data);
-  // console.log("printed");
+  let session = await getSession(request.headers.get("cookie"));
+
   return session.data;
 }
 
