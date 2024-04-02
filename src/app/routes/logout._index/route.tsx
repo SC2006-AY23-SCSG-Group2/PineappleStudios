@@ -1,7 +1,7 @@
-import {ActionFunctionArgs, redirect} from "@remix-run/node";
+import {LoaderFunctionArgs, redirect} from "@remix-run/node";
 import {destroySession, getSession} from "src/app/session";
 
-export const action = async ({request}: ActionFunctionArgs) => {
+export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   await destroySession(session);
   return redirect("/login", {
@@ -9,8 +9,4 @@ export const action = async ({request}: ActionFunctionArgs) => {
       "Set-Cookie": await destroySession(session),
     },
   });
-};
-
-export default function LogoutPage() {
-  return redirect("/login");
 }
