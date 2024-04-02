@@ -1,9 +1,11 @@
-import {ActionFunctionArgs, redirect} from "@remix-run/node";
-import {Form, Link, NavLink} from "@remix-run/react";
+import {Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
-import {destroySession, getSession} from "src/app/session";
 
 import Logout from "./Logout";
+
+
+// function Logout(): React.JSX.Element {
+
 
 // function Logout(): React.JSX.Element {
 //   return (
