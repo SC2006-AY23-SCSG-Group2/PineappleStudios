@@ -3,9 +3,7 @@ import React, {useState} from "react";
 
 import Logout from "./Logout";
 
-
 // function Logout(): React.JSX.Element {
-
 
 // function Logout(): React.JSX.Element {
 //   return (

@@ -4,9 +4,7 @@ import {useState} from "react";
 import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
-
 //CRUD
-
 
 //CRUD
 //getAllMovies
