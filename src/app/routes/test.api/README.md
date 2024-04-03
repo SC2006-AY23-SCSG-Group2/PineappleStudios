@@ -46,6 +46,17 @@ only change the `getItemInfo` function and write the function
 under `lib/database`.
 
 you do not need to submit the changes of the `route.test.*`, you may ignore
-them.
+them
 
-I will update the `.gitignore` file, so they will be ignored automatically.
+```shell
+# Ignore checked in file:
+
+git update-index --assume-unchanged file_path
+
+
+# To revert
+git update-index --no-assume-unchanged file_path
+
+# Revert All
+git update-index --really-refresh
+```
