@@ -19,3 +19,6 @@ package-lock.json
 bun.lockb
 *.log
 
+
+/src/app/routes/test.*
+
