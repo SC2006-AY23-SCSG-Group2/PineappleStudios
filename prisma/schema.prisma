@@ -104,17 +104,15 @@ model PeopleInItems {
 model Tag {
   id      Int              @id @default(autoincrement())
   name    String
-  itemId  Int
   Item    TagInItems[]
   Profile TagsInProfiles[]
 }
 
 model People {
-  id     Int             @id @default(autoincrement())
-  name   String
-  role   String
-  itemId Int
-  item   PeopleInItems[]
+  id   Int             @id @default(autoincrement())
+  name String
+  role String
+  item PeopleInItems[]
 }
 
 model Rate {
