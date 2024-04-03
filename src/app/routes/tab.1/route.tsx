@@ -99,6 +99,7 @@ export const loader = async (): Promise<LoaderData> => {
 };
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {user} = useLoaderData<typeof loader>();
 
   const favoriteItems = user.items.filter((item) => item.showHeart);
@@ -109,7 +110,7 @@ export default function tab_index(): React.JSX.Element {
       <div className="bg-gray-200">
         <ItemList title="Favorites" items={favoriteItems} />
         <div className="divider"></div>
-        <h1 className="mx-10 mb-4 text-xl font-extrabold text-black text-gray-900 md:text-3xl lg:text-4xl">
+        <h1 className="mx-10 mb-4 text-xl font-extrabold text-black md:text-3xl lg:text-4xl">
           <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
             Top Recommendations
           </span>{" "}
