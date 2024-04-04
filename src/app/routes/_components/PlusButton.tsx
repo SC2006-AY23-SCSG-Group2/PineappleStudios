@@ -2,9 +2,7 @@ import React, {FC} from "react";
 
 const PlusButton: FC<{onClick: () => void}> = ({onClick}) => {
   return (
-    <button
-      onClick={onClick}
-      className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-gray-200">
+    <button onClick={onClick} className="badge indicator-item badge-success">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-3 w-3"
