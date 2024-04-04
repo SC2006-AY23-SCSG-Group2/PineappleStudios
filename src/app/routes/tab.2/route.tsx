@@ -162,64 +162,60 @@ export default function tab_index(): React.JSX.Element {
   const {user} = useLoaderData<typeof loader>();
 
   return (
-    <div className="bg-gray-100">
-      <div className="flex bg-gray-100 p-2">
-        <div className="flex transform items-center space-x-6 rounded-xl bg-white p-3 shadow-lg transition duration-200 hover:scale-95 hover:shadow-xl">
-          <div className="flex w-72 space-x-4 rounded-lg bg-gray-100 p-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 opacity-30"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              className="bg-gray-100 outline-none"
-              type="text"
-              placeholder="Item name or keyword..."
-            />
-          </div>
-          <div className="flex cursor-pointer rounded-lg px-4 py-2 font-semibold text-gray-500">
-            <span>All categories</span>
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="duration-3000 cursor-pointer rounded-lg bg-gray-800 px-5 py-2 font-semibold text-white transition hover:shadow-lg">
-            <span>Search</span>
-          </div>
-        </div>
-      </div>
+    <>
+      {/*<div className="flex bg-gray-100 p-2">*/}
+      {/*  <div className="flex transform items-center space-x-6 rounded-xl bg-white p-3 shadow-lg transition duration-200 hover:scale-95 hover:shadow-xl">*/}
+      {/*    <div className="flex w-72 space-x-4 rounded-lg bg-gray-100 p-2">*/}
+      {/*      <svg*/}
+      {/*        xmlns="http://www.w3.org/2000/svg"*/}
+      {/*        className="h-6 w-6 opacity-30"*/}
+      {/*        fill="none"*/}
+      {/*        viewBox="0 0 24 24"*/}
+      {/*        stroke="currentColor">*/}
+      {/*        <path*/}
+      {/*          stroke-linecap="round"*/}
+      {/*          stroke-linejoin="round"*/}
+      {/*          stroke-width="2"*/}
+      {/*          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"*/}
+      {/*        />*/}
+      {/*      </svg>*/}
+      {/*      <input*/}
+      {/*        className="bg-gray-100 outline-none"*/}
+      {/*        type="text"*/}
+      {/*        placeholder="Item name or keyword..."*/}
+      {/*      />*/}
+      {/*    </div>*/}
+      {/*    <div className="flex cursor-pointer rounded-lg px-4 py-2 font-semibold text-gray-500">*/}
+      {/*      <span>All categories</span>*/}
+      {/*      <button>*/}
+      {/*        <svg*/}
+      {/*          xmlns="http://www.w3.org/2000/svg"*/}
+      {/*          className="h-6 w-6"*/}
+      {/*          fill="none"*/}
+      {/*          viewBox="0 0 24 24"*/}
+      {/*          stroke="currentColor">*/}
+      {/*          <path*/}
+      {/*            stroke-linecap="round"*/}
+      {/*            stroke-linejoin="round"*/}
+      {/*            stroke-width="2"*/}
+      {/*            d="M19 9l-7 7-7-7"*/}
+      {/*          />*/}
+      {/*        </svg>*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*    <div className="duration-3000 cursor-pointer rounded-lg bg-gray-800 px-5 py-2 font-semibold text-white transition hover:shadow-lg">*/}
+      {/*      <span>Search</span>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
-      <div className="my-6 flex flex-wrap justify-start gap-4 px-4">
-        <h1 className="mx-6 mb-4 text-xl font-extrabold text-black text-gray-900 md:text-3xl lg:text-4xl">
-          <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Today's Hits
-          </span>{" "}
-        </h1>
-        <ItemList items={sampleData} title={"Top Music"} />
-        <ItemList items={sampleData} title={"Top Movies"} />
-        <ItemList items={sampleData} title={"Top TV Shows"} />
-        <ItemList items={sampleData} title={"Top Books"} />
-      </div>
-    </div>
+      <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent">
+        Today's Hits
+      </h1>
+      <ItemList items={sampleData} title={"Top Music"} />
+      <ItemList items={sampleData} title={"Top Movies"} />
+      <ItemList items={sampleData} title={"Top TV Shows"} />
+      <ItemList items={sampleData} title={"Top Books"} />
+    </>
   );
 }

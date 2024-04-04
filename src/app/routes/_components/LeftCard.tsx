@@ -15,7 +15,7 @@ const LeftCard: React.FC<LeftCardProps> = ({
   children,
 }) => {
   return (
-    <div className="lg:m-sm card w-full min-w-0 bg-base-100 shadow-xl lg:sticky lg:bottom-[16px] lg:max-w-md">
+    <div className="lg:m-sm card w-full min-w-0 bg-base-200 shadow-xl lg:sticky lg:bottom-[16px] lg:max-w-md">
       <div className="card-title">
         <div className="avatar m-6">
           <div className="h-24 w-24 rounded-full">

@@ -144,59 +144,55 @@ export default function tab_index(): React.JSX.Element {
 
   return (
     <>
-      <div className="mx-6 lg:mx-12">
-        <ItemList title="Favorites" items={favoriteItems} />
+      <ItemList title="Favorites" items={favoriteItems} />
 
-        {notFavoriteItems.filter((x) => x.type === "music").length !== 0 && (
-          <>
-            <div className="divider"></div>
-            <ItemList
-              title="Music"
-              items={notFavoriteItems.filter((x) => x.type === "music")}
-            />
-          </>
-        )}
+      {notFavoriteItems.filter((x) => x.type === "music").length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList
+            title="Music"
+            items={notFavoriteItems.filter((x) => x.type === "music")}
+          />
+        </>
+      )}
 
-        {notFavoriteItems.filter((x) => x.type === "movie").length !== 0 && (
-          <>
-            <div className="divider"></div>
-            <ItemList
-              title="Movies & TV Shows"
-              items={notFavoriteItems.filter((x) => x.type === "movie")}
-            />
-          </>
-        )}
+      {notFavoriteItems.filter((x) => x.type === "movie").length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList
+            title="Movies & TV Shows"
+            items={notFavoriteItems.filter((x) => x.type === "movie")}
+          />
+        </>
+      )}
 
-        {notFavoriteItems.filter((x) => x.type === "book").length !== 0 && (
-          <>
-            <div className="divider"></div>
-            <ItemList
-              title="Books"
-              items={notFavoriteItems.filter((x) => x.type === "book")}
-            />
-          </>
-        )}
+      {notFavoriteItems.filter((x) => x.type === "book").length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList
+            title="Books"
+            items={notFavoriteItems.filter((x) => x.type === "book")}
+          />
+        </>
+      )}
 
-        {notFavoriteItems.filter(
-          (x) =>
-            x.type === undefined ||
-            (x.type !== "movie" && x.type !== "book" && x.type !== "music"),
-        ).length !== 0 && (
-          <>
-            <div className="divider"></div>
-            <ItemList
-              title="Others"
-              items={notFavoriteItems.filter(
-                (x) =>
-                  x.type === undefined ||
-                  (x.type !== "movie" &&
-                    x.type !== "book" &&
-                    x.type !== "music"),
-              )}
-            />
-          </>
-        )}
-      </div>
+      {notFavoriteItems.filter(
+        (x) =>
+          x.type === undefined ||
+          (x.type !== "movie" && x.type !== "book" && x.type !== "music"),
+      ).length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList
+            title="Others"
+            items={notFavoriteItems.filter(
+              (x) =>
+                x.type === undefined ||
+                (x.type !== "movie" && x.type !== "book" && x.type !== "music"),
+            )}
+          />
+        </>
+      )}
     </>
   );
 }

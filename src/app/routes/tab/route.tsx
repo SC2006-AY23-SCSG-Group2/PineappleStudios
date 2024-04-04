@@ -26,7 +26,7 @@ export async function loader({request}: LoaderFunctionArgs) {
   const m = regex.exec(request.url);
   const type = m ? m.at(1) ?? "" : "";
 
-  var title = "Pineapple Studio";
+  let title = "Pineapple Studio";
 
   switch (type) {
     case "1":
@@ -71,7 +71,9 @@ export default function tab(): React.JSX.Element {
         additionalClassName={"lg:hidden"}
       />
       <TopNav />
-      <Outlet />
+      <div className="mx-6 lg:mx-12">
+        <Outlet />
+      </div>
       <BtmNav />
     </>
   );
