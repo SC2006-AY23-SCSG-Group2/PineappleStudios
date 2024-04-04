@@ -27,6 +27,16 @@ model User {
 
   rate    Rate[]
   reviews Review[]
+
+  userClickedData UserClickedData[]
+}
+
+model UserClickedData {
+  userId          Int      @unique
+  user            User     @relation(fields: [userId], references: [id])
+  itemId          Int      @unique
+  numberOfClicked Int      @default(0)
+  timestamp       DateTime @default(now())
 }
 
 model Profile {
