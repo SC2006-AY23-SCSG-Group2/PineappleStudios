@@ -1,6 +1,6 @@
 import React from "react";
 
-import ItemCard from "./ItemCard";
+import {ItemCard} from "./ItemCard";
 
 interface Item {
   thumbnailUrl?: string;
@@ -16,13 +16,13 @@ interface ItemsListProps {
   items: Item[];
 }
 
-const ItemList: React.FC<ItemsListProps> = ({title = "", items}) => {
+export const ItemList: React.FC<ItemsListProps> = ({title = "", items}) => {
   return (
-    <div className="w-full bg-gray-200">
-      <h2 className="card-title mx-6 my-4 text-3xl">{title}</h2>
-      <div className="mx-6 flex flex-wrap justify-start gap-4">
+    <div className="card w-full">
+      <h2 className="card-title mx-6 my-4 text-2xl lg:text-3xl">{title}</h2>
+      <div className="m-6 grid grid-cols-4 gap-4 lg:grid-cols-6">
         {items.map((item, index) => (
-          <div key={index} className="m-1 w-64">
+          <div key={index} className="">
             <ItemCard data={item} />
           </div>
         ))}
@@ -30,5 +30,3 @@ const ItemList: React.FC<ItemsListProps> = ({title = "", items}) => {
     </div>
   );
 };
-
-export default ItemList;
