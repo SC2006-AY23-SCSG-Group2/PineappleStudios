@@ -22,9 +22,11 @@ const LeftCard: React.FC<LeftCardProps> = ({
             <img src={imageUrl} alt="Profile" />
           </div>
         </div>
-        <h2 className="block pt-7 lg:text-2xl">
+        <h2 className="block pt-7 max-lg:text-xl lg:text-2xl">
           {title}
-          <span className="mt-2 block lg:text-xl">{subtitle}</span>
+          <span className="mt-2 block max-lg:text-sm lg:text-xl">
+            {subtitle}
+          </span>
         </h2>
       </div>
       <div className="card-body">{children}</div>

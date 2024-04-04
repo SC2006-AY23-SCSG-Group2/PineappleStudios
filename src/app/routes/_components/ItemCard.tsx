@@ -11,12 +11,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
   const [fav, setFav] = useState(false);
 
   return (
-    <div className="col-span  group mask mask-square relative h-32 w-32 lg:h-36 lg:w-36 xl:h-40 xl:w-40">
+    <div className="col-span  group mask mask-square relative h-32 w-32 max-md:h-16 max-md:w-16 lg:h-36 lg:w-36 xl:h-40 xl:w-40">
       <img
         src={data.img}
         alt={data.name ?? "Item"}
         draggable={false}
-        className="mask mask-square h-32 w-32 cursor-pointer rounded-3xl object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0 lg:h-36 lg:w-36 xl:h-40 xl:w-40"
+        className="mask mask-square h-32 w-32 cursor-pointer rounded-3xl object-cover shadow-xl transition group-hover:opacity-90 max-md:h-16 max-md:w-16 sm:group-hover:opacity-0 lg:h-36 lg:w-36 xl:h-40 xl:w-40"
       />
       {(data.tag.includes("favorite") || data.tag.includes("favourite")) && (
         <div className="absolute right-2 top-2">
