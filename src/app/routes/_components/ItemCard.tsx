@@ -1,37 +1,24 @@
 import React, {useState} from "react";
 
-import HeartButton from "./HeartButton";
+import {SimpleItem} from "../../../lib/interfaces";
+import {HeartButton} from "./HeartButton";
 
 interface ItemCardProps {
-  data: {
-    thumbnailUrl?: string;
-    duration?: string;
-    genre?: string;
-    itemTitle?: string;
-    showHeart?: boolean;
-  };
+  data: SimpleItem;
 }
 
-export const ItemCard: React.FC<ItemCardProps> = ({
-  data: {
-    thumbnailUrl,
-    duration = "",
-    genre = "",
-    itemTitle = "",
-    showHeart = false,
-  },
-}) => {
+export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
   const [fav, setFav] = useState(false);
 
   return (
     <div className="col-span  group mask mask-square relative h-32 w-32 lg:h-36 lg:w-36 xl:h-40 xl:w-40">
       <img
-        src={thumbnailUrl}
-        alt={itemTitle || "Item"}
+        src={data.img}
+        alt={data.name ?? "Item"}
         draggable={false}
         className="mask mask-square h-32 w-32 cursor-pointer rounded-3xl object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0 lg:h-36 lg:w-36 xl:h-40 xl:w-40"
       />
-      {showHeart && (
+      {(data.tag.includes("favorite") || data.tag.includes("favourite")) && (
         <div className="absolute right-2 top-2">
           <HeartButton onClick={() => setFav(!fav)} />
         </div>

@@ -28,9 +28,7 @@ and <https://remix.run/docs/en/main/utils/cookies>
 > function
 
 ```ts
-getUserInfo(number
-id
-)
+function getUserInfo(id: number) {}
 ```
 
 > return `User`
@@ -40,12 +38,12 @@ type User = {
   id: number;
   email: string;
   name: string;
-  history: Item[];
+  history: SimpleItem[];
   countItemsInLibrary: number;
   preference: string[];
 };
 
-type Item = {
+type SimpleItem = {
   id: number;
   name: number;
   img: string; // string of the url
@@ -64,10 +62,7 @@ type Item = {
 > function:
 
 ```ts
-getItemInfo(number
-id, number
-userId
-)
+function getItemInfo(id: number, userId: number) {}
 ```
 
 > return: `Item`
@@ -78,9 +73,10 @@ type Item = {
   title: string;
   isInLibrary: boolean;
   img: string; // string of the url
-  genre: string;
-  country: string?;
-  publicationDate: string?;
+  genre: string[];
+  tag: string[];
+  country?: string;
+  publicationDate?: string;
   type: string; // movie song or book
   otherContent: MovieContent | SongContent | BookContent;
   people: People[];
@@ -92,17 +88,17 @@ type People = {
 };
 
 type MovieContent = {
-  duration: number?;
-  country: string?;
+  duration?: number;
+  country?: string;
 };
 
 type SongContent = {
-  duration: number?;
-  album: string?；
+  duration?: number;
+  album?: string;
 };
 
 type BookContent = {
-  pageCount: number?;
+  pageCount?: number;
 };
 ```
 
@@ -111,10 +107,7 @@ type BookContent = {
 > function:
 
 ```ts
-getFolderInfo(number
-id, number
-userId
-)
+function getFolderInfo(id: number, userId: number) {}
 ```
 
 > return: `Folder`
@@ -125,10 +118,10 @@ type Folder = {
   name: string;
   isSeries: boolean;
   img: string; // string of the url, maybe a default value, may be upload by user, may be the img of the first item in the folder
-  items: Item[];
+  items: SimpleItem[];
 };
 
-type Item = {
+type SimpleItem = {
   id: number;
   name: number;
   img: string; // string of the url
@@ -141,9 +134,7 @@ type Item = {
 > function:
 
 ```ts
-getLibraryInfo(number
-userId
-)
+function getLibraryInfo(userId: number) {}
 ```
 
 > return: `Library`
@@ -152,12 +143,12 @@ userId
 type Library = {
   id: number;
   userId: number;
-  items: Item[];
+  items: SimpleItem[];
   folders: Folder[];
   series: Folder[];
 };
 
-type Item = {
+type SimpleItem = {
   id: number;
   name: number;
   img: string; // string of the url
@@ -177,19 +168,19 @@ type Folder = {
 > function:
 
 ```ts
-getBrowserContent();
+function getBrowserContent() {}
 ```
 
 > return: `OnlineContent`
 
 ```ts
 type OnlineContent = {
-  movies: Item[]?;
-  songs: Item[]?;
-  books: Item[]?;
+  movies?: SimpleItem[];
+  songs?: SimpleItem[];
+  books?: SimpleItem[];
 };
 
-type Item = {
+type SimpleItem = {
   id: number;
   name: number;
   img: string; // string of the url
@@ -213,21 +204,13 @@ user_profile
 > function:
 
 ```ts
-getSearch(searchKey
-:
-string, type
-:
-Type
-)
-;
+function getSearch(searchKey: string, type: ItemType) {}
 
-enum Type
-
-= {
+enum ItemType {
   Book,
   Song,
   Movie,
-  All
+  All,
 }
 ```
 
@@ -235,12 +218,12 @@ enum Type
 
 ```ts
 type OnlineContent = {
-  movies: Item[]?;
-  songs: Item[]?;
-  books: Item[]?;
+  movies?: SimpleItem[];
+  songs?: SimpleItem[];
+  books?: SimpleItem[];
 };
 
-type Item = {
+type SimpleItem = {
   id: number;
   name: number;
   img: string; // string of the url

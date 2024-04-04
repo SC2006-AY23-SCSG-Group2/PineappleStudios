@@ -1,19 +1,20 @@
 import React from "react";
 
+import {SimpleItem} from "../../../lib/interfaces";
 import {ItemCard} from "./ItemCard";
 
-interface Item {
-  thumbnailUrl?: string;
-  duration?: string;
-  genre?: string;
-  itemTitle?: string;
-  placeholder?: string;
-  showHeart?: boolean;
-}
+// interface Item {
+//   thumbnailUrl?: string;
+//   duration?: string;
+//   genre?: string;
+//   itemTitle?: string;
+//   placeholder?: string;
+//   showHeart?: boolean;
+// }
 
 interface ItemsListProps {
   title?: string;
-  items: Item[];
+  items: SimpleItem[];
 }
 
 export const ItemList: React.FC<ItemsListProps> = ({title = "", items}) => {
