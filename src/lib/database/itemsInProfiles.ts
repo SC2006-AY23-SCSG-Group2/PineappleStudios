@@ -10,7 +10,10 @@ export const createAssignments = async (request: any) => {
     });
     return assignment;
   } catch (error) {
-    console.error("Error occurred while creating assignment for item in profiles:", error);
+    console.error(
+      "Error occurred while creating assignment for item in profiles:",
+      error,
+    );
   }
 };
 

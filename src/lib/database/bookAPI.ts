@@ -56,7 +56,8 @@ export const createBookItem = async (singleBookData: any) => {
 
   //check if there are any people (authors) found or created
   if (peopleArray.length != 0) {
-    //only create People & item assignment when there are any people (authors) found or created
+    //only create People & item assignment when there are any people (authors)
+    // found or created
     for (const person of peopleArray) {
       const assignmentData = {
         body: {
@@ -83,5 +84,8 @@ export const createBookItem = async (singleBookData: any) => {
   };
 
   const book = await createBook(bookData);
-  return {item, book};
+  return {
+    item,
+    book,
+  };
 };

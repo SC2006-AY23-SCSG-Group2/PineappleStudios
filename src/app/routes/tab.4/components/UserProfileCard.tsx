@@ -16,7 +16,7 @@ interface UserProfileCardProps {
   user: userData;
 }
 
-const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
+export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
   return (
     <>
       <LeftCard
@@ -26,19 +26,19 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
         <div>
           <div className="stat">
             <div className="stat-title">Date Joined</div>
-            <div className="stat-value">{user.date}</div>
+            <div className="stat-value max-lg:text-xl">{user.date}</div>
           </div>
           <div className="stat">
             <div className="stat-title">Time Used</div>
-            <div className="stat-value">{user.time} hours</div>
+            <div className="stat-value max-lg:text-xl">{user.time} hours</div>
           </div>
           <div className="stat">
             <div className="stat-title">Liked items</div>
-            <div className="stat-value">{user.numOfLikes}</div>
+            <div className="stat-value max-lg:text-xl">{user.numOfLikes}</div>
           </div>
           <div className="stat">
             <div className="stat-title">Ratings Given</div>
-            <div className="stat-value">{user.numOfRatings}</div>
+            <div className="stat-value max-lg:text-xl">{user.numOfRatings}</div>
           </div>
         </div>
         <div className="card-actions justify-end">
@@ -48,5 +48,3 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
     </>
   );
 };
-
-export default UserProfileCard;

@@ -3,12 +3,34 @@ import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
 
-import ItemList from "../_components/ItemList";
+import {SimpleItem} from "../../../lib/interfaces";
 import {TagList} from "../_components/TagList";
-import UserProfileCard from "./components/UserProfileCard";
+import {HistoryItemList} from "./components/HistoryItemList";
+import {UserProfileCard} from "./components/UserProfileCard";
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
-  let session = await getSession(request.headers.get("cookie"));
+export async function loader({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
+
+  function randomInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function makeItems(): SimpleItem[] {
+    const returnList: SimpleItem[] = [];
+    for (let i = 0; i < 20; i++) {
+      const id = randomInteger(0, 1084);
+      const newItem: SimpleItem = {
+        id: id,
+        name: "Item",
+        img: `https://picsum.photos/id/${id}/200.webp`,
+        tag: randomInteger(0, 1084) % 2 == 0 ? ["favorite"] : [],
+        type: randomInteger(0, 1084) % 3,
+      };
+      returnList.push(newItem);
+    }
+
+    return returnList;
+  }
 
   return {
     session: session.data,
@@ -20,96 +42,50 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       numOfLikes: 107,
       numOfRatings: 26,
       preferences: [
-        {
-          name: "Music",
-          values: [
-            "Pop",
-            "Jazz",
-            "Classical",
-            "Indie",
-            "Movie-related",
-            "Indian Classical",
-          ],
-        },
-        {name: "Books", values: ["Dystopian", "Non-fiction"]},
-        {name: "Movies", values: ["Thriller", "Horror"]},
+        "Pop",
+        "Jazz",
+        "Classical",
+        "Indie",
+        "Movie-related",
+        "Indian Classical",
+        "Dystopian",
+        "Non-fiction",
+        "Thriller",
+        "Horror",
       ],
-      HistoryItems: [
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-          showHeart: true,
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-        {
-          imageSrc: "https://picsum.photos/200.webp",
-          placeholder: "Item",
-        },
-      ],
+      HistoryItems: makeItems(),
     },
   };
-};
+}
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {session, user} = useLoaderData<typeof loader>();
 
-  const colors = ["neutral", "primary", "secondary"];
+  const colors = ["accent", "primary", "secondary"];
   return (
     <>
-      <div className="hero min-h-screen bg-base-200 ">
+      <div className="hero min-h-screen">
         {session.userId !== undefined && session.userId !== null && (
-          <div className="hero-content max-lg:m-12 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end">
+          <div className="hero-content max-lg:m-0 max-lg:flex-col max-md:w-96 lg:m-0 lg:flex-row lg:items-end lg:justify-end">
             <UserProfileCard user={user} />
-            <div className="flex min-w-0 flex-col shadow-xl max-lg:w-full lg:w-7/12">
-              <div className="card mb-4 bg-gray-200">
-                <div className="card-body">
-                  <h2 className="card-title mx-2 text-3xl">Preferences</h2>
-                  <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
-                    <TagList
-                      tag={user.preferences}
-                      colors={colors}
-                      buttonType="none"
-                    />
-                  </div>
-                </div>
+
+            <div className="card bg-base-200 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+                  Preferences
+                </h2>
+
+                <TagList
+                  tag={user.preferences}
+                  colors={colors}
+                  buttonType="none"
+                />
               </div>
-              <ItemList title="View History" items={user.HistoryItems} />
+
+              <HistoryItemList title="View History" items={user.HistoryItems} />
             </div>
+            {/*</div>*/}
           </div>
         )}
       </div>

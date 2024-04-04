@@ -3,9 +3,7 @@ import React, {FC} from "react";
 
 const CloseButton: FC<{onClick: () => void}> = ({onClick}) => {
   return (
-    <button
-      onClick={onClick}
-      className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-gray-200">
+    <button onClick={onClick} className="badge indicator-item badge-error">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-2 w-2"

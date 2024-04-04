@@ -34,15 +34,15 @@ const TagEditing: FC<TagProps> = ({children, color, buttonType}) => {
     }
   };
 
-  const btnClass = `btn btn-${color} no-animation w-full text-lg`;
+  const btnClass = `btn btn-${color} no-animation w-full text-sm lg:text-lg`;
 
   return (
     <div
       className={`mx-1 my-2 flex items-center justify-center ${
         isVisible ? "block" : "hidden"
       }`}>
-      <div className="relative">
-        <div className="flex min-w-40 items-center justify-center text-xs">
+      <div className="indicator">
+        <div className="flex min-w-32 items-center justify-center text-xs">
           <button className={btnClass}>{children}</button>
         </div>
         {renderButton()}
