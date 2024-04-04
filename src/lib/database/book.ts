@@ -1,4 +1,3 @@
-import {createItem, deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
 // getAllBooks
@@ -16,12 +15,11 @@ export const getAllBooks = async () => {
 };
 
 // getBookById
-export const getBookById = async (request: any) => {
+export const getBookByScrId = async (sourceId: any) => {
   try {
-    const bookId = request.params.itemId;
     const book = await prismaClient.book.findUnique({
       where: {
-        itemId: bookId,
+        srcId: sourceId,
       },
       include: {
         item: true,
@@ -34,19 +32,16 @@ export const getBookById = async (request: any) => {
 };
 
 // createBook
-export const createBook = async (reqBook: any, reqItem: any) => {
+export const createBook = async (reqBook: any) => {
   try {
     const bookData = reqBook.body;
-    const itemData = reqItem.body;
     const book = await prismaClient.book.create({
       data: bookData,
     });
-
-    // Create the associated item
-    const item = await createItem(itemData);
-    return {book, item};
+    return book; // Return item and book
   } catch (e) {
     console.error("Error occurred while creating book:", e);
+    return null;
   }
 };
 
@@ -76,17 +71,12 @@ export const updateBook = async (request: any) => {
 export const deleteBook = async (request: any) => {
   try {
     const bookId = request.params.itemId;
-    let result = await deleteItem(bookId); // Await the deleteItem function directly
-    if (result) {
-      await prismaClient.book.delete({
-        where: {
-          itemId: bookId,
-        },
-      });
-      return {success: true};
-    } else {
-      return {success: false, error: "Unable to delete item"};
-    }
+    await prismaClient.book.delete({
+      where: {
+        itemId: bookId,
+      },
+    });
+    return {success: true};
   } catch (e) {
     console.log(e);
     return {success: false};
@@ -110,10 +100,11 @@ export const getBookRequest = async (searchValue: string) => {
       return [];
     }
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error("Error fetching books:", error);
     return [];
   }
 };
+
 export const getBookDetailsRequest = async (searchValue: string) => {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(searchValue)}`;
   try {
@@ -123,15 +114,21 @@ export const getBookDetailsRequest = async (searchValue: string) => {
     if (responseData.items) {
       // Extract book information from response data
       const booksData: any[] = responseData.items.map((item: any) => ({
+        srcId: item.id,
+        pages: item.volumeInfo.pageCount,
         itemTitle: item.volumeInfo.title,
-        thumbnailUrl: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : 'N/A', // Extract thumbnail URL
-        genre: item.volumeInfo.categories ? item.volumeInfo.categories.join(', ') : 'N/A',
-        language: item.volumeInfo.language || 'N/A',
-        averageRating: item.volumeInfo.averageRating || 'N/A',
-        ratingsCount: item.volumeInfo.ratingsCount || 'N/A',
-        authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(', ') : 'N/A',
-        publishedDate: item.volumeInfo.publishedDate || 'N/A',
-        year: responseData.Year || 'N/A', // Add year
+        thumbnailUrl: item.volumeInfo.imageLinks
+          ? item.volumeInfo.imageLinks.thumbnail
+          : "N/A", // Extract thumbnail URL
+        genre: item.volumeInfo.categories
+          ? item.volumeInfo.categories.join(", ")
+          : "N/A",
+        language: item.volumeInfo.language || "N/A",
+        averageRating: item.volumeInfo.averageRating || "N/A",
+        ratingsCount: item.volumeInfo.ratingsCount || "N/A",
+        authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
+        publishedDate: item.volumeInfo.publishedDate || "N/A",
+        year: responseData.Year || "N/A", // Add year
         // Add other properties of a book as needed
       }));
       return booksData;
@@ -139,11 +136,10 @@ export const getBookDetailsRequest = async (searchValue: string) => {
       return [];
     }
   } catch (error) {
-    console.error('Error fetching books:', error);
+    console.error("Error fetching books:", error);
     return [];
   }
 };
-
 
 // // Add a review to a book
 // export const addBookReview = async (bookId: number, review: String) => {
