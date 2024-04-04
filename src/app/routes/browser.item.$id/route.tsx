@@ -1,49 +1,63 @@
+import {LoaderFunctionArgs, TypedResponse, json} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
 import React from "react";
 
+import {getItemInfo} from "../../../lib/database/functions";
+import {ItemInfo} from "../../../lib/interfaces";
+
+export function loader({params}: LoaderFunctionArgs): TypedResponse<{
+  success: boolean;
+  data: ItemInfo | undefined;
+  error: {msg: string} | undefined;
+}> {
+  const id = params.id;
+  if (!id) {
+    return json({
+      success: false,
+      data: undefined,
+      error: {msg: "unknown url requested"},
+    });
+  }
+
+  let itemInfo: ItemInfo | undefined = getItemInfo(id);
+
+  let jsonData: {
+    success: boolean;
+    data: ItemInfo | undefined;
+    error: {msg: string} | undefined;
+  } = {
+    success: true,
+    data: itemInfo,
+    error: undefined,
+  };
+
+  return json(jsonData);
+}
+
 export default function tab_index(): React.JSX.Element {
+  const loaderData = useLoaderData<typeof loader>();
+
+  if (!loaderData.success) {
+    return (
+      <>
+        <h1 className={"text-error"}>{loaderData.error?.msg}</h1>
+      </>
+    );
+  }
+
+  if (!loaderData.data) {
+    return (
+      <>
+        <h1 className={"text-error"}>Error Data Not Found</h1>
+      </>
+    );
+  }
+
+  let data: ItemInfo = loaderData.data;
+
   return (
     <>
-      <p>aaaa</p>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <p>aaaa</p>
+      <p>{data.toString()}</p>
     </>
   );
 }

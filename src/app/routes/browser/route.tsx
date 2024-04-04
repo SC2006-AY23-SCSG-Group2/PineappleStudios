@@ -1,9 +1,12 @@
-import {LoaderFunctionArgs, redirect} from "@remix-run/node";
+import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
+import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
+import {getItemInfo} from "../../../lib/database/functions";
 import {commitSession, getSession} from "../../session";
+import {BrowserTopNav} from "./components/BrowserTopNav";
 
-export async function loader({request}: LoaderFunctionArgs) {
+export async function loader({params, request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
 
   if (!session.has("userId")) {
@@ -14,53 +17,86 @@ export async function loader({request}: LoaderFunctionArgs) {
       },
     });
   }
-  return session.data;
+
+  const id = params.id;
+  if (!id) {
+    return json({
+      success: false,
+      data: {},
+      error: {context: "unknown url requested"},
+    });
+  }
+
+  let title: string = getItemInfo(id)?.title ?? "Browser Item";
+
+  return json({
+    success: true,
+    data: {title: title},
+    error: {},
+  });
 }
 
-export default function tab_index(): React.JSX.Element {
+export default function tab(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const data = useLoaderData<typeof loader>();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate = useNavigate();
   return (
     <>
-      <p>aaaa</p>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <div className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-              excepturi exercitationem quasi. In deleniti eaque aut repudiandae
-              et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
-      <p>aaaa</p>
+      <BrowserTopNav
+        leftSection={
+          <>
+            <button
+              key={"btn-sm"}
+              className="btn btn-circle lg:hidden"
+              onClick={() => {
+                navigate(-1);
+              }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                />
+              </svg>
+            </button>
+
+            <button
+              key={"btn-lg"}
+              className="btn max-lg:hidden lg:visible"
+              onClick={() => {
+                navigate(-1);
+              }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
+                />
+              </svg>
+              Back
+            </button>
+          </>
+        }
+        title={
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          !data.success ? "Pineapple Studio" : data.data!.title
+        }
+      />
+      <Outlet />
     </>
   );
 }

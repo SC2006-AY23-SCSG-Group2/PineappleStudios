@@ -46,7 +46,7 @@ export type SimpleItem = {
   type: ItemType;
 };
 
-export type ItemInfo = {
+export interface ItemInfo {
   id: number;
   title: string;
   isInLibrary: boolean;
@@ -58,7 +58,7 @@ export type ItemInfo = {
   type: ItemType; // movie song or book
   otherContent: MovieContent | SongContent | BookContent;
   people: People[];
-};
+}
 
 export type People = {
   name: string;

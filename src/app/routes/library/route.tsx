@@ -29,8 +29,6 @@ export async function loader({params, request}: LoaderFunctionArgs) {
 
   const isEditing: boolean = m ? m.at(2) === "editing" : false;
 
-  // console.log(`Found match, group ${type}`);
-
   if (!type) {
     return json({
       success: false,
