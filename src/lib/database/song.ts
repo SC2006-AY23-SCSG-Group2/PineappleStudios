@@ -96,27 +96,335 @@ export const deleteSong = async (request: any) => {
     return {success: false};
   }
 };
-export const searchSongs = async (searchValue: string, accessToken: string) => {
+// export const getSongRequest = async (searchValue: string, accessToken: string) => {
+//   try {
+//     const response = await fetch(
+//       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+//         searchValue,
+//       )}&type=track`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       },
+//     );
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch songs");
+//     }
+
+//     const responseData = await response.json();
+//     return responseData.tracks.items;
+//   } catch (error) {
+//     console.error("Error fetching songs:", error);
+//     return [];
+//   }
+// };
+// export const getSongRequest = async (searchValue: string) => {
+//   const url = `https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(searchValue)}&fmt=json`;
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (responseData.recordings && responseData.recordings.length > 0) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.recordings.map((recording: any) => ({
+//         itemTitle: recording.title,
+//         // Add other properties of a song as needed
+//       }));
+//       return songsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+// export const getSongDetailsRequest = async (searchValue: string) => {
+//   const url = `https://www.theaudiodb.com/api/v1/json/2/searchalbum.php?s=${encodeURIComponent(searchValue)}`;
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (responseData.recordings && responseData.recordings.length > 0) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.recordings.map((recording: any) => ({
+//         itemTitle: recording.strAlbum,
+//         //artists: recording.artists,
+//         //duration: recording.duration,
+//         date: recording.date,
+//         genre: recording.strGenre,
+//         thumbnailUrl: recording.strAlbumThumb || 'N/A',
+        
+//         // Add other properties of a song as needed
+//         // Example: duration, artists, release date, etc.
+//       }));
+//       //console.error(responseData.recordings[0].thumbnailUrl);
+//       return songsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+// export const getSongRequest = async (searchValue: string) => {
+//   const apiKey = '39b4456fdf4d31bd27e1e9759e8f2fd6';
+//   const url = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(searchValue)}&api_key=${apiKey}&format=json`;
+
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (response.ok && responseData.results && responseData.results.trackmatches && responseData.results.trackmatches.track) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.results.trackmatches.track.map((track: any) => ({
+//         itemTitle: track.name,
+//         artist: track.artist,
+//         thumbnailUrl: track.url,
+//         // Add other properties of a song as needed
+//       }));
+//       return songsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+export const getSongRequest = async (songTitle: string) => {
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(songTitle)}&entity=song`;
+
   try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-        searchValue,
-      )}&type=track`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch songs");
-    }
-
+    const response = await fetch(url);
     const responseData = await response.json();
-    return responseData.tracks.items;
+
+    if (response.ok && responseData.results && responseData.results.length > 0) {
+      // Extract song information from response data
+      const songsData: any[] = responseData.results.map((song: any) => ({
+        itemTitle: song.trackName,
+      }));
+      return songsData;
+    } else {
+      return [];
+    }
   } catch (error) {
-    console.error("Error fetching songs:", error);
+    console.error('Error fetching songs:', error);
     return [];
   }
 };
+
+
+// export const getSongDetailsRequest = async (songTitle: string) => {
+//   const apiKey = '39b4456fdf4d31bd27e1e9759e8f2fd6';
+//   //const url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&track=${encodeURIComponent(songTitle)}&api_key=${apiKey}&format=json`;
+//   const url = `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${encodeURIComponent(songTitle)}&api_key=${apiKey}&format=json`;
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (response.ok && responseData.results && responseData.results.trackmatches && responseData.results.trackmatches.track) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.results.trackmatches.track.map((track: any) => ({
+//         itemTitle: track.name,
+//         artist: track.artist,
+//         thumbnailUrl: track.url,
+//         // Add other properties of a song as needed
+//       }));
+//       return songsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+export const getSongDetailsRequest = async (songTitle: string) => {
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(songTitle)}&entity=song`;
+  const millisToMinutesAndSeconds = (millis: number) => {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = ((millis % 60000) / 1000).toFixed(0);
+    return `${minutes}:${parseInt(seconds) < 10 ? '0' : ''}${seconds}`;
+  };
+  try {
+    const response = await fetch(url);
+    const responseData = await response.json();
+
+    if (response.ok && responseData.results && responseData.results.length > 0) {
+      // Extract song information from response data
+      const songsData: any[] = responseData.results.map((song: any) => ({
+        itemTitle: song.trackName,
+        artist: song.artistName,
+        thumbnailUrl: song.artworkUrl100, // Use artworkUrl100 for thumbnail image
+        genre: song.primaryGenreName, // Genre information
+        
+        duration: millisToMinutesAndSeconds(song.trackTimeMillis), // Duration in milliseconds
+        // Add other properties of a song as needed
+      }));
+      return songsData;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching songs:', error);
+    return [];
+  }
+};
+
+
+
+
+
+
+// Modify the function to query an appropriate endpoint for song details
+// export const getSongDetailsRequest = async (searchValue: string) => {
+//   const url = `https://www.theaudiodb.com/api/v1/json/2/searchalbum.php?s=${encodeURIComponent(searchValue)}`;
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (responseData.album && responseData.album.length > 0) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.album.map((album: any) => ({
+//         itemTitle: album.strAlbum,
+//         // Add other properties of a song as needed
+//         // Example: duration, artists, release date, etc.
+//       }));
+//       return songsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+
+// export const getSongRequest = async (searchValue: string) => {
+// //   const apiKey = '0624c037fc65b46656d9d979053d140a'; // Replace with your YouTube API key
+// //   const url = `https://api.musixmatch.com/ws/1.1/track.search?q=${encodeURIComponent(searchValue)}&apikey=${apiKey}`;
+
+// //   try {
+// //     const response = await fetch(url);
+// //     const responseData = await response.json();
+
+// //     if (responseData.message.body.track_list) {
+// //       // Extract song information from response data
+// //       const songsData: any[] = responseData.message.body.track_list.map((item: any) => ({
+// //         trackName: item.track.track_name,
+// //         artistName: item.track.artist_name,
+// //         albumName: item.track.album_name,
+// //         // Add other properties of a song as needed
+// //       }));
+// //       return songsData;
+// //     } else {
+// //       console.error('No songs found.');
+// //       return [];
+// //     }
+// //   } catch (error) {
+// //     console.error('Error fetching songs:', error);
+// //     return [];
+// //   }
+// // };
+//   const apiUrl = `https://musicbrainz.org/ws/2/recording/?query=<song_name>&fmt=json`
+//   //const apiUrl = `https://www.theaudiodb.com/api/v1/json/2/track.php?a=${encodeURIComponent(searchValue)}`;
+
+//   try {
+//     const response = await fetch(apiUrl);
+//     const text = await response.text();
+
+//     // Log the response text for debugging
+//     console.log('API Response:', text);
+
+//     const data = JSON.parse(text);
+
+//     // Check if the response contains tracks
+//     if (data.track) {
+//       // Extract relevant track information
+//       const tracks = data.track.map((track: { strTrack: any; intTrackNumber: any; }) => ({
+//         trackTitle: track.strTrack,
+//         trackNumber: track.intTrackNumber
+//       }));
+//       return tracks;
+//     } else {
+//       console.error('No tracks found for the album.');
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching tracks:', error);
+//     return [];
+//   }
+// }
+
+// export const getSongRequest = async (searchValue: string, accessToken: string) => {
+//   try {
+//     const response = await fetch(
+//       `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+//         searchValue,
+//       )}&type=track`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       },
+//     );
+
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch songs");
+//     }
+
+//     const responseData = await response.json();
+
+//     if (responseData.tracks && responseData.tracks.items) {
+//       // Extract song information from response data
+//       const songsData: any[] = responseData.tracks.items.map((item: any) => ({
+//         itemTitle: item.name,
+//         // Add other properties of a song as needed
+//       }));
+//       return songsData;
+//     } else {
+//       console.error('No songs found.');
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error("Error fetching songs:", error);
+//     return [];
+//   }
+// };
+
+// export const getSongDetailsRequest = async (searchValue: string, accessToken: string) => {
+//   try {
+//     const response = await getSongRequest(searchValue, accessToken); // Assuming you already have the getSongRequest function
+
+//     // Assuming response is an array of tracks/items
+//     if (Array.isArray(response) && response.length > 0) {
+//       // Extract song information from response data
+//       const songData: any[] = response.map((item: any) => ({
+//         itemTitle: item.name,
+//         thumbnailUrl: item.album.images.length > 0 ? item.album.images[0].url : 'N/A',
+//         artists: item.artists.map((artist: any) => artist.name).join(', '),
+//         album: item.album.name,
+//         duration: millisecondsToMinutesSeconds(item.duration_ms), // Assuming you have a function to convert milliseconds to minutes:seconds
+//         // Add other properties of a song as needed
+//       }));
+//       return songData;
+//     } else {
+//       console.error('Songs not found.');
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error fetching songs:', error);
+//     return [];
+//   }
+// };
+
+// // Function to convert milliseconds to minutes:seconds
+// const millisecondsToMinutesSeconds = (milliseconds: number) => {
+//   const minutes = Math.floor(milliseconds / 60000);
+//   const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+//   return `${minutes}:${parseInt(seconds) < 10 ? '0' : ''}${seconds}`;
+// };
