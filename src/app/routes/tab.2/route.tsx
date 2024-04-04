@@ -1,7 +1,7 @@
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import ItemList from "../_components/ItemList";
+import {ItemList} from "../_components/ItemList";
 
 interface LoaderData {
   user: {

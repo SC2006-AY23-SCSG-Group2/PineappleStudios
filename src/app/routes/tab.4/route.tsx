@@ -3,12 +3,12 @@ import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
 
-import ItemList from "../_components/ItemList";
+import {ItemList} from "../_components/ItemList";
 import {TagList} from "../_components/TagList";
-import UserProfileCard from "./components/UserProfileCard";
+import {UserProfileCard} from "./components/UserProfileCard";
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
-  let session = await getSession(request.headers.get("cookie"));
+export async function loader({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
 
   return {
     session: session.data,
@@ -83,9 +83,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       ],
     },
   };
-};
+}
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {session, user} = useLoaderData<typeof loader>();
 
   const colors = ["neutral", "primary", "secondary"];
