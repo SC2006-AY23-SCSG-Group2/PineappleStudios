@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 
-const HeartButton: FC<{onClick: () => void}> = ({onClick}) => {
+export const HeartButton: FC<{onClick: () => void}> = ({onClick}) => {
   return (
     <button
       onClick={onClick}
@@ -16,5 +16,3 @@ const HeartButton: FC<{onClick: () => void}> = ({onClick}) => {
     </button>
   );
 };
-
-export default HeartButton;

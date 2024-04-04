@@ -3,12 +3,12 @@ import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
 
-import ItemList from "../_components/ItemList";
 import {TagList} from "../_components/TagList";
-import UserProfileCard from "./components/UserProfileCard";
+import {HistoryItemList} from "./components/HistoryItemList";
+import {UserProfileCard} from "./components/UserProfileCard";
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
-  let session = await getSession(request.headers.get("cookie"));
+export async function loader({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
 
   return {
     session: session.data,
@@ -36,80 +36,82 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       ],
       HistoryItems: [
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
           showHeart: true,
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
         {
-          imageSrc: "https://picsum.photos/200.webp",
+          thumbnailUrl: "https://picsum.photos/200.webp",
           placeholder: "Item",
         },
       ],
     },
   };
-};
+}
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const {session, user} = useLoaderData<typeof loader>();
 
   const colors = ["neutral", "primary", "secondary"];
   return (
     <>
-      <div className="hero min-h-screen bg-base-200 ">
+      <div className="hero min-h-screen">
         {session.userId !== undefined && session.userId !== null && (
-          <div className="hero-content max-lg:m-12 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end">
+          <div className="hero-content  max-lg:m-12 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end">
             <UserProfileCard user={user} />
-            <div className="flex min-w-0 flex-col shadow-xl max-lg:w-full lg:w-7/12">
-              <div className="card mb-4 bg-gray-200">
-                <div className="card-body">
-                  <h2 className="card-title mx-2 text-3xl">Preferences</h2>
-                  <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
-                    <TagList
-                      tag={user.preferences}
-                      colors={colors}
-                      buttonType="none"
-                    />
-                  </div>
+
+            <div className="card bg-base-200 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-3xl">Preferences</h2>
+                <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
+                  <TagList
+                    tag={user.preferences}
+                    colors={colors}
+                    buttonType="none"
+                  />
                 </div>
               </div>
-              <ItemList title="View History" items={user.HistoryItems} />
+
+              <HistoryItemList title="View History" items={user.HistoryItems} />
             </div>
+            {/*</div>*/}
           </div>
         )}
       </div>

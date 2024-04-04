@@ -16,7 +16,7 @@ interface UserProfileCardProps {
   user: userData;
 }
 
-const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
+export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
   return (
     <>
       <LeftCard
@@ -48,5 +48,3 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
     </>
   );
 };
-
-export default UserProfileCard;
