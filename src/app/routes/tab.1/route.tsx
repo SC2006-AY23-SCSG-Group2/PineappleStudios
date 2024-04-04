@@ -1,7 +1,7 @@
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import ItemList from "../_components/ItemList";
+import {ItemList} from "../_components/ItemList";
 
 interface LoaderData {
   user: {
@@ -16,11 +16,15 @@ interface LoaderData {
       thumbnailUrl?: string;
       itemTitle?: string;
       showHeart?: boolean;
+      type?: string;
     }>;
   };
 }
 
-export const loader = async (): Promise<LoaderData> => {
+export async function loader(): Promise<LoaderData> {
+  function randomInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   return {
     user: {
       name: "Unknown_Blaze",
@@ -46,80 +50,152 @@ export const loader = async (): Promise<LoaderData> => {
       ],
       items: [
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
           showHeart: true,
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
           showHeart: true,
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
-          itemTitle: "Item",
-          showHeart: true,
-        },
-        {
-          thumbnailUrl: "https://picsum.photos/200.webp",
-          itemTitle: "Item",
-        },
-        {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
           showHeart: true,
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
+          itemTitle: "Item",
+          showHeart: true,
+        },
+        {
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
         {
-          thumbnailUrl: "https://picsum.photos/200.webp",
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
+          itemTitle: "Item",
+        },
+        {
+          thumbnailUrl: `https://picsum.photos/id/${randomInteger(
+            0,
+            1084,
+          )}/200.webp`,
           itemTitle: "Item",
         },
       ],
     },
   };
-};
+}
 
 export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const {user} = useLoaderData<typeof loader>();
 
   const favoriteItems = user.items.filter((item) => item.showHeart);
-  const unfavoriteItems = user.items.filter((item) => !item.showHeart);
+  const notFavoriteItems = user.items.filter((item) => !item.showHeart);
 
   return (
     <>
-      <div className="bg-gray-200">
+      <div className="mx-6 lg:mx-12">
         <ItemList title="Favorites" items={favoriteItems} />
-        <div className="divider"></div>
-        <h1 className="mx-10 mb-4 text-xl font-extrabold text-black md:text-3xl lg:text-4xl">
-          <span className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Top Recommendations
-          </span>{" "}
-          based on PineappleAI🍍
-        </h1>
-        <div className="divider"></div>
-        <ItemList title={"Music"} items={user.items} />
-        <ItemList title="Movies & TV Shows" items={user.items} />
-        <ItemList title="Books" items={unfavoriteItems} />
+
+        {notFavoriteItems.filter((x) => x.type === "music").length !== 0 && (
+          <>
+            <div className="divider"></div>
+            <ItemList
+              title="Music"
+              items={notFavoriteItems.filter((x) => x.type === "music")}
+            />
+          </>
+        )}
+
+        {notFavoriteItems.filter((x) => x.type === "movie").length !== 0 && (
+          <>
+            <div className="divider"></div>
+            <ItemList
+              title="Movies & TV Shows"
+              items={notFavoriteItems.filter((x) => x.type === "movie")}
+            />
+          </>
+        )}
+
+        {notFavoriteItems.filter((x) => x.type === "book").length !== 0 && (
+          <>
+            <div className="divider"></div>
+            <ItemList
+              title="Books"
+              items={notFavoriteItems.filter((x) => x.type === "book")}
+            />
+          </>
+        )}
+
+        {notFavoriteItems.filter(
+          (x) =>
+            x.type === undefined ||
+            (x.type !== "movie" && x.type !== "book" && x.type !== "music"),
+        ).length !== 0 && (
+          <>
+            <div className="divider"></div>
+            <ItemList
+              title="Others"
+              items={notFavoriteItems.filter(
+                (x) =>
+                  x.type === undefined ||
+                  (x.type !== "movie" &&
+                    x.type !== "book" &&
+                    x.type !== "music"),
+              )}
+            />
+          </>
+        )}
       </div>
     </>
   );
