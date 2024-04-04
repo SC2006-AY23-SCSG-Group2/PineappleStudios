@@ -17,7 +17,10 @@ interface ItemsListProps {
   items: SimpleItem[];
 }
 
-export const ItemList: React.FC<ItemsListProps> = ({title = "", items}) => {
+export const ItemList: React.FC<ItemsListProps> = ({
+  title = "",
+  items,
+}: ItemsListProps) => {
   return (
     <div className="card w-full">
       <h2 className="card-title mx-6 my-4 text-2xl lg:text-3xl">{title}</h2>
