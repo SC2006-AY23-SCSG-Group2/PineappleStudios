@@ -1,6 +1,6 @@
 import {LoaderFunctionArgs, json} from "@remix-run/node";
 
-import {getItemInfo} from "../../../lib/database/functions";
+import {getItemInfoExample} from "../../../lib/database/functions";
 
 export async function loader({params}: LoaderFunctionArgs) {
   const id: string | undefined = params.id;
@@ -13,7 +13,7 @@ export async function loader({params}: LoaderFunctionArgs) {
     });
     return null;
   }
-  const data = getItemInfo(id);
+  const data = getItemInfoExample(id);
 
   console.log({
     success: true,

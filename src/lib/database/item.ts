@@ -11,9 +11,8 @@ export const getAllitems = async () => {
 };
 
 // get item By Id
-export const getItemById = async (request: any) => {
+export const getItemById = async (itemId: any) => {
   try {
-    const itemId = request.params.id;
     const item = await prismaClient.item.findUnique({
       where: {
         id: itemId,

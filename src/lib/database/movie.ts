@@ -19,10 +19,9 @@ export const getAllMovies = async () => {
   }
 };
 
-//getMovieById
-export const getMovieById = async (request: any) => {
+//getMovieByItemId
+export const getMovieByItemId = async (movieId: any) => {
   try {
-    const movieId = request.params.itemId;
     const movie = await prismaClient.movie.findUnique({
       where: {
         itemId: movieId, //id equals to movieid

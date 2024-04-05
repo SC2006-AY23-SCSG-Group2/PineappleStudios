@@ -7,7 +7,7 @@ import {
 import {Form, useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import {getItemInfo} from "../../../lib/database/functions";
+import {getItemInfoExample} from "../../../lib/database/functions";
 import {ItemInfo} from "../../../lib/interfaces";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
@@ -26,7 +26,7 @@ export function loader({params}: LoaderFunctionArgs): TypedResponse<{
     });
   }
 
-  let itemInfo: ItemInfo | undefined = getItemInfo(id);
+  let itemInfo: ItemInfo | undefined = getItemInfoExample(id);
 
   if (itemInfo !== undefined && itemInfo.isInLibrary && !itemInfo.id) {
     return redirect("/library/item/" + itemInfo.id);

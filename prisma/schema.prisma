@@ -51,28 +51,31 @@ model Profile {
 
 // Define an abstract model called `Item` that serves as the base for movies, books, and songs.
 model Item {
-  id        Int                @id @default(autoincrement())
-  itemType  String // This field specifies the type of item (e.g., "movie", "book", "song")
-  movie     Movie?
-  book      Book?
-  song      Song?
-  title     String
-  genre     String
-  tags      TagInItems[]
-  language  String
-  avgRate   Float?
-  rate      Rate[]
-  reviews   Review[]
-  People    PeopleInItems[]
-  folder    ItemsInFolders[]
-  libraries ItemsInLibraries[]
-  Profile   ItemsInProfiles[]
+  id            Int                @id @default(autoincrement())
+  itemType      String // This field specifies the type of item (e.g., "movie", "book", "song")
+  image         String
+  movie         Movie?
+  book          Book?
+  song          Song?
+  title         String
+  genre         String
+  country       String?
+  publishedDate String
+  tags          TagInItems[]
+  language      String
+  avgRate       Float?
+  rate          Rate[]
+  reviews       Review[]
+  People        PeopleInItems[]
+  folder        ItemsInFolders[]
+  libraries     ItemsInLibraries[]
+  Profile       ItemsInProfiles[]
 }
 
 // Define specific models for movies, books, and songs.
 model Movie {
   srcId    String @unique // id from datasource
-  duration Int
+  duration Int?
   itemId   Int    @unique
   item     Item   @relation(fields: [itemId], references: [id])
 }
@@ -85,10 +88,11 @@ model Book {
 }
 
 model Song {
-  srcId  String  @unique // id from datasource
-  album  String?
-  itemId Int     @unique
-  item   Item    @relation(fields: [itemId], references: [id])
+  srcId    String  @unique // id from datasource
+  album    String?
+  duration Int?
+  itemId   Int     @unique
+  item     Item    @relation(fields: [itemId], references: [id])
 }
 
 model TagInItems {

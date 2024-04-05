@@ -14,12 +14,29 @@ export const getAllBooks = async () => {
   }
 };
 
-// getBookById
-export const getBookByScrId = async (sourceId: any) => {
+// getBookBySrcId
+export const getBookBySrcId = async (sourceId: any) => {
   try {
     const book = await prismaClient.book.findUnique({
       where: {
         srcId: sourceId,
+      },
+      include: {
+        item: true,
+      },
+    });
+    return book;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// getBookById
+export const getBookByItemId = async (itemId: any) => {
+  try {
+    const book = await prismaClient.book.findUnique({
+      where: {
+        itemId: itemId,
       },
       include: {
         item: true,
@@ -119,7 +136,10 @@ export const getBookDetailsRequest = async (searchValue: string) => {
       // Extract book information from response data
       const booksData: any[] = responseData.items.map((item: any) => ({
         srcId: item.id,
-        pages: item.volumeInfo.pageCount,
+        pages:
+          item.volumeInfo.pageCount != 0
+            ? item.volumeInfo.pageCount
+            : undefined,
         itemTitle: item.volumeInfo.title,
         thumbnailUrl: item.volumeInfo.imageLinks
           ? item.volumeInfo.imageLinks.thumbnail

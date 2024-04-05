@@ -35,7 +35,6 @@ export const getHistoryItemsFromProfile = async (request: any) => {
     return allItemsFromProfile;
   } catch (e) {
     console.error("Error fetching history items for profile:", e);
-    throw e;
   }
 };
 

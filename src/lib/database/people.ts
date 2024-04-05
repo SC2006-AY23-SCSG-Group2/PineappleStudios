@@ -30,3 +30,17 @@ export const getPeopleByNameAndRole = async (
     console.log("Error occured while creating people", e);
   }
 };
+
+//get people by Id
+export const getPoepleById = async (peopleId: number) => {
+  try {
+    const people = await prismaClient.people.findUnique({
+      where: {
+        id: peopleId,
+      },
+    });
+    return people;
+  } catch (e) {
+    console.log(e);
+  }
+};

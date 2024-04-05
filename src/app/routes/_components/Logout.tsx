@@ -1,4 +1,4 @@
-import {Form} from "@remix-run/react";
+import {Form, NavLink} from "@remix-run/react";
 import {useRef} from "react";
 
 export default function Logout(): React.JSX.Element {
@@ -14,7 +14,7 @@ export default function Logout(): React.JSX.Element {
 
   return (
     <>
-      <Form ref={formRef} method="post" action="/logout">
+      <Form ref={formRef} method="get" action="/logout">
         <button
           className="h-5 w-40 text-left"
           type="submit"

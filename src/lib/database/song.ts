@@ -18,9 +18,8 @@ export const getAllSongs = async () => {
 };
 
 // getSongById
-export const getSongById = async (request: any) => {
+export const getSongById = async (songId: any) => {
   try {
-    const songId = request.params.itemId;
     const song = await prismaClient.song.findUnique({
       where: {
         itemId: songId,
