@@ -2,7 +2,7 @@ import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
-import {getItemInfo} from "../../../lib/database/functions";
+import {getItemInfoExample} from "../../../lib/database/functions";
 import {commitSession, getSession} from "../../session";
 import {BrowserTopNav} from "./components/BrowserTopNav";
 
@@ -27,7 +27,7 @@ export async function loader({params, request}: LoaderFunctionArgs) {
     });
   }
 
-  let title: string = getItemInfo(id)?.title ?? "Browser Item";
+  let title: string = getItemInfoExample(id)?.title ?? "Browser Item";
 
   return json({
     success: true,

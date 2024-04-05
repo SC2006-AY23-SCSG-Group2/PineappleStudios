@@ -1,4 +1,4 @@
-import {createBook, getBookByScrId} from "./book";
+import {createBook, getBookBySrcId} from "./book";
 import {createItem} from "./item";
 import {createPeople, getPeopleByNameAndRole} from "./people";
 import {createPeopleinItemsAssignments} from "./peopleInItems";
@@ -10,10 +10,10 @@ export const createBookItem = async (singleBookData: any) => {
     return null;
   }
 
-  const bookCheck = await getBookByScrId(singleBookData.srcId);
+  const bookCheck = await getBookBySrcId(singleBookData.srcId);
   if (bookCheck) {
     console.log("Book Already Exist in database.");
-    return null;
+    return bookCheck;
   }
 
   //Create people object (authors)
@@ -41,10 +41,12 @@ export const createBookItem = async (singleBookData: any) => {
   //Create item object
   const itemData = {
     body: {
+      image: singleBookData.thumbnailUrl,
       itemType: "book",
       title: singleBookData.itemTitle,
-      genre: singleBookData.genre, //assume one genre only
+      genre: singleBookData.genre,
       language: singleBookData.language,
+      publishedDate: singleBookData.publishedDate,
     },
   };
 

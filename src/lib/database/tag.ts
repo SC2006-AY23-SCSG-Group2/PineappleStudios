@@ -13,9 +13,8 @@ export const getAllTags = async () => {
 };
 
 //get tag by Id
-export const getTagById = async (request: any) => {
+export const getTagById = async (tagId: number) => {
   try {
-    const tagId = request.params.id;
     const tag = await prismaClient.tag.findUnique({
       where: {
         id: tagId,
@@ -27,12 +26,27 @@ export const getTagById = async (request: any) => {
   }
 };
 
-//create tag
-export const createMovie = async (request: any) => {
+//get tag by tag name
+export const getTagByName = async (tagName: string) => {
   try {
-    const tagData = request.body;
+    const tag = await prismaClient.tag.findFirst({
+      where: {
+        name: tagName,
+      },
+    });
+    return tag;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+//create tag
+export const createTag = async (tagName: string) => {
+  try {
     const tag = await prismaClient.tag.create({
-      data: tagData,
+      data: {
+        name: tagName,
+      },
     });
     return tag;
   } catch (error) {

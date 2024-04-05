@@ -36,6 +36,14 @@ export async function getUserByEmail(email: string) {
   });
 }
 
+export async function getUserById(userId: number) {
+  return await prismaClient.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+}
+
 export async function createUser(
   email: string,
   userName: string,
