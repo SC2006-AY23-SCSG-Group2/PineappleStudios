@@ -40,7 +40,7 @@ export type OnlineContent = {
 
 export type SimpleItem = {
   id: number;
-  name: string;
+  title: string;
   img: string; // string of the url
   tag: string[];
   type: ItemType;
