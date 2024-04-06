@@ -34,22 +34,33 @@ export const getSongById = async (songId: any) => {
   }
 };
 
+export const getSongBySrcId = async (sourceId: any) => {
+  try {
+    const song = await prismaClient.song.findUnique({
+      where: {
+        srcId: sourceId,
+      },
+      include: {
+        item: true,
+      },
+    });
+    return song;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 // createSong
-export const createSong = async (reqSong: any, reqItem: any) => {
+export const createSong = async (reqSong: any) => {
   try {
     const songData = reqSong.body;
-    const itemData = reqItem.body;
-
-    // Create the song
     const song = await prismaClient.song.create({
       data: songData,
     });
-
-    // Create the associated item
-    const item = await createItem(itemData);
-    return {song, item};
-  } catch (error) {
-    console.error("Error occurred while creating song:", error);
+    return song;
+  } catch (e) {
+    console.error("Error occurred while creating song:", e);
+    return '1';
   }
 };
 
@@ -222,6 +233,9 @@ export const getSongDetailsRequest = async (songTitle: string) => {
     const seconds = ((millis % 60000) / 1000).toFixed(0);
     return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
   };
+  const millisToSeconds = (millis: number): number => {
+    return Math.floor(millis / 1000);
+  };
   try {
     const response = await fetch(url);
     const responseData = await response.json();
@@ -233,13 +247,15 @@ export const getSongDetailsRequest = async (songTitle: string) => {
     ) {
       // Extract song information from response data
       const songsData: any[] = responseData.results.map((song: any) => ({
+        album: song.collectionName,
+        srcId: song.trackId.toString(),
         itemTitle: song.trackName,
         artist: song.artistName,
         thumbnailUrl: song.artworkUrl100, // Use artworkUrl100 for thumbnail
-        // image
         genre: song.primaryGenreName, // Genre information
-
-        duration: millisToMinutesAndSeconds(song.trackTimeMillis), // Duration
+        releaseDate: song.releaseDate,
+        language: song.language? song.language:"English",
+        duration: millisToSeconds(song.trackTimeMillis), // Duration
         // in
         // milliseconds
         // Add other properties of a song as needed
