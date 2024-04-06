@@ -1,11 +1,14 @@
 import {prismaClient} from "./prisma";
 
 // create preference
-export const createPreferenceForUser = async (name: string, userId: number) => {
+export const createPreferenceForUser = async (
+  userId: number,
+  preferenceName: string,
+) => {
   try {
     const preference = await prismaClient.preference.create({
       data: {
-        name: name,
+        name: preferenceName,
         userId: userId,
       },
     });
