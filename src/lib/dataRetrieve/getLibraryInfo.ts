@@ -94,7 +94,7 @@ export async function getLibraryInfoByUserId(
           id: item.id,
           type: types,
           img: item.image,
-          name: item.title,
+          title: item.title,
           tag: nonNullTagNames, // Fill tags field with tag names
         });
       }
@@ -143,7 +143,7 @@ export async function getLibraryInfoByUserId(
             id: item.id,
             type: types,
             img: item.image,
-            name: item.title,
+            title: item.title,
             tag: nonNullTagNames, // Fill tags field with tag names
           });
         }

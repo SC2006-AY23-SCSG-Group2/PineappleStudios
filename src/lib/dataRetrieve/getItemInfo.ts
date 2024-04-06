@@ -17,6 +17,7 @@ import {
   ItemType,
   MovieContent,
   People,
+  SimpleItem,
   SongContent,
 } from "../interfaces";
 import {Folder, Library, User} from "./../interfaces";
@@ -177,4 +178,46 @@ export async function getItemInfoBySrcId(
     return undefined;
   }
   return getItemInfoByItemId(itemId, userId);
+}
+
+export async function getSimpleItemInfoByUserId(
+  itemId: number,
+  userId: number,
+): Promise<SimpleItem | undefined> {
+  const user = await getUserById(userId);
+  if (!user) {
+    console.log("cannot find user");
+    return undefined;
+  }
+  //return type is ItemInfo or undefined
+  const item = await getItemById(itemId);
+  if (!item) {
+    console.log("Item not existing");
+    return undefined;
+  }
+  //check item type,
+  let itemType: ItemType;
+  if (item.itemType == "book") {
+    itemType = ItemType.Book;
+  } else if (item.itemType == "movie") itemType = ItemType.Movie;
+  else itemType = ItemType.Song;
+  //get tags from item
+  const tagsFromItem = await getTagsFromItem(itemId);
+  let tags: string[] = []; // Initialize tags as an empty array
+
+  if (tagsFromItem != undefined) {
+    for (const tag of tagsFromItem) {
+      if (tag) tags.push(tag?.name);
+    }
+  }
+
+  const simpleItemInfo: SimpleItem = {
+    id: item.id,
+    title: item.title,
+    img: item.image,
+    tag: tags,
+    type: itemType,
+  };
+
+  return simpleItemInfo;
 }
