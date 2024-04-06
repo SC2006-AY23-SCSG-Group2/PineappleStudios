@@ -12,14 +12,14 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique
-  userName    String?
-  password    String
-  preferences Preference[]
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  userName String
+  password String
+
   // Must create a profile whenever create a new user
-  profile     Profile      @relation(fields: [profileId], references: [id]) // references `id` of `Profile`
-  profileId   Int          @unique
+  profile   Profile @relation(fields: [profileId], references: [id]) // references `id` of `Profile`
+  profileId Int     @unique
 
   // Must create a library whenever create a new user
   library   Library @relation(fields: [libraryId], references: [id])
@@ -29,13 +29,6 @@ model User {
   reviews Review[]
 
   userClickedData UserClickedData[]
-}
-
-model Preference {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user   User   @relation(fields: [userId], references: [id])
 }
 
 model UserClickedData {

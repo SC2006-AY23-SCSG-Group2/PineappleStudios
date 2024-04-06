@@ -182,13 +182,7 @@ export async function getItemInfoBySrcId(
 
 export async function getSimpleItemInfoByUserId(
   itemId: number,
-  userId: number,
 ): Promise<SimpleItem | undefined> {
-  const user = await getUserById(userId);
-  if (!user) {
-    console.log("cannot find user");
-    return undefined;
-  }
   //return type is ItemInfo or undefined
   const item = await getItemById(itemId);
   if (!item) {
