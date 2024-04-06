@@ -1,3 +1,4 @@
+import { Item } from "@prisma/client";
 import {
   BookContent,
   ItemInfo,
@@ -17,8 +18,10 @@ import {
   deletePreference,
   getPreference,
 } from "./preference";
+import { prismaClient } from "./prisma";
 import {getSongById} from "./song";
 import {getUserById} from "./user";
+
 
 function randomInteger(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -46,7 +49,258 @@ export async function removePreferenceForUser(
   }
 }
 
-export async function getUserInfoByUserId(userId: number) {}
+// import { PrismaClient, Library } from '@prisma/client';
+
+// const prisma = new PrismaClient();
+
+// interface LibraryInfo {
+//   library: Library;
+//   userId: number;
+// }
+
+// export async function getLibraryInfoByUserId(userId: number): Promise<LibraryInfo | null> {
+//   try {
+//     const userLibrary = await prisma.user.findUnique({
+//       where: {
+//         id: userId,
+//       },
+//       select: {
+//         library: true,
+//       },
+//     });
+
+//     if (!userLibrary) {
+//       console.log(`User with ID ${userId} does not have a library.`);
+//       return null;
+//     }
+
+//     const library = await prisma.library.findUnique({
+//       where: {
+//         id: userLibrary.library.id,
+//       },
+//       include: {
+//         items: true,
+//         folders: {
+//           include: {
+//             series: true,
+//           },
+//         },
+//       },
+//     });
+
+//     // Check if the library exists
+//     if (!library) {
+//       console.log(`Library not found for user with ID ${userId}.`);
+//       return null;
+//     }
+
+//     // Return the library along with the userId
+//     return { library, userId };
+//   } catch (error) {
+//     console.error('Error fetching library info:', error);
+//     return null;
+//   }
+// }
+
+import { User, Folder, Library } from './../interfaces'; // Import necessary interfaces
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function getTagNameById(tagId: number): Promise<string | null> {
+  try {
+    const tag = await prisma.tag.findUnique({
+      where: {
+        id: tagId,
+      },
+    });
+
+    if (!tag) {
+      console.error(`Tag with ID ${tagId} not found.`);
+      return null;
+    }
+
+    return tag.name;
+  } catch (error) {
+    console.error('Error fetching tag name:', error);
+    return null;
+  }
+}
+
+export async function getLibraryInfoByUserId(userId: number): Promise<Library | null> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        library: {
+          include: {
+            folders: {
+              include: {
+                items: {
+                  include: {
+                    item: {
+                      include: {
+                        tags: true, // Include tags for each item
+                      },
+                    },
+                  },
+                },
+                series: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      console.log(`User with ID ${userId} does not exist.`);
+      return null;
+    }
+
+    const library: Library = {
+      id: user.libraryId,
+      userId: userId,
+      items: [],
+      folders: [],
+      series: [],
+    };
+
+    // Process folders
+    for (const folder of user.library.folders) {
+      const value = (folder.series == null) ? false : true;
+      const folderInfo: Folder = {
+        id: folder.id,
+        name: folder.name,
+        isSeries: value, // Assuming regular folder by default
+        img: '', // You need to determine how to get the folder image URL
+        items: [],
+      };
+
+
+      // Process items in the folder
+      for (const folderItem of folder.items) {
+        const item = folderItem.item;
+        const ids = item.tags.map(tag => tag.tagId);
+        const tagNames = await Promise.all(ids.map(id => getTagNameById(id)));
+        const nonNullTagNames = tagNames.filter(tagName => tagName !== null) as string[];
+        const types = (item.itemType == "song") ? ItemType.Song : ((item.itemType == "book") ? ItemType.Book : ItemType.Movie);
+        folderInfo.items.push({
+          id: item.id,
+          type: types,
+          img: item.image,
+          name: item.title,
+          tag: nonNullTagNames, // Fill tags field with tag names
+        });
+      }
+
+      library.folders.push(folderInfo);
+    }
+
+    // Process series
+    for (const series of user.library.folders.filter(folder => folder.series)) {
+      const seriesInfo: Folder = {
+        id: series.series!.id,
+        name: series.series!.name,
+        isSeries: true,
+        img: '', // You need to determine how to get the series image URL
+        items: [], // Initialize items array
+      };
+
+      // Access the folder directly associated with the series using 'folderId'
+      const folderId = series.series!.folderId;
+
+      // Find the folder with the corresponding folderId
+      const folder = user.library.folders.find(folder => folder.id === folderId);
+
+      if (folder) {
+        // Process items within the folder
+        for (const folderItem of folder.items) {
+          const item = folderItem.item;
+          const ids = item.tags.map(tag => tag.tagId);
+          const tagNames = await Promise.all(ids.map(id => getTagNameById(id)));
+          const nonNullTagNames = tagNames.filter(tagName => tagName !== null) as string[];
+          const types = (item.itemType == "song") ? ItemType.Song : ((item.itemType == "book") ? ItemType.Book : ItemType.Movie);
+          seriesInfo.items.push({
+            id: item.id,
+            type: types,
+            img: item.image,
+            name: item.title,
+            tag: nonNullTagNames, // Fill tags field with tag names
+          });
+
+        }
+      } else {
+        console.error(`Folder with ID ${folderId} not found.`);
+      }
+
+      library.series.push(seriesInfo);
+    }
+
+    return library;
+  } catch (error) {
+    console.error('Error fetching library info:', error);
+    return null;
+  }
+}
+
+
+
+export async function getItemInfoBySrcId(
+  srcId: string,
+  userId: number,
+): Promise<ItemInfo | undefined> {
+  const itemId = await getItemIdBySrcId(srcId);
+  if (itemId === undefined) {
+    console.log("Item ID not found for source ID:", srcId);
+    return undefined;
+  }
+  return getItemInfoByItemId(itemId, userId);
+}
+
+export async function getItemIdBySrcId(srcId: string): Promise<number | undefined> {
+  try {
+    const movie = await prismaClient.movie.findFirst({
+      where: {
+        srcId,
+      },
+      select: {
+        itemId: true,
+      },
+    });
+
+    if (movie) return movie.itemId;
+
+    const book = await prismaClient.book.findFirst({
+      where: {
+        srcId,
+      },
+      select: {
+        itemId: true,
+      },
+    });
+
+    if (book) return book.itemId;
+
+    const song = await prismaClient.song.findFirst({
+      where: {
+        srcId,
+      },
+      select: {
+        itemId: true,
+      },
+    });
+
+    return song?.itemId;
+  } catch (error) {
+    console.error("Error fetching item id:", error);
+    return undefined;
+  }
+}
+
+
 
 export async function getItemInfoByItemId(
   itemId: number,
