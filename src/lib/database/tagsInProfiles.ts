@@ -2,22 +2,64 @@ import {prismaClient} from "./prisma";
 import {getProfileById} from "./profile";
 import {getTagById} from "./tag";
 
-export const createAssignments = async (request: any) => {
+export const createTagInProfileAssignments = async (
+  profileId: number,
+  tagId: number,
+) => {
   try {
-    const assignmentData = request.body;
     const assignment = await prismaClient.tagsInProfiles.create({
-      data: assignmentData,
+      data: {
+        profileId: profileId,
+        tagId: tagId,
+      },
     });
     return assignment;
   } catch (error) {
-    console.error("Error occurred while creating movie:", error);
+    console.error(
+      "Error occurred while creating Tag in Profile assignment:",
+      error,
+    );
+  }
+};
+
+export const deleteTagInProfileAssignment = async (
+  profileId: number,
+  tagId: number,
+) => {
+  try {
+    await prismaClient.tagsInProfiles.deleteMany({
+      where: {
+        profileId: profileId,
+        tagId: tagId,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Error occured while deleting tag in Profile assignment: ",
+      error,
+    );
+  }
+};
+
+export const getTagInProfileAssignment = async (
+  profileId: number,
+  tagId: number,
+) => {
+  try {
+    const assignment = await prismaClient.tagsInProfiles.findFirst({
+      where: {
+        profileId: profileId,
+        tagId: tagId,
+      },
+    });
+    return assignment;
+  } catch (error) {
+    console.error("Error occured while getting tag in profile", error);
   }
 };
 
 // Return all the tags that are in a profile
-export const getAllTagsInProfile = async (request: any) => {
-  const profileId = request.params.id;
-
+export const getAllTagsInProfile = async (profileId: number) => {
   try {
     // Retrieve all tag assignments for the given profile
     const tagAssignments = await prismaClient.tagsInProfiles.findMany({

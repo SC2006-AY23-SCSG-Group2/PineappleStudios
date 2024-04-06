@@ -14,39 +14,18 @@ import {getItemById} from "./item";
 import {isItemInLibrary} from "./itemsInLibraries";
 import {getMovieByItemId} from "./movie";
 import {getPeopleFromItem} from "./peopleInItems";
-import {
-  createPreferenceForUser,
-  deletePreference,
-  getPreference,
-} from "./preference";
 import {prismaClient} from "./prisma";
 import {getSongById} from "./song";
+import {createTag, getTagByName} from "./tag";
+import {
+  createTagInProfileAssignments,
+  deleteTagInProfileAssignment,
+  getTagInProfileAssignment,
+} from "./tagsInProfiles";
 import {getUserById} from "./user";
 
 function randomInteger(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export async function addPreferenceForUser(userId: number, preference: string) {
-  let preferenceCheck = await getPreference(userId, preference);
-  if (!preferenceCheck) {
-    preferenceCheck = await createPreferenceForUser(userId, preference);
-  }
-  console.log("The preference for user is created.");
-  return preferenceCheck;
-}
-
-export async function removePreferenceForUser(
-  userId: number,
-  preference: string,
-) {
-  let preferenceCheck = await getPreference(userId, preference);
-  if (preferenceCheck) {
-    await deletePreference(userId, preference);
-    console.log("The preference : ", preference, "is removed");
-  } else {
-    console.log("The preference : ", preference, "is already removed");
-  }
 }
 
 // import { PrismaClient, Library } from '@prisma/client';

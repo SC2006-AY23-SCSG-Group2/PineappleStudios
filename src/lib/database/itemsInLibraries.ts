@@ -23,6 +23,7 @@ export const countItemsInLibrary = async (libraryId: number) => {
   } catch (error) {
     // Handle any errors here
     console.error("Error counting items in library:", error);
+    return 0;
   }
 };
 
