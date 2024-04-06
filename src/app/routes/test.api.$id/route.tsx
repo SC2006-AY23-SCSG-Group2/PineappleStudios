@@ -8,12 +8,10 @@
 // import {createSongItem} from "src/lib/database/songAPI";
 // import {getTagByName} from "src/lib/database/tag";
 // import {createTagsforItem} from "src/lib/database/tagsItem";
-
 // import {
 //   getItemInfoByItemId,
 //   getItemInfoExample,
 // } from "../../../lib/database/functions";
-
 // export async function loader({params}: LoaderFunctionArgs) {
 //   const booksData = await getSongDetailsRequest("Maze Runner");
 //   const book = await createSongItem(booksData[0]);
@@ -34,9 +32,7 @@
 //     },
 //     {status: 200},
 //   );
-
 //   // const id: string | undefined = params.id;
-
 //   // if (!id) {
 //   //   return json(
 //   //     {
@@ -47,9 +43,7 @@
 //   //     {status: 400},
 //   //   );
 //   // }
-
 //   // const data = getItemInfo(id);
-
 //   // return json(
 //   //   {
 //   //     success: true,
@@ -59,8 +53,6 @@
 //   //   {status: 200},
 //   // );
 // }
-
-
 //--------------------Testing getItemInfoBySrcId,getItemIdBySrcId functions -----------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import {
@@ -68,11 +60,9 @@
 //   getItemIdBySrcId,
 //   getItemInfoByItemId,
 // } from "../../../lib/database/functions"; // Update the path to match your project structure
-
 // export async function loader({ params }: LoaderFunctionArgs) {
 //   const srcId: string = "tt1790864"; // Provide a valid source ID for testing
 //   const userId: number = 1; // Provide a valid user ID for testing
-
 //   try {
 //     // const itemId = await getItemIdBySrcId(srcId);
 //     // if (!itemId) {
@@ -85,7 +75,6 @@
 //     //     { status: 400 }
 //     //   );
 //     // }
-
 //     const itemInfo = await getItemInfoBySrcId(srcId, userId);
 //     if (!itemInfo) {
 //       return json(
@@ -97,7 +86,6 @@
 //         { status: 400 }
 //       );
 //     }
-
 //     console.log("Item Info:", itemInfo);
 //     return json(
 //       {
@@ -119,12 +107,11 @@
 //     );
 //   }
 // }
-
 //-------------Testing for getLibraryInfoByUserId ----------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { getLibraryInfoByUserId } from "../../../lib/database/functions";
+import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {getLibraryInfoByUserId} from "src/lib/dataRetrieve/getLibraryInfo";
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({params}: LoaderFunctionArgs) {
   const userId: number = 2; // Provide a valid user ID for testing
 
   try {
@@ -134,9 +121,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
         {
           success: false,
           data: {},
-          error: { msg: "Library info not found for the provided user ID" },
+          error: {msg: "Library info not found for the provided user ID"},
         },
-        { status: 400 }
+        {status: 400},
       );
     }
 
@@ -147,7 +134,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
         data: libraryInfo,
         error: {},
       },
-      { status: 200 }
+      {status: 200},
     );
   } catch (error) {
     console.error("Error:", error);
@@ -155,11 +142,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while fetching library info" },
+        error: {msg: "An error occurred while fetching library info"},
       },
-      { status: 500 }
+      {status: 500},
     );
   }
 }
-
-
