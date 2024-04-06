@@ -18,6 +18,21 @@ export const getAllMovies = async () => {
     console.log(e);
   }
 };
+export const getMovieBySrcId = async (sourceId: any) => {
+  try {
+    const movie = await prismaClient.movie.findUnique({
+      where: {
+        srcId: sourceId,
+      },
+      include: {
+        item: true,
+      },
+    });
+    return movie;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 //getMovieByItemId
 export const getMovieByItemId = async (movieId: any) => {
@@ -37,17 +52,33 @@ export const getMovieByItemId = async (movieId: any) => {
 };
 
 //createMovie
-export const createMovie = async (reqMovie: any, reqItem: any) => {
+// export const createMovie = async (reqMovie: any, reqItem: any) => {
+//   try {
+//     const movieData = reqMovie.body; //contain all movie's data for a movie
+//     const itemData = reqItem.body;
+//     const movie = await prismaClient.movie.create({
+//       data: movieData,
+//     });
+//     const item = await createItem(itemData);
+//     return {movie, item};
+//   } catch (error) {
+//     console.error("Error occurred while creating movie:", error);
+//   }
+// };
+
+// createBook
+export const createMovie = async (reqMovie: any) => {
   try {
-    const movieData = reqMovie.body; //contain all movie's data for a movie
-    const itemData = reqItem.body;
+    const movieData = reqMovie.body;
+    
     const movie = await prismaClient.movie.create({
       data: movieData,
     });
-    const item = await createItem(itemData);
-    return {movie, item};
-  } catch (error) {
-    console.error("Error occurred while creating movie:", error);
+    //if(movie == null) return '1';
+    return movie; // Return item and book
+  } catch (e) {
+    console.error("Error occurred while creating book:", e);
+    return null;
   }
 };
 
@@ -131,40 +162,85 @@ export const getMovieRequest = async (searchValue: string) => {
   }
 };
 
+// export const getMovieDetailsRequest = async (searchValue: string) => {
+//   const url = `http://www.omdbapi.com/?t=${encodeURIComponent(
+//     searchValue,
+//   )}&apikey=411ddaa2`;
+//   try {
+//     const response = await fetch(url);
+//     const responseData = await response.json();
+
+//     if (responseData.items) {
+//       // Extract movie information from response data
+//       const movieData: any[] = responseData.items.map((item: any) => ({
+//           srcId: item.id,
+//           actors: item.volumeInfo.Actors ? item.volumeInfo.Actors : "N/A",
+//           itemTitle: item.volumeInfo.Title,
+//           thumbnailUrl: item.volumeInfo.Poster || "N/A",
+//           genre: item.volumeInfo.Genre || "N/A",
+//           language: item.volumeInfo.Language || "N/A",
+//           averageRating: item.volumeInfo.imdbRating || "N/A",
+//           ratingsCount: item.volumeInfo.imdbVotes || "N/A",
+//           year: item.volumeInfo.Year || "N/A", // Add year
+//           duration: item.volumeInfo.Runtime || "N/A", // Add duration
+//           releaseDate: item.volumeInfo.Released || "N/A"
+//           // Add other properties of a movie as needed
+//         }));
+//       return movieData;
+//     } else {
+//       console.error("Movie not found.");
+//       return ["Sorry"];
+//     }
+//   } catch (error) {
+//     console.error("Error fetching movie:", error);
+//     return [];
+//   }
+// };
 export const getMovieDetailsRequest = async (searchValue: string) => {
-  const url = `http://www.omdbapi.com/?t=${encodeURIComponent(
+  const url = `http://www.omdbapi.com/?s=${encodeURIComponent(
     searchValue,
-  )}&apikey=411ddaa2`;
+  )}&apikey=411ddaa2&type=movie`;
+
   try {
     const response = await fetch(url);
     const responseData = await response.json();
 
-    if (responseData.Response === "True") {
-      // Extract movie information from response data
-      const movieData: any[] = [
-        {
-          itemTitle: responseData.Title,
-          thumbnailUrl:
-            responseData.Poster !== "N/A" ? responseData.Poster : "",
-          genre: responseData.Genre || "N/A",
-          language: responseData.Language || "N/A",
-          averageRating: responseData.imdbRating || "N/A",
-          ratingsCount: responseData.imdbVotes || "N/A",
-          year: responseData.Year || "N/A", // Add year
-          duration: responseData.Runtime || "N/A", // Add duration
+    if (responseData.Search) {
+      const movieData: any[] = [];
+      for (const movie of responseData.Search.slice(0, 10)) {
+        const detailResponse = await fetch(`http://www.omdbapi.com/?i=${movie.imdbID}&apikey=411ddaa2`);
+        const detailData = await detailResponse.json();
+
+        const runtimeMatch = detailData.Runtime.match(/\d+/); // Extract numeric part from the string
+        const duration = runtimeMatch ? parseInt(runtimeMatch[0]) : 0; // Convert the numeric part to an integer
+
+        movieData.push({
+          srcId: movie.imdbID,
+          actors: detailData.Actors || "N/A",
+          itemTitle: movie.Title,
+          thumbnailUrl: movie.Poster === "N/A" ? "N/A" : movie.Poster,
+          genre: detailData.Genre || "N/A",
+          language: detailData.Language || "N/A",
+          averageRating: detailData.imdbRating || "N/A",
+          ratingsCount: detailData.imdbVotes || "N/A",
+          year: movie.Year,
+          duration: duration, // Store duration as an integer
+          releaseDate: detailData.Released || "N/A",
           // Add other properties of a movie as needed
-        },
-      ];
+        });
+      }
+
       return movieData;
     } else {
-      console.error("Movie not found.");
+      console.error("Movies not found.");
       return [];
     }
   } catch (error) {
-    console.error("Error fetching movie:", error);
+    console.error("Error fetching movies:", error);
     return [];
   }
 };
+
 
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {

@@ -126,7 +126,7 @@ export const getBookRequest = async (searchValue: string) => {
 
 export const getBookDetailsRequest = async (searchValue: string) => {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-    searchValue,
+    searchValue
   )}`;
   try {
     const response = await fetch(url);
@@ -152,7 +152,7 @@ export const getBookDetailsRequest = async (searchValue: string) => {
         ratingsCount: item.volumeInfo.ratingsCount || "N/A",
         authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
         publishedDate: item.volumeInfo.publishedDate || "N/A",
-        year: responseData.Year || "N/A", // Add year
+        year: item.volumeInfo.Year || "N/A", // Add year
         // Add other properties of a book as needed
       }));
       return booksData;
