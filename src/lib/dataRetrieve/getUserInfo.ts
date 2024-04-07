@@ -3,7 +3,7 @@ import {getHistoryItemsInProfile} from "../database/itemsInProfiles";
 import {getAllTagsInProfile} from "../database/tagsInProfiles";
 import {getUserById} from "../database/user";
 import {SimpleItem, User} from "../interfaces";
-import {getSimpleItemInfoByUserId} from "./getItemInfo";
+import {getSimpleItemInfoByItemId} from "./getItemInfo";
 
 export async function getUserInfoByUserId(
   userId: number,
@@ -18,7 +18,7 @@ export async function getUserInfoByUserId(
   let historyItem: SimpleItem[] = [];
   for (const item of itemsInProfiles) {
     if (item) {
-      const simpleItem = await getSimpleItemInfoByUserId(item.id);
+      const simpleItem = await getSimpleItemInfoByItemId(item.id);
       if (simpleItem) historyItem.push(simpleItem);
     }
   }
@@ -33,7 +33,7 @@ export async function getUserInfoByUserId(
   const userResult: User = {
     id: user.id,
     email: user.email,
-    name: (user.userName == null)?"": user.userName,
+    name: user.userName,
     dateJoined: user.profile.registeredDate,
     numberofLikedItem: user.profile.likedItem,
     numberOfRating: user.rate.length,

@@ -180,7 +180,7 @@ export async function getItemInfoBySrcId(
   return getItemInfoByItemId(itemId, userId);
 }
 
-export async function getSimpleItemInfoByUserId(
+export async function getSimpleItemInfoByItemId(
   itemId: number,
 ): Promise<SimpleItem | undefined> {
   //return type is ItemInfo or undefined
