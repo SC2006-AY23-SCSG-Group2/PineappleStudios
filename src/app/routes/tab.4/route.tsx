@@ -15,7 +15,8 @@ import {UserProfileCard} from "./components/UserProfileCard";
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
   if (session.data.startTime && session.data.userId) {
-    const timeUsed = await calculateUsageTimeInMinutes(session.data.startTime);
+    const startTime = new Date(session.data.startTime);
+    const timeUsed = await calculateUsageTimeInMinutes(startTime);
     session.set("startTime", new Date());
     await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
   }

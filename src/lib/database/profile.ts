@@ -34,9 +34,8 @@ export const createProfile = async () => {
 };
 
 // update  profile
-export const updateProfile = async (request: any) => {
+export const updateProfile = async (profileId: number, request: any) => {
   try {
-    const profileId = request.params.id;
     const profileData = request.body;
     // Remove bookId from bookData to prevent updating it
     delete profileData.id;
@@ -130,7 +129,7 @@ export async function updateUserAppUsage(
         timeUsedInApp: newTotalUsageTime,
       },
     };
-    updateProfile(data);
+    updateProfile(profileId, data);
 
     return {success: true};
   } catch (error) {
