@@ -25,9 +25,22 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
         </div>
       )}
       <div
-        className="absolute inset-0 z-20 duration-400 invisible opacity-0 transition delay-100 group-hover:visible group-hover:opacity-100"
-        style={{ height: 'calc(100% + 3rem)' /* 3rem is the total vertical margin */ }}
-      >
+        className="
+          duration-400
+          invisible
+          absolute
+          top-0
+          z-10
+          w-full
+          scale-0
+          opacity-0
+          transition
+          delay-100
+          group-hover:-translate-y-[6vw]
+          group-hover:scale-110
+          group-hover:opacity-100
+          sm:visible
+        ">
         <img
           src={data.img}
           alt={data.title || "Item"}
