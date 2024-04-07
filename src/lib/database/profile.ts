@@ -129,7 +129,7 @@ export async function updateUserAppUsage(
         timeUsedInApp: newTotalUsageTime,
       },
     };
-    updateProfile(profileId, data);
+    await updateProfile(profileId, data);
 
     return {success: true};
   } catch (error) {
