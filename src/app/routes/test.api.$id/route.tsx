@@ -129,7 +129,7 @@
 
 // ----------------------------- addItemToLibrary funciton -----------------------------
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/database/library";
+import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/dataRetrieve/handleLibraryItems";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId: number = 2; // Provide a valid user ID for testing
