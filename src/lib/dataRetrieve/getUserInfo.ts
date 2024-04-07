@@ -30,11 +30,10 @@ export async function getUserInfoByUserId(
   }
 
   let count = await countItemsInLibrary(user.libraryId);
-
   const userResult: User = {
     id: user.id,
     email: user.email,
-    name: user.userName,
+    name: (user.userName == null)?"": user.userName,
     dateJoined: user.profile.registeredDate,
     numberofLikedItem: user.profile.likedItem,
     numberOfRating: user.rate.length,
