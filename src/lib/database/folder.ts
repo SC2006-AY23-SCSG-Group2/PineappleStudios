@@ -68,3 +68,19 @@ export const deleteFolderById = async (folderId: number) => {
     return false;
   }
 };
+
+// Get folder by name within a specific library
+export const getFolderByName = async (name: string, libraryId: number) => {
+  try {
+    const folder = await prismaClient.folder.findFirst({
+      where: {
+        name: name,
+        libraryId: libraryId,
+      },
+    });
+    return folder;
+  } catch (error) {
+    console.error('Error occurred while fetching folder by name:', error);
+    return null;
+  }
+};
