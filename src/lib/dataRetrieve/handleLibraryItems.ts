@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
+import {prismaClient} from "../database/prisma"
+const prisma = prismaClient;
 export async function addItemToLibrary(userId: number, libraryId: number, itemId: number) {
     try {
       // Fetch the user to ensure it exists
