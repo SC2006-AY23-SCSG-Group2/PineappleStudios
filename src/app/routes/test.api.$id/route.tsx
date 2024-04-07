@@ -2,6 +2,11 @@ import {LoaderFunctionArgs, json} from "@remix-run/node";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleHistoryItems";
 import {
+  decrementLikedItemsByOne,
+  incrementLikedItemsByOne,
+  updateUserName,
+} from "src/lib/dataRetrieve/handleUserInfo";
+import {
   addPreferenceForUser,
   removePreferenceForUser,
 } from "src/lib/dataRetrieve/handleUserPreferences";
@@ -9,8 +14,8 @@ import {getUserById} from "src/lib/database/user";
 
 export async function loader({params}: LoaderFunctionArgs) {
   // const booksData = await getSongDetailsRequest("Maze Runner");
-  await addHistoryItemForUser(2, 1);
-  await addPreferenceForUser(2, "LEGEBI");
+  // await updateUserName(2, "POP");
+  await decrementLikedItemsByOne(2);
   const frontendUser = await getUserInfoByUserId(2);
   const user = await getUserById(2);
   // const book = await getItemInfoExample("1");

@@ -16,7 +16,7 @@ export async function loader() {
       const id = randomInteger(0, 1084);
       const newItem: SimpleItem = {
         id: id,
-        name: "Item",
+        title: "Item",
         img: `https://picsum.photos/id/${id}/200.webp`,
         tag: randomInteger(0, 1084) % 2 == 0 ? ["favorite"] : [],
         type: randomInteger(0, 1084) % 3,
