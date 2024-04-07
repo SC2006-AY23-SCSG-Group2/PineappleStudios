@@ -1,36 +1,36 @@
-import {LoaderFunctionArgs, json} from "@remix-run/node";
-import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
-import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleHistoryItems";
-import {
-  decrementLikedItemsByOne,
-  incrementLikedItemsByOne,
-  updateUserName,
-} from "src/lib/dataRetrieve/handleUserInfo";
-import {
-  addPreferenceForUser,
-  removePreferenceForUser,
-} from "src/lib/dataRetrieve/handleUserPreferences";
-import {getUserById} from "src/lib/database/user";
+// import {LoaderFunctionArgs, json} from "@remix-run/node";
+// import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
+// import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleHistoryItems";
+// import {
+//   decrementLikedItemsByOne,
+//   incrementLikedItemsByOne,
+//   updateUserName,
+// } from "src/lib/dataRetrieve/handleUserInfo";
+// import {
+//   addPreferenceForUser,
+//   removePreferenceForUser,
+// } from "src/lib/dataRetrieve/handleUserPreferences";
+// import {getUserById} from "src/lib/database/user";
 
-export async function loader({params}: LoaderFunctionArgs) {
-  // const booksData = await getSongDetailsRequest("Maze Runner");
-  // await updateUserName(2, "POP");
-  await decrementLikedItemsByOne(2);
-  const frontendUser = await getUserInfoByUserId(2);
-  const user = await getUserById(2);
-  // const book = await getItemInfoExample("1");
-  // if (user != null)
-  //   console.log("SUCCESSFULLY CREATED ITEM, PEOPLE, ITEM, ASSIGNMENT, BOOK");
-  return json(
-    {
-      success: true,
-      dataFromDataBase: user,
-      dataForFronted: frontendUser,
-      error: {},
-    },
-    {status: 200},
-  );
-}
+// export async function loader({params}: LoaderFunctionArgs) {
+//   // const booksData = await getSongDetailsRequest("Maze Runner");
+//   // await updateUserName(2, "POP");
+//   await decrementLikedItemsByOne(2);
+//   const frontendUser = await getUserInfoByUserId(2);
+//   const user = await getUserById(2);
+//   // const book = await getItemInfoExample("1");
+//   // if (user != null)
+//   //   console.log("SUCCESSFULLY CREATED ITEM, PEOPLE, ITEM, ASSIGNMENT, BOOK");
+//   return json(
+//     {
+//       success: true,
+//       dataFromDataBase: user,
+//       dataForFronted: frontendUser,
+//       error: {},
+//     },
+//     {status: 200},
+//   );
+// }
 //--------------------Testing getItemInfoBySrcId,getItemIdBySrcId functions -----------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import {
@@ -126,3 +126,39 @@ export async function loader({params}: LoaderFunctionArgs) {
 //     );
 //   }
 // }
+
+// ----------------------------- addItemToLibrary funciton -----------------------------
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/database/library";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userId: number = 2; // Provide a valid user ID for testing
+  const libraryId: number = 1; // Provide the library ID where you want to add the item
+  const movieId: number = 45; // Provide the ID of the existing movie
+
+  try {
+    // Add the existing movie to the library
+    const addedMovie = await removeItemFromLibrary(userId, libraryId, movieId);
+    console.log("Added Movie to Library:", addedMovie);
+
+    return json(
+      {
+        success: true,
+        data: addedMovie,
+        error: {},
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return json(
+      {
+        success: false,
+        data: {},
+        error: { msg: "An error occurred while adding movie to library" },
+      },
+      { status: 500 }
+    );
+  }
+}
+
