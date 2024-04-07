@@ -199,43 +199,43 @@
 // }
 
 // ---------------------- createReview ------------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-//import { createReview } from "../../../lib/database/review";
-import { createRating } from "../../../lib/database/rate";
-import { handleRating } from "../../../lib/dataRetrieve/handleRating";
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// //import { createReview } from "../../../lib/database/review";
+// import { createRating } from "../../../lib/database/rate";
+// import { handleRating } from "../../../lib/dataRetrieve/handleRating";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const userId: number = 2; // Provide a valid user ID for testing
-  const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
-  const reviewContent: string = "Worst song that i have heard so far."; // Provide the review content
-  const rating: number = 4; // Provide the rating (out of 5) to be assigned
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const userId: number = 2; // Provide a valid user ID for testing
+//   const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
+//   const reviewContent: string = "Worst song that i have heard so far."; // Provide the review content
+//   const rating: number = 4; // Provide the rating (out of 5) to be assigned
 
-  try {
-    // Create a new review
-    //const newReview = await createReview(userId, itemId, reviewContent);
-    const newReview = await handleRating(userId, itemId, rating);
-    console.log("Created Review:", newReview);
+//   try {
+//     // Create a new review
+//     //const newReview = await createReview(userId, itemId, reviewContent);
+//     const newReview = await handleRating(userId, itemId, rating);
+//     console.log("Created Review:", newReview);
 
-    return json(
-      {
-        success: true,
-        data: newReview,
-        error: {},
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error:", error);
-    return json(
-      {
-        success: false,
-        data: {},
-        error: { msg: "An error occurred while creating review" },
-      },
-      { status: 500 }
-    );
-  }
-}
+//     return json(
+//       {
+//         success: true,
+//         data: newReview,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while creating review" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
 //---------------------------avgRating---------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path
@@ -268,5 +268,76 @@ export async function loader({ request }: LoaderFunctionArgs) {
 //     );
 //   }
 // }
+//------------------------------handle folder----------------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// //import { createFolder } from "../../../lib/database/folder";
+// import { handleFolder } from "../../../lib/dataRetrieve/handleFolder";
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const libraryId: number = 2; // Provide the library ID where you want to create the folder
+//   const folderName: string = "Train"; // Provide the name for the folder
+
+//   try {
+//     // Create a new folder
+//     const newFolder = await handleFolder(folderName, libraryId);
+//     console.log("Created Folder:", newFolder);
+
+//     return json(
+//       {
+//         success: true,
+//         data: newFolder,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while creating folder" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+// -----------------------handle api ------------------------------------------
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
+import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
+import { getSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
+
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  try {
+    // Invoke the handleSearchAPI function
+    const searchData = await getSearchAPI("Harry Potter");
+
+    // Log the search data
+    console.log("Search Data:", searchData);
+
+    // Return the search data
+    return json(
+      {
+        success: true,
+        data: searchData,
+        error: {},
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return json(
+      {
+        success: false,
+        data: {},
+        error: { msg: "An error occurred while fetching search results" },
+      },
+      { status: 500 }
+    );
+  }
+}
+
 
 
