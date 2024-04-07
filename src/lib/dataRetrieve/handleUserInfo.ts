@@ -1,6 +1,10 @@
 import {getSession} from "src/app/session";
 
-import {decrementLikedItems, incrementLikedItems} from "../database/profile";
+import {
+  decrementLikedItems,
+  incrementLikedItems,
+  updateUserAppUsage,
+} from "../database/profile";
 import {getUserByEmail, getUserById, updateUser} from "../database/user";
 
 export async function updateUserEmail(userId: number, newUserEmail: string) {
@@ -127,6 +131,6 @@ export async function updateUserTimeUsedInApp(
   if (!user) {
     return {error: "The userId is invalid!"};
   }
-  updateUserTimeUsedInApp(user.profileId, timeUsedInMins);
+  updateUserAppUsage(user.profileId, timeUsedInMins);
   return {message: "Updated time used in app"};
 }
