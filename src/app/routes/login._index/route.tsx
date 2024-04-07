@@ -88,6 +88,7 @@ export async function action({request}: ActionFunctionArgs) {
 
   const session = await getSession();
   session.set("userId", user.id.toString());
+  session.set("startTime", new Date());
 
   //returns a redirect response to a specific URL ("/tab"), along with the cookie containing the session information.
   return redirect("/tab/1", {

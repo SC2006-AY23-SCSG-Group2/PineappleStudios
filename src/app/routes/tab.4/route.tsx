@@ -2,6 +2,10 @@ import {LoaderFunctionArgs} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
+import {
+  calculateUsageTimeInMinutes,
+  updateUserTimeUsedInApp,
+} from "src/lib/dataRetrieve/handleUserInfo";
 
 import {SimpleItem} from "../../../lib/interfaces";
 import {TagList} from "../_components/TagList";
@@ -10,6 +14,11 @@ import {UserProfileCard} from "./components/UserProfileCard";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
+  if (session.data.startTime && session.data.userId) {
+    const timeUsed = await calculateUsageTimeInMinutes(session.data.startTime);
+    session.set("startTime", new Date());
+    await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
+  }
 
   function randomInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -21,7 +30,7 @@ export async function loader({request}: LoaderFunctionArgs) {
       const id = randomInteger(0, 1084);
       const newItem: SimpleItem = {
         id: id,
-        name: "Item",
+        title: "Item",
         img: `https://picsum.photos/id/${id}/200.webp`,
         tag: randomInteger(0, 1084) % 2 == 0 ? ["favorite"] : [],
         type: randomInteger(0, 1084) % 3,

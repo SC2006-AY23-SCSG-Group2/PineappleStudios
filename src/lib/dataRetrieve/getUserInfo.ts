@@ -5,10 +5,12 @@ import {getUserById} from "../database/user";
 import {SimpleItem, User} from "../interfaces";
 import {getSimpleItemInfoByUserId} from "./getItemInfo";
 
-export async function getUserInfoByUserId(userId: number) {
+export async function getUserInfoByUserId(
+  userId: number,
+): Promise<User | undefined> {
   const user = await getUserById(userId);
   if (!user) {
-    console.log("User for userId: ", userId, " is not created.");
+    console.log("User for userId: ", userId, " is invalid!");
     return;
   }
 
@@ -33,6 +35,10 @@ export async function getUserInfoByUserId(userId: number) {
     id: user.id,
     email: user.email,
     name: user.userName,
+    dateJoined: user.profile.registeredDate,
+    numberofLikedItem: user.profile.likedItem,
+    numberOfRating: user.rate.length,
+    timeUsedAppInMins: user.profile.timeUsedInApp,
     history: historyItem,
     countItemsInLibrary: count,
     preference: preferences,

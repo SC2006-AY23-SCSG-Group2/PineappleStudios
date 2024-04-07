@@ -2,6 +2,10 @@ export type User = {
   id: number;
   email: string;
   name: string;
+  dateJoined: Date;
+  numberofLikedItem: number;
+  numberOfRating: number;
+  timeUsedAppInMins: number;
   history?: SimpleItem[];
   countItemsInLibrary: number;
   preference: string[];

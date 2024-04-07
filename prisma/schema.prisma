@@ -42,7 +42,7 @@ model UserClickedData {
 model Profile {
   id             Int               @id @default(autoincrement())
   user           User?
-  registeredDate DateTime
+  registeredDate DateTime //handle in createProfile()
   timeUsedInApp  Int               @default(0) // Total time used in minute
   likedItem      Int               @default(0)
   preferences    TagsInProfiles[]

@@ -1,9 +1,8 @@
 import {prismaClient} from "./prisma";
 
 // get profile by id
-export const getProfileById = async (request: any) => {
+export const getProfileById = async (profileId: number) => {
   try {
-    const profileId = request.params.id;
     const profile = await prismaClient.profile.findUnique({
       where: {
         id: profileId,
@@ -69,31 +68,69 @@ export const deleteProfile = async (request: any) => {
   }
 };
 
+export const incrementLikedItems = async (profileId: number) => {
+  const profile = await getProfileById(profileId);
+  if (!profile) {
+    throw new Error(`Profile with ID ${profileId} not found.`);
+  }
+  try {
+    await prismaClient.profile.update({
+      where: {
+        id: profileId,
+      },
+      data: {
+        likedItem: profile?.likedItem + 1,
+      },
+    });
+    console.log(`LikedItem incremented for profile with ID ${profileId}.`);
+  } catch (error) {
+    console.log("Error occured while incrementing LikedItem by 1", error);
+  }
+};
+
+export const decrementLikedItems = async (profileId: number) => {
+  const profile = await getProfileById(profileId);
+  if (!profile) {
+    throw new Error(`Profile with ID ${profileId} not found.`);
+  }
+  try {
+    await prismaClient.profile.update({
+      where: {
+        id: profileId,
+      },
+      data: {
+        likedItem: profile?.likedItem - 1, // Decrement likedItem by 1
+      },
+    });
+    console.log(`LikedItem decremented for profile with ID ${profileId}.`);
+  } catch (error) {
+    console.log("Error occurred while decrementing LikedItem by 1", error);
+  }
+};
+
 // Function to update accumulated app usage time for a user //Pass in argument (profileId and latestAppUsageTime) to update timeUsedInApp
 export async function updateUserAppUsage(
-  request: any,
+  profileId: number,
   latestAppUsageTime: number,
 ) {
   try {
     // Retrieve the profileId from the request parameter
-    const profileId = request.params.profileId;
-    const userProfile = await prismaClient.profile.findUnique({
-      where: {id: profileId},
-    });
+    const userProfile = await getProfileById(profileId);
 
     if (!userProfile) {
       throw new Error("User profile not found");
     }
 
     // Calculate the new total usage time by adding latestAppUsageTime to existing total
-    const newTotalUsageTime =
-      (userProfile.timeUsedInApp || 0) + latestAppUsageTime;
+    const newTotalUsageTime = userProfile.timeUsedInApp + latestAppUsageTime;
 
     // Update the timeUsedInApp field in the user's profile with the new total usage time
-    await prismaClient.profile.update({
-      where: {id: profileId},
-      data: {timeUsedInApp: newTotalUsageTime},
-    });
+    const data = {
+      body: {
+        timeUsedInApp: newTotalUsageTime,
+      },
+    };
+    updateProfile(data);
 
     return {success: true};
   } catch (error) {

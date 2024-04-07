@@ -33,6 +33,9 @@ export async function getUserByEmail(email: string) {
     where: {
       email,
     },
+    include: {
+      profile: true, //also fetch "Profile"
+    },
   });
 }
 
@@ -40,6 +43,10 @@ export async function getUserById(userId: number) {
   return await prismaClient.user.findUnique({
     where: {
       id: userId,
+    },
+    include: {
+      profile: true, //also fetch "Profile"
+      rate: true, //fetch "rate"
     },
   });
 }
@@ -82,12 +89,12 @@ export async function createUser(
   }
 }
 
-export async function updateUser(id: number, user: User) {
+export async function updateUser(userId: number, request: any) {
   return await prismaClient.user.update({
     where: {
-      id,
+      id: userId,
     },
-    data: user,
+    data: request.body,
   });
 }
 
