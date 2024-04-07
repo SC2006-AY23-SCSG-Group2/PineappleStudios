@@ -163,24 +163,63 @@
 // }
 
 //---------------------------------folder function -------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { addItemToFolder, removeItemFromFolder } from "../../../lib/dataRetrieve/handleFolder";
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const userId: number = 2; // Provide a valid user ID for testing
+//   const libraryId: number = 2; // Provide the library ID where you want to add the item
+//   const folderId: number = 2; // Provide the ID of the folder where you want to add the item
+//   const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
+
+//   try {
+//     // Add the existing item to the folder
+//     const addedItem = await addItemToFolder(libraryId, folderId, itemId);
+//     console.log("Added Item to Folder:", addedItem);
+
+//     return json(
+//       {
+//         success: true,
+//         data: addedItem,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while adding item to folder" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+// ---------------------- createReview ------------------------------
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { addItemToFolder, removeItemFromFolder } from "../../../lib/dataRetrieve/handleFolder";
+//import { createReview } from "../../../lib/database/review";
+import { createRating } from "../../../lib/database/rate";
+import { handleRating } from "../../../lib/dataRetrieve/handleRating";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId: number = 2; // Provide a valid user ID for testing
-  const libraryId: number = 2; // Provide the library ID where you want to add the item
-  const folderId: number = 2; // Provide the ID of the folder where you want to add the item
   const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
+  const reviewContent: string = "Worst song that i have heard so far."; // Provide the review content
+  const rating: number = 4; // Provide the rating (out of 5) to be assigned
 
   try {
-    // Add the existing item to the folder
-    const addedItem = await addItemToFolder(libraryId, folderId, itemId);
-    console.log("Added Item to Folder:", addedItem);
+    // Create a new review
+    //const newReview = await createReview(userId, itemId, reviewContent);
+    const newReview = await handleRating(userId, itemId, rating);
+    console.log("Created Review:", newReview);
 
     return json(
       {
         success: true,
-        data: addedItem,
+        data: newReview,
         error: {},
       },
       { status: 200 }
@@ -191,10 +230,43 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while adding item to folder" },
+        error: { msg: "An error occurred while creating review" },
       },
       { status: 500 }
     );
   }
 }
+//---------------------------avgRating---------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path
+
+// export async function loader({ params }: LoaderFunctionArgs) {
+//   const itemId: number = 44; // Provide the item ID for testing
+
+//   try {
+//     const averageRating = await getAverageRatingByItemId(itemId);
+    
+//     console.log("Average Rating:", averageRating);
+
+//     return json(
+//       {
+//         success: true,
+//         data: { averageRating },
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while fetching average rating for item" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
 
