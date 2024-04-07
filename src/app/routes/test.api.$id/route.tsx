@@ -128,23 +128,59 @@
 // }
 
 // ----------------------------- addItemToLibrary funciton -----------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/dataRetrieve/handleLibraryItems";
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const userId: number = 2; // Provide a valid user ID for testing
+//   const libraryId: number = 1; // Provide the library ID where you want to add the item
+//   const movieId: number = 45; // Provide the ID of the existing movie
+
+//   try {
+//     // Add the existing movie to the library
+//     const addedMovie = await removeItemFromLibrary(userId, libraryId, movieId);
+//     console.log("Added Movie to Library:", addedMovie);
+
+//     return json(
+//       {
+//         success: true,
+//         data: addedMovie,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while adding movie to library" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+//---------------------------------folder function -------------------------
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/dataRetrieve/handleLibraryItems";
+import { addItemToFolder, removeItemFromFolder } from "../../../lib/dataRetrieve/handleFolder";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId: number = 2; // Provide a valid user ID for testing
-  const libraryId: number = 1; // Provide the library ID where you want to add the item
-  const movieId: number = 45; // Provide the ID of the existing movie
+  const libraryId: number = 2; // Provide the library ID where you want to add the item
+  const folderId: number = 2; // Provide the ID of the folder where you want to add the item
+  const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
 
   try {
-    // Add the existing movie to the library
-    const addedMovie = await removeItemFromLibrary(userId, libraryId, movieId);
-    console.log("Added Movie to Library:", addedMovie);
+    // Add the existing item to the folder
+    const addedItem = await addItemToFolder(libraryId, folderId, itemId);
+    console.log("Added Item to Folder:", addedItem);
 
     return json(
       {
         success: true,
-        data: addedMovie,
+        data: addedItem,
         error: {},
       },
       { status: 200 }
@@ -155,7 +191,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while adding movie to library" },
+        error: { msg: "An error occurred while adding item to folder" },
       },
       { status: 500 }
     );
