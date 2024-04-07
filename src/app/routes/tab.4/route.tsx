@@ -2,12 +2,13 @@ import {LoaderFunctionArgs} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {getSession} from "src/app/session";
+import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   calculateUsageTimeInMinutes,
   updateUserTimeUsedInApp,
 } from "src/lib/dataRetrieve/handleUserInfo";
 
-import {SimpleItem} from "../../../lib/interfaces";
+import {SimpleItem, User} from "../../../lib/interfaces";
 import {TagList} from "../_components/TagList";
 import {HistoryItemList} from "./components/HistoryItemList";
 import {UserProfileCard} from "./components/UserProfileCard";
@@ -19,6 +20,14 @@ export async function loader({request}: LoaderFunctionArgs) {
     const timeUsed = await calculateUsageTimeInMinutes(startTime);
     session.set("startTime", new Date());
     await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
+  }
+
+  let userData;
+  if (session.data.userId) {
+    userData = await getUserInfoByUserId(parseInt(session.data.userId));
+  }
+  if (!userData || !userData.history) {
+    return;
   }
 
   function randomInteger(min: number, max: number) {
@@ -45,25 +54,14 @@ export async function loader({request}: LoaderFunctionArgs) {
   return {
     session: session.data,
     user: {
-      name: "Unknown_Blaze",
-      email: "unknown@e.ntu.edu.sg",
-      time: 2,
-      date: "March 15, 2024",
-      numOfLikes: 107,
-      numOfRatings: 26,
-      preferences: [
-        "Pop",
-        "Jazz",
-        "Classical",
-        "Indie",
-        "Movie-related",
-        "Indian Classical",
-        "Dystopian",
-        "Non-fiction",
-        "Thriller",
-        "Horror",
-      ],
-      HistoryItems: makeItems(),
+      name: userData?.name,
+      email: userData?.email,
+      time: userData?.timeUsedAppInMins,
+      date: userData?.dateJoined,
+      numOfLikes: userData?.numberofLikedItem,
+      numOfRatings: userData?.numberOfRating,
+      preferences: userData?.preference,
+      HistoryItems: userData?.history,
     },
   };
 }
