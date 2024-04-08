@@ -1,8 +1,8 @@
+import {PlayIcon} from "@heroicons/react/16/solid";
 import React, {useState} from "react";
 
 import {SimpleItem} from "../../../lib/interfaces";
 import {HeartButton} from "./HeartButton";
-import { PlayIcon } from "@heroicons/react/16/solid";
 
 interface ItemCardProps {
   data: SimpleItem;
@@ -12,14 +12,14 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
   const [fav, setFav] = useState(false);
 
   return (
-    <div className="col-span group relative h-[12vw] m-3">
+    <div className="col-span group relative m-3 h-[12vw]">
       <img
         src={data.img}
         alt={data.title || "Item"}
         draggable={false}
         className="h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
       />
-      {data.tag.find(str => str === "favorite") && (
+      {data.tag.find((str) => str === "favorite") && (
         <div className="absolute right-2 top-2">
           <HeartButton onClick={() => setFav(!fav)} />
         </div>

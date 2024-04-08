@@ -1,7 +1,7 @@
-import { createSong, getSongBySrcId } from "./song";
-import { createItem } from "./item";
-import { createPeople, getPeopleByNameAndRole } from "./people";
-import { createPeopleinItemsAssignments } from "./peopleInItems";
+import {createItem} from "./item";
+import {createPeople, getPeopleByNameAndRole} from "./people";
+import {createPeopleinItemsAssignments} from "./peopleInItems";
+import {createSong, getSongBySrcId} from "./song";
 
 export const createSongItem = async (singleSongData: any) => {
   // Sanity check
@@ -41,7 +41,9 @@ export const createSongItem = async (singleSongData: any) => {
   }
 
   // Extract date part from releaseDate
-  const releaseDate = singleSongData.releaseDate ? singleSongData.releaseDate.split("T")[0] : null;
+  const releaseDate = singleSongData.releaseDate
+    ? singleSongData.releaseDate.split("T")[0]
+    : null;
   // Create item object
   const itemData = {
     body: {
@@ -83,10 +85,10 @@ export const createSongItem = async (singleSongData: any) => {
   // Create Song object
   const songData = {
     body: {
-        srcId: singleSongData.srcId,
-        album: singleSongData.album,
-        duration: singleSongData.duration,
-        itemId: item.id,
+      srcId: singleSongData.srcId,
+      album: singleSongData.album,
+      duration: singleSongData.duration,
+      itemId: item.id,
     },
   };
 

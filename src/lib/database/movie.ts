@@ -70,7 +70,7 @@ export const getMovieByItemId = async (movieId: any) => {
 export const createMovie = async (reqMovie: any) => {
   try {
     const movieData = reqMovie.body;
-    
+
     const movie = await prismaClient.movie.create({
       data: movieData,
     });
@@ -208,7 +208,9 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
     if (responseData.Search) {
       const movieData: any[] = [];
       for (const movie of responseData.Search.slice(0, 10)) {
-        const detailResponse = await fetch(`http://www.omdbapi.com/?i=${movie.imdbID}&apikey=411ddaa2`);
+        const detailResponse = await fetch(
+          `http://www.omdbapi.com/?i=${movie.imdbID}&apikey=411ddaa2`,
+        );
         const detailData = await detailResponse.json();
 
         const runtimeMatch = detailData.Runtime.match(/\d+/); // Extract numeric part from the string
@@ -240,7 +242,6 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
     return [];
   }
 };
-
 
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {

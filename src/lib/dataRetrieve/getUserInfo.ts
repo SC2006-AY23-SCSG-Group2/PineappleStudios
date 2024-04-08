@@ -5,13 +5,11 @@ import {getUserById} from "../database/user";
 import {SimpleItem, User} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
 
-export async function getUserInfoByUserId(
-  userId: number,
-): Promise<User | undefined> {
+export async function getUserInfoByUserId(userId: number): Promise<User> {
   const user = await getUserById(userId);
   if (!user) {
     console.log("User for userId: ", userId, " is invalid!");
-    return;
+    throw new Error(`User with ID ${userId} not found`);
   }
 
   const itemsInProfiles = await getHistoryItemsInProfile(user.profileId);

@@ -126,7 +126,7 @@ export const getBookRequest = async (searchValue: string) => {
 
 export const getBookDetailsRequest = async (searchValue: string) => {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-    searchValue
+    searchValue,
   )}`;
   try {
     const response = await fetch(url);
