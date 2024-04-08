@@ -18,6 +18,7 @@ export const SmallPeopleList: React.FC<ItemsListProps> = ({
         <div className="m-6 grid grid-cols-4 gap-1 max-md:m-0 max-md:grid-cols-3 lg:grid-cols-3">
           {items.map((item, index) => (
             <div
+              key={index}
               className={
                 "grid min-w-24 grid-cols-1 content-center justify-items-center rounded-full bg-accent"
               }>
