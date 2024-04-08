@@ -22,6 +22,8 @@ async function getTagNameById(tagId: number): Promise<string | null> {
   }
 }
 
+
+
 export async function getLibraryInfoByUserId(
   userId: number,
 ): Promise<Library | null> {
@@ -33,13 +35,22 @@ export async function getLibraryInfoByUserId(
       include: {
         library: {
           include: {
+            items: { // Include items directly from the library
+              include: {
+                item: { // Include item details
+                  include: {
+                    tags: true,
+                  },
+                },
+              },
+            },
             folders: {
               include: {
                 items: {
                   include: {
                     item: {
                       include: {
-                        tags: true, // Include tags for each item
+                        tags: true,
                       },
                     },
                   },
@@ -60,10 +71,41 @@ export async function getLibraryInfoByUserId(
     const library: Library = {
       id: user.libraryId,
       userId: userId,
-      items: [],
+      items: [], // Initialize items array
       folders: [],
       series: [],
     };
+
+    // Process items directly from the library
+    for (const libraryItem of user.library.items) {
+      const item = libraryItem.item;
+      const ids = item.tags.map((tag) => tag.tagId);
+      const tagNames = await Promise.all(ids.map((id) => getTagNameById(id)));
+      const nonNullTagNames = tagNames.filter(
+        (tagName) => tagName !== null,
+      ) as string[];
+      const types =
+        item.itemType == "song"
+          ? ItemType.Song
+          : item.itemType == "book"
+          ? ItemType.Book
+          : ItemType.Movie;
+      library.items.push({
+        id: item.id,
+        type: types,
+        img: item.image,
+        title: item.title,
+        tag: nonNullTagNames,
+      });
+    }
+
+
+    //image for folder
+    function randomInteger(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    const fakeImg = `https://picsum.photos/id/${randomInteger(0, 1084)}/400/600.webp`;
+
 
     // Process folders
     for (const folder of user.library.folders) {
@@ -72,7 +114,7 @@ export async function getLibraryInfoByUserId(
         id: folder.id,
         name: folder.name,
         isSeries: value, // Assuming regular folder by default
-        img: "", // You need to determine how to get the folder image URL
+        img: folder.items.length >= 1 ? folder.items[0].item.image : fakeImg,
         items: [],
       };
 

@@ -27,12 +27,27 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
     if (tag) preferences.push(tag?.name);
   }
 
+  // Convert user.profile.registeredDate to Singapore time and format it
+  const registeredDate = new Date(user.profile.registeredDate);
+  const singaporeTimeOptions = {
+    timeZone: "Asia/Singapore",
+    month: "long" as const, // Ensure the month is specified as "long"
+    day: "numeric" as const, // Ensure the day is specified as "numeric"
+    year: "numeric" as const, // Ensure the year is specified as "numeric"
+  };
+  const formatter = new Intl.DateTimeFormat("en-US", singaporeTimeOptions);
+  const formattedDateJoined = formatter.format(registeredDate);
+
+
+
   let count = await countItemsInLibrary(user.libraryId);
+  const Name = user.userName?user.userName:"";
   const userResult: User = {
     id: user.id,
     email: user.email,
-    name: user.userName,
-    dateJoined: user.profile.registeredDate,
+    name: Name,
+    //dateJoined: user.profile.registeredDate,
+    dateJoined: formattedDateJoined,
     numberofLikedItem: user.profile.likedItem,
     numberOfRating: user.rate.length,
     timeUsedAppInMins: user.profile.timeUsedInApp,

@@ -92,7 +92,6 @@ export const updateMovie = async (request: any) => {
     delete movieData.itemId;
     delete movieData.item;
     delete movieData.srcId;
-
     const movie = await prismaClient.movie.update({
       where: {
         itemId: movieId,
