@@ -21,6 +21,7 @@ import {
 import {commitSession, destroySession, getSession} from "../../session";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
+import {HistoryItemList} from "../tab.4/components/HistoryItemList";
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -93,7 +94,15 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
   }
 
   if (itemInfo.isInLibrary && itemInfo.id) {
-    return redirect("/library/item/" + itemInfo.id);
+    return redirect("/library/item/" + itemInfo.id, {
+      headers: {"Set-Cookie": await commitSession(session)},
+    });
+  }
+
+  if (id !== itemInfo.id.toString()) {
+    return redirect("/browser/item/" + itemInfo.id, {
+      headers: {"Set-Cookie": await commitSession(session)},
+    });
   }
 
   return json(jsonData, {
@@ -236,6 +245,8 @@ export default function tab_index(): React.JSX.Element {
               <TagList tag={data.genre} />
             </div>
             <SmallPeopleList items={data.people} />
+            {/*used as an item list */}
+            <HistoryItemList title="View History" items={[]} />
           </div>
           {/*Right Card End*/}
         </div>
