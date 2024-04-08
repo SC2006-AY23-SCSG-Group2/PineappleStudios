@@ -1,17 +1,28 @@
-import { LoaderFunctionArgs, TypedResponse, json, redirect } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
-import React, { useEffect, useState } from "react";
+import {
+  LoaderFunctionArgs,
+  TypedResponse,
+  json,
+  redirect,
+} from "@remix-run/node";
+import {useFetcher, useLoaderData} from "@remix-run/react";
+import React, {useEffect, useState} from "react";
 
-
-
-import { getItemInfoByItemId, getItemInfoBySrcId } from "../../../lib/dataRetrieve/getItemInfo";
-import { BookContent, ItemInfo, ItemType, MovieContent, SongContent } from "../../../lib/interfaces";
-import { commitSession, destroySession, getSession } from "../../session";
-import { SmallPeopleList } from "../_components/SmallPeopleList";
-import { TagList } from "../_components/TagList";
+import {
+  getItemInfoByItemId,
+  getItemInfoBySrcId,
+} from "../../../lib/dataRetrieve/getItemInfo";
+import {
+  BookContent,
+  ItemInfo,
+  ItemType,
+  MovieContent,
+  SongContent,
+} from "../../../lib/interfaces";
+import {commitSession, destroySession, getSession} from "../../session";
+import {SmallPeopleList} from "../_components/SmallPeopleList";
+import {TagList} from "../_components/TagList";
 import {ToastList} from "../_components/ToastList";
 import {HistoryItemList} from "../tab.4/components/HistoryItemList";
-
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -140,8 +151,8 @@ export default function tab_index(): React.JSX.Element {
   const autoClose = true;
   const autoCloseDuration = 5;
 
-  // // eslint-disable-next-line
-  // @typescript-eslint/no-unused-vars,react-hooks/exhaustive-depsfunction showToast(message: string, type: string) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const showToast = (message: string, type: string) => {
     const toast: {id: number; message: string; type: string} = {
       id: Date.now(),
       message,
@@ -159,7 +170,7 @@ export default function tab_index(): React.JSX.Element {
         removeToast(toast.id);
       }, autoCloseDuration * 1000);
     }
-  }
+  };
 
   function removeToast(id: number) {
     setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
