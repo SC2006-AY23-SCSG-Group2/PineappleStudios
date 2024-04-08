@@ -8,7 +8,6 @@ import {
   updateUserTimeUsedInApp,
 } from "src/lib/dataRetrieve/handleUserInfo";
 
-import {SimpleItem} from "../../../lib/interfaces";
 import {TagList} from "../_components/TagList";
 import {HistoryItemList} from "./components/HistoryItemList";
 import {UserProfileCard} from "./components/UserProfileCard";

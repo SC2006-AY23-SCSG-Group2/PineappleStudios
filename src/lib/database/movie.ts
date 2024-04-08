@@ -1,5 +1,5 @@
 //http://www.omdbapi.com/?s=star wars&apikey=411ddaa2
-import {createItem, deleteItem} from "./item";
+import {deleteItem} from "./item";
 import {prismaClient} from "./prisma";
 
 //CRUD

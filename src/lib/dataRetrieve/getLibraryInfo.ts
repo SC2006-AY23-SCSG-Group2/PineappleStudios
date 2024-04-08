@@ -1,6 +1,6 @@
 // Import necessary interfaces
 import {prismaClient} from "../database/prisma";
-import {Folder, ItemType, Library, User} from "./../interfaces";
+import {Folder, ItemType, Library} from "./../interfaces";
 
 async function getTagNameById(tagId: number): Promise<string | null> {
   try {

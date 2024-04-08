@@ -1,7 +1,4 @@
 // Import necessary interfaces
-import {PrismaClient} from "@prisma/client";
-import {Item} from "@prisma/client";
-
 import {getTagsFromItem} from "../database/TagsInItems";
 import {getBookByItemId} from "../database/book";
 import {getItemById} from "../database/item";
@@ -20,7 +17,6 @@ import {
   SimpleItem,
   SongContent,
 } from "../interfaces";
-import {Folder, Library, User} from "./../interfaces";
 
 export async function getItemInfoByItemId(
   itemId: number,
