@@ -1,6 +1,6 @@
 // Import necessary interfaces
 import {prismaClient} from "../database/prisma";
-import {Folder, ItemType, Library, User} from "./../interfaces";
+import {Folder, ItemType, Library} from "../interfaces";
 
 async function getTagNameByIdAndUserId(
   tagId: number,
@@ -106,6 +106,7 @@ export async function getLibraryInfoByUserId(
     }
 
     //image for folder
+    // eslint-disable-next-line no-inner-declarations
     function randomInteger(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -113,7 +114,7 @@ export async function getLibraryInfoByUserId(
 
     // Process folders
     for (const folder of user.library.folders) {
-      const value = folder.series == null ? false : true;
+      const value = folder.series != null;
       const folderInfo: Folder = {
         id: folder.id,
         name: folder.name,

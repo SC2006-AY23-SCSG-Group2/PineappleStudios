@@ -1,4 +1,3 @@
-import {createFolder} from "../database/folder";
 import {createUser, getUserByEmail} from "../database/user";
 
 export async function createNewUser(

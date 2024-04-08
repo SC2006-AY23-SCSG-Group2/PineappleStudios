@@ -1,7 +1,5 @@
 import React from "react";
 
-import {useTheme} from "../../utils/theme-provider";
-
 interface TopNavProps {
   leftSection?: [React.JSX.Element];
   title?: string;

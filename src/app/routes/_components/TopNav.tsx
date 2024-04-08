@@ -1,9 +1,11 @@
 import {Link, NavLink} from "@remix-run/react";
 import React, {useState} from "react";
 
-import {useTheme} from "../utils/theme-provider";
+import {useTheme} from "../_utils/theme-provider";
 import Logout from "./Logout";
 import Pineapple from "./Pineapple";
+
+// function Logout(): React.JSX.Element {
 
 // function Logout(): React.JSX.Element {
 
@@ -87,7 +89,7 @@ export default function TopNav(): React.JSX.Element {
               <NavLink to={"/tab/2"}>Browser</NavLink>
             </li>
             <li className="menu-item px-4">
-              <NavLink to={"/tab/3"}>Library</NavLink>
+              <NavLink to={"/tab/3"}>Search</NavLink>
             </li>
           </ul>
         </div>

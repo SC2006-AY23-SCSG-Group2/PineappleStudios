@@ -1,5 +1,3 @@
-import {preference} from "@prisma/client";
-
 import {prismaClient} from "./prisma";
 
 //CRUD
