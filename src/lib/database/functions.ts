@@ -14,14 +14,14 @@ import {getItemById} from "./item";
 import {isItemInLibrary} from "./itemsInLibraries";
 import {getMovieByItemId} from "./movie";
 import {getPeopleFromItem} from "./peopleInItems";
-import {prismaClient} from "./prisma";
-import {getSongById} from "./song";
-import {createTag, getTagByName} from "./tag";
 import {
   createTagInProfileAssignments,
   deleteTagInProfileAssignment,
   getTagInProfileAssignment,
-} from "./tagsInProfiles";
+} from "./preferenceInProfile";
+import {prismaClient} from "./prisma";
+import {getSongById} from "./song";
+import {createTag, getTagByName} from "./tag";
 import {getUserById} from "./user";
 
 function randomInteger(min: number, max: number) {
