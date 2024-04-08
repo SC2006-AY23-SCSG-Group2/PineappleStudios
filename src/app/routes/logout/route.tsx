@@ -12,8 +12,6 @@ export async function loader({request}: LoaderFunctionArgs) {
     const endTime = new Date(); // Current time
     const timeUsed = await calculateUsageTimeInMinutes(startTime, endTime);
     await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
-    // Update the session's startTime to the current time
-    session.set("startTime", endTime);
   }
 
   // await destroySession(session);
