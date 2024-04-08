@@ -156,7 +156,7 @@ export default function tab_index(): React.JSX.Element {
           <>
             {(content as MovieContent).duration && (
               <p className="mt-2 block text-lg">
-                Duration: {(content as MovieContent).duration}
+                Duration: {(content as MovieContent).duration} minutes
               </p>
             )}
             {(content as MovieContent).country && (
@@ -178,7 +178,7 @@ export default function tab_index(): React.JSX.Element {
             )}
             {(content as SongContent).duration && (
               <p className="mt-2 block text-lg">
-                Duration: {(content as SongContent).duration}
+                Duration: {(content as SongContent).duration} minutes
               </p>
             )}
           </>
@@ -220,7 +220,13 @@ export default function tab_index(): React.JSX.Element {
                 {funcContent()}
               </div>
             </div>
-            <div className={"max-lg:mt-12 lg:my-4"}></div>
+          </div>
+          {/*Left Card End*/}
+
+          <div className={"max-lg:mt-4 lg:hidden"}></div>
+
+          {/*Right Card Begin*/}
+          <div className="self-start">
             <div className={"card w-full min-w-80 items-center"}>
               <Form
                 className={"min-w-full"}
@@ -233,21 +239,18 @@ export default function tab_index(): React.JSX.Element {
                 </button>
               </Form>
             </div>
-          </div>
-          {/*Left Card End*/}
-
-          <div className={"max-lg:mt-4 lg:hidden"}></div>
-
-          {/*Right Card Begin*/}
-          <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">
-            <div className="card-body">
-              <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
-              <TagList tag={data.genre} />
+            <div className={"max-lg:mt-12 lg:my-4"}></div>
+            <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
+                <TagList tag={data.genre} />
+              </div>
+              <SmallPeopleList items={data.people} />
+              {/*used as an item list */}
+              <HistoryItemList title="Recommendation" items={[]} />
             </div>
-            <SmallPeopleList items={data.people} />
-            {/*used as an item list */}
-            <HistoryItemList title="View History" items={[]} />
           </div>
+
           {/*Right Card End*/}
         </div>
       </div>
