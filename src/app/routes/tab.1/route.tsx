@@ -45,8 +45,6 @@ export async function loader({request}: LoaderFunctionArgs) {
     error: undefined,
   };
 
-  console.log(library);
-
   if (!library) {
     session.flash("error", "Library Cannot found");
 

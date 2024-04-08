@@ -3,10 +3,6 @@ import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {commitSession, getSession} from "src/app/session";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
-import {
-  calculateUsageTimeInMinutes,
-  updateUserTimeUsedInApp,
-} from "src/lib/dataRetrieve/handleUserInfo";
 
 import {TagList} from "../_components/TagList";
 import {HistoryItemList} from "./components/HistoryItemList";
@@ -14,17 +10,6 @@ import {UserProfileCard, userData} from "./components/UserProfileCard";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
-  if (session.data.startTime && session.data.userId) {
-    const startTime = new Date(session.data.startTime);
-    const endTime = new Date(); // Current time
-    // console.log("StartTime : ", startTime.toLocaleString());
-    // console.log("endTime : ", endTime.toLocaleString());
-    const timeUsed = await calculateUsageTimeInMinutes(startTime, endTime);
-    await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
-    // Update the session's startTime to the current time
-    session.set("startTime", endTime);
-    await commitSession(session);
-  }
 
   let userData;
   if (session.data.userId) {
