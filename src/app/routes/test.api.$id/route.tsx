@@ -90,21 +90,40 @@
 // console.error("Error:", error); return json( { success: false, data: {},
 // error: { msg: "An error occurred while creating review" }, }, { status: 500
 // } ); } } ---------------------------avgRating---------------------------
-// import { LoaderFunctionArgs, json } from "@remix-run/node"; import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path export async function loader({ params }: LoaderFunctionArgs) { const itemId: number = 44; // Provide the item ID for testing try { const averageRating = await getAverageRatingByItemId(itemId); console.log("Average Rating:", averageRating); return json( { success: true, data: { averageRating }, error: {}, }, { status: 200 } ); } catch (error) { console.error("Error:", error); return json( { success: false, data: {}, error: { msg: "An error occurred while fetching average rating for item" }, }, { status: 500 } ); } } ------------------------------handle folder---------------------------------- import { LoaderFunctionArgs, json } from "@remix-run/node"; //import { createFolder } from "../../../lib/database/folder"; import { handleFolder } from "../../../lib/dataRetrieve/handleFolder"; export async function loader({ request }: LoaderFunctionArgs) { const libraryId: number = 2; // Provide the library ID where you want to create the folder const folderName: string = "Train"; // Provide the name for the folder try { // Create a new folder const newFolder = await handleFolder(folderName, libraryId); console.log("Created Folder:", newFolder); return json( { success: true, data: newFolder, error: {}, }, { status: 200 } ); } catch (error) { console.error("Error:", error); return json( { success: false, data: {}, error: { msg: "An error occurred while creating folder" }, }, { status: 500 } ); } } -----------------------handle api ------------------------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node"; import {
+// getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the
+// import path export async function loader({ params }: LoaderFunctionArgs) {
+// const itemId: number = 44; // Provide the item ID for testing try { const
+// averageRating = await getAverageRatingByItemId(itemId); console.log("Average
+// Rating:", averageRating); return json( { success: true, data: {
+// averageRating }, error: {}, }, { status: 200 } ); } catch (error) {
+// console.error("Error:", error); return json( { success: false, data: {},
+// error: { msg: "An error occurred while fetching average rating for item" },
+// }, { status: 500 } ); } } ------------------------------handle
+// folder---------------------------------- import { LoaderFunctionArgs, json }
+// from "@remix-run/node"; //import { createFolder } from
+// "../../../lib/database/folder"; import { handleFolder } from
+// "../../../lib/dataRetrieve/handleFolder"; export async function loader({
+// request }: LoaderFunctionArgs) { const libraryId: number = 2; // Provide the
+// library ID where you want to create the folder const folderName: string =
+// "Train"; // Provide the name for the folder try { // Create a new folder
+// const newFolder = await handleFolder(folderName, libraryId);
+// console.log("Created Folder:", newFolder); return json( { success: true,
+// data: newFolder, error: {}, }, { status: 200 } ); } catch (error) {
+// console.error("Error:", error); return json( { success: false, data: {},
+// error: { msg: "An error occurred while creating folder" }, }, { status: 500
+// } ); } } -----------------------handle api
+// ------------------------------------------
 import {LoaderFunctionArgs, json} from "@remix-run/node";
 import {getLibraryInfoByUserId} from "src/lib/dataRetrieve/getLibraryInfo";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   addItemToFavourtie,
   removeItemFromFavourite,
-  removeTagForItem,
 } from "src/lib/dataRetrieve/handleItemTag";
 import {addItemToLibrary} from "src/lib/dataRetrieve/handleLibraryItems";
 import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleUserInfo";
-import {
-  addPreferenceForUser,
-  removePreferenceForUser,
-} from "src/lib/dataRetrieve/handleUserPreferences";
+import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {createBookItem} from "src/lib/database/bookAPI";
 import {createMovieItem} from "src/lib/database/movieAPI";
 import {createSongItem} from "src/lib/database/songAPI";
