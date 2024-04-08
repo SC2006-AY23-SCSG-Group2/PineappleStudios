@@ -7,16 +7,52 @@ import {
 import {Form, useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import {getItemInfoExample} from "../../../lib/database/functions";
-import {ItemInfo} from "../../../lib/interfaces";
+import {
+  getItemInfoByItemId,
+  getItemInfoBySrcId,
+} from "../../../lib/dataRetrieve/getItemInfo";
+import {
+  BookContent,
+  ItemInfo,
+  ItemType,
+  MovieContent,
+  SongContent,
+} from "../../../lib/interfaces";
+import {commitSession, destroySession, getSession} from "../../session";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
 
-export function loader({params}: LoaderFunctionArgs): TypedResponse<{
-  success: boolean;
-  data: ItemInfo | undefined;
-  error: {msg: string} | undefined;
-}> {
+export async function loader({params, request}: LoaderFunctionArgs): Promise<
+  TypedResponse<{
+    success: boolean;
+    data: ItemInfo | undefined;
+    error: {msg: string} | undefined;
+  }>
+> {
+  const session = await getSession(request.headers.get("cookie"));
+
+  if (!session.has("userId") || !session.data.userId) {
+    session.flash("error", "User not login");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  if (isNaN(+session.data.userId)) {
+    session.flash("error", "User id is not a number");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  // session.set("startTime", new Date());
+
   const id = params.id;
   if (!id) {
     return json({
@@ -26,13 +62,14 @@ export function loader({params}: LoaderFunctionArgs): TypedResponse<{
     });
   }
 
-  const itemInfo: ItemInfo | undefined = getItemInfoExample(id);
-
-  if (itemInfo !== undefined && itemInfo.isInLibrary && !itemInfo.id) {
-    return redirect("/library/item/" + itemInfo.id);
+  let itemInfo;
+  if (isNaN(+id)) {
+    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+  } else if (!isNaN(+id)) {
+    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
   }
 
-  const jsonData: {
+  let jsonData: {
     success: boolean;
     data: ItemInfo | undefined;
     error: {msg: string} | undefined;
@@ -42,10 +79,32 @@ export function loader({params}: LoaderFunctionArgs): TypedResponse<{
     error: undefined,
   };
 
-  return json(jsonData);
+  if (!itemInfo) {
+    jsonData = {
+      success: false,
+      data: undefined,
+      error: {msg: "Item " + id + " not found."},
+    };
+    return json(jsonData, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  if (itemInfo.isInLibrary && itemInfo.id) {
+    return redirect("/library/item/" + itemInfo.id);
+  }
+
+  return json(jsonData, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
 
   if (!loaderData.success) {
@@ -64,10 +123,62 @@ export default function tab_index(): React.JSX.Element {
     );
   }
 
-  let data: ItemInfo = loaderData.data;
-  let content = data.otherContent;
+  const data: ItemInfo = loaderData.data;
+  const content: MovieContent | SongContent | BookContent = data.otherContent;
 
   const type = ["Book", "Song", "Movie"];
+
+  function funcContent() {
+    switch (data.type) {
+      case ItemType.Book: {
+        return (
+          <>
+            {(content as BookContent).pageCount && (
+              <p className="mt-2 block text-lg">
+                Page Count: {(content as BookContent).pageCount}
+              </p>
+            )}
+          </>
+        );
+      }
+
+      case ItemType.Movie: {
+        return (
+          <>
+            {(content as MovieContent).duration && (
+              <p className="mt-2 block text-lg">
+                Duration: {(content as MovieContent).duration}
+              </p>
+            )}
+            {(content as MovieContent).country && (
+              <p className="mt-2 block text-lg">
+                Country: {(content as MovieContent).country}
+              </p>
+            )}
+          </>
+        );
+      }
+
+      case ItemType.Song: {
+        return (
+          <>
+            {(content as SongContent).album && (
+              <p className="mt-2 block text-lg">
+                Album: {(content as SongContent).album}
+              </p>
+            )}
+            {(content as SongContent).duration && (
+              <p className="mt-2 block text-lg">
+                Duration: {(content as SongContent).duration}
+              </p>
+            )}
+          </>
+        );
+      }
+    }
+
+    return null;
+  }
 
   return (
     <>
@@ -77,7 +188,11 @@ export default function tab_index(): React.JSX.Element {
           <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:bottom-[16px] lg:max-w-md">
             <div className="card items-center bg-base-200 shadow-xl ">
               <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
-                <img className="h-72 w-72" src={data.img} alt="Image" />
+                <img
+                  className="h-72 w-72"
+                  src={data.img}
+                  alt="Poster of the item"
+                />
               </figure>
 
               <div className="card-title">
@@ -93,6 +208,7 @@ export default function tab_index(): React.JSX.Element {
                     Publication Data: {data.publicationDate}
                   </p>
                 )}
+                {funcContent()}
               </div>
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
@@ -116,10 +232,8 @@ export default function tab_index(): React.JSX.Element {
           {/*Right Card Begin*/}
           <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">
             <div className="card-body">
-              <h2 className="card-title mx-2 text-2xl lg:text-3xl">
-                Preferences
-              </h2>
-              <TagList tag={data.tag} />
+              <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
+              <TagList tag={data.genre} />
             </div>
             <SmallPeopleList items={data.people} />
           </div>
