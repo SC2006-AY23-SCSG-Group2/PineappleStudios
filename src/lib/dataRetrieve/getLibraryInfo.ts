@@ -2,11 +2,15 @@
 import {prismaClient} from "../database/prisma";
 import {Folder, ItemType, Library, User} from "./../interfaces";
 
-async function getTagNameById(tagId: number): Promise<string | null> {
+async function getTagNameByIdAndUserId(
+  tagId: number,
+  userId: number,
+): Promise<string | null> {
   try {
     const tag = await prismaClient.tag.findUnique({
       where: {
         id: tagId,
+        userId: userId,
       },
     });
 
@@ -22,8 +26,6 @@ async function getTagNameById(tagId: number): Promise<string | null> {
   }
 }
 
-
-
 export async function getLibraryInfoByUserId(
   userId: number,
 ): Promise<Library | null> {
@@ -35,9 +37,11 @@ export async function getLibraryInfoByUserId(
       include: {
         library: {
           include: {
-            items: { // Include items directly from the library
+            items: {
+              // Include items directly from the library
               include: {
-                item: { // Include item details
+                item: {
+                  // Include item details
                   include: {
                     tags: true,
                   },
@@ -79,8 +83,10 @@ export async function getLibraryInfoByUserId(
     // Process items directly from the library
     for (const libraryItem of user.library.items) {
       const item = libraryItem.item;
-      const ids = item.tags.map((tag) => tag.tagId);
-      const tagNames = await Promise.all(ids.map((id) => getTagNameById(id)));
+      const ids = item.tags.map((tag) => tag.id);
+      const tagNames = await Promise.all(
+        ids.map((id) => getTagNameByIdAndUserId(id, userId)),
+      );
       const nonNullTagNames = tagNames.filter(
         (tagName) => tagName !== null,
       ) as string[];
@@ -88,8 +94,8 @@ export async function getLibraryInfoByUserId(
         item.itemType == "song"
           ? ItemType.Song
           : item.itemType == "book"
-          ? ItemType.Book
-          : ItemType.Movie;
+            ? ItemType.Book
+            : ItemType.Movie;
       library.items.push({
         id: item.id,
         type: types,
@@ -99,13 +105,11 @@ export async function getLibraryInfoByUserId(
       });
     }
 
-
     //image for folder
     function randomInteger(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     const fakeImg = `https://picsum.photos/id/${randomInteger(0, 1084)}/400/600.webp`;
-
 
     // Process folders
     for (const folder of user.library.folders) {
@@ -121,8 +125,10 @@ export async function getLibraryInfoByUserId(
       // Process items in the folder
       for (const folderItem of folder.items) {
         const item = folderItem.item;
-        const ids = item.tags.map((tag) => tag.tagId);
-        const tagNames = await Promise.all(ids.map((id) => getTagNameById(id)));
+        const ids = item.tags.map((tag) => tag.id);
+        const tagNames = await Promise.all(
+          ids.map((id) => getTagNameByIdAndUserId(id, userId)),
+        );
         const nonNullTagNames = tagNames.filter(
           (tagName) => tagName !== null,
         ) as string[];
@@ -168,9 +174,9 @@ export async function getLibraryInfoByUserId(
         // Process items within the folder
         for (const folderItem of folder.items) {
           const item = folderItem.item;
-          const ids = item.tags.map((tag) => tag.tagId);
+          const ids = item.tags.map((tag) => tag.id);
           const tagNames = await Promise.all(
-            ids.map((id) => getTagNameById(id)),
+            ids.map((id) => getTagNameByIdAndUserId(id, userId)),
           );
           const nonNullTagNames = tagNames.filter(
             (tagName) => tagName !== null,
