@@ -92,6 +92,23 @@
 // } ); } } ---------------------------avgRating---------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node"; import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path export async function loader({ params }: LoaderFunctionArgs) { const itemId: number = 44; // Provide the item ID for testing try { const averageRating = await getAverageRatingByItemId(itemId); console.log("Average Rating:", averageRating); return json( { success: true, data: { averageRating }, error: {}, }, { status: 200 } ); } catch (error) { console.error("Error:", error); return json( { success: false, data: {}, error: { msg: "An error occurred while fetching average rating for item" }, }, { status: 500 } ); } } ------------------------------handle folder---------------------------------- import { LoaderFunctionArgs, json } from "@remix-run/node"; //import { createFolder } from "../../../lib/database/folder"; import { handleFolder } from "../../../lib/dataRetrieve/handleFolder"; export async function loader({ request }: LoaderFunctionArgs) { const libraryId: number = 2; // Provide the library ID where you want to create the folder const folderName: string = "Train"; // Provide the name for the folder try { // Create a new folder const newFolder = await handleFolder(folderName, libraryId); console.log("Created Folder:", newFolder); return json( { success: true, data: newFolder, error: {}, }, { status: 200 } ); } catch (error) { console.error("Error:", error); return json( { success: false, data: {}, error: { msg: "An error occurred while creating folder" }, }, { status: 500 } ); } } -----------------------handle api ------------------------------------------
 import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {getLibraryInfoByUserId} from "src/lib/dataRetrieve/getLibraryInfo";
+import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
+import {
+  addItemToFavourtie,
+  removeItemFromFavourite,
+  removeTagForItem,
+} from "src/lib/dataRetrieve/handleItemTag";
+import {addItemToLibrary} from "src/lib/dataRetrieve/handleLibraryItems";
+import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleUserInfo";
+import {
+  addPreferenceForUser,
+  removePreferenceForUser,
+} from "src/lib/dataRetrieve/handleUserPreferences";
+import {createBookItem} from "src/lib/database/bookAPI";
+import {createMovieItem} from "src/lib/database/movieAPI";
+import {createSongItem} from "src/lib/database/songAPI";
+import {getUserById} from "src/lib/database/user";
 
 import {getSearchAPI} from "./../../../lib/dataRetrieve/getAPIInfo";
 
@@ -105,37 +122,46 @@ export async function loader({request}: LoaderFunctionArgs) {
     const movies = searchData.slice(10, 20);
     const songs = searchData.slice(20);
 
-    // for (const singleBookData of books) {
-    //   // Create a book item using the fetched book data
-    //   const result = await createBookItem(singleBookData);
+    for (const singleBookData of books) {
+      // Create a book item using the fetched book data
+      const result = await createBookItem(singleBookData);
 
-    //   // Log the result if needed
-    //   console.log("Book Item Created:", result);
-    // }
+      // Log the result if needed
+      console.log("Book Item Created:", result);
+    }
     for (const singleBookData of movies) {
       // Create a book item using the fetched book data
-      // const result = await createMovieItem(singleBookData);
-      // if (result?.item) await addHistoryItemForUser(2, result?.item.id);
+      const result = await createMovieItem(singleBookData);
+      if (result?.item) await addHistoryItemForUser(1, result?.item.id);
       // Log the result if needed
       // console.log("Movie Item Created:", result);
     }
-    // for (const singleBookData of songs) {
-    //   // Create a book item using the fetched book data
-    //   const result = await createSongItem(singleBookData);
+    for (const singleBookData of songs) {
+      // Create a book item using the fetched book data
+      const result = await createSongItem(singleBookData);
 
-    //   // Log the result if needed
-    //   console.log("Song Item Created:", result);
-    // }
+      // Log the result if needed
+      console.log("Song Item Created:", result);
+    }
     // Log the separated data
-    console.log("Books:", books);
-    console.log("Movies:", movies);
-    console.log("Songs:", songs);
-
+    // console.log("Books:", books);
+    // console.log("Movies:", movies);
+    // console.log("Songs:", songs);
+    await addPreferenceForUser(1, "Horror");
+    await addPreferenceForUser(1, "LEGEBI");
     // Return the search data
+    await addItemToFavourtie(1, 11);
+    await addItemToFavourtie(1, 12);
+    await addItemToFavourtie(1, 13);
+    await removeItemFromFavourite(1, 11);
+    const userData = await getUserInfoByUserId(2);
+    const user = await getUserById(2);
+    if (user) await addItemToLibrary(2, user?.libraryId, 12);
+    const libraryData = await getLibraryInfoByUserId(1);
     return json(
       {
         success: true,
-        data: searchData,
+        data: libraryData,
         error: {},
       },
       {status: 200},

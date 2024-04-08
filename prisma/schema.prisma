@@ -25,6 +25,7 @@ model User {
   library   Library @relation(fields: [libraryId], references: [id])
   libraryId Int     @unique
 
+  tags    Tag[]
   rate    Rate[]
   reviews Review[]
 
@@ -40,12 +41,12 @@ model UserClickedData {
 }
 
 model Profile {
-  id             Int               @id @default(autoincrement())
+  id             Int                   @id @default(autoincrement())
   user           User?
   registeredDate DateTime //handle in createProfile()
-  timeUsedInApp  Int               @default(0) // Total time used in minute
-  likedItem      Int               @default(0)
-  preferences    TagsInProfiles[]
+  timeUsedInApp  Int                   @default(0) // Total time used in minute
+  likedItem      Int                   @default(0)
+  preferences    preferenceInProfile[]
   history        ItemsInProfiles[]
 }
 
@@ -61,7 +62,7 @@ model Item {
   genre         String
   country       String?
   publishedDate String
-  tags          TagInItems[]
+  tags          Tag[]
   language      String
   avgRate       Float?
   rate          Rate[]
@@ -95,16 +96,6 @@ model Song {
   item     Item    @relation(fields: [itemId], references: [id])
 }
 
-model TagInItems {
-  item    Item     @relation(fields: [itemId], references: [id])
-  itemId  Int
-  tag     Tag      @relation(fields: [tagId], references: [id])
-  tagId   Int
-  addedAt DateTime @default(now())
-
-  @@id([itemId, tagId])
-}
-
 model PeopleInItems {
   item     Item     @relation(fields: [itemId], references: [id])
   itemId   Int
@@ -116,10 +107,28 @@ model PeopleInItems {
 }
 
 model Tag {
-  id      Int              @id @default(autoincrement())
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  item   Item   @relation(fields: [itemId], references: [id])
+  itemId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model preference {
+  id      Int                   @id @default(autoincrement())
   name    String
-  Item    TagInItems[]
-  Profile TagsInProfiles[]
+  Profile preferenceInProfile[]
+}
+
+model preferenceInProfile {
+  profile      Profile    @relation(fields: [profileId], references: [id])
+  profileId    Int
+  preference   preference @relation(fields: [preferenceId], references: [id])
+  preferenceId Int
+  addedAt      DateTime   @default(now())
+
+  @@id([profileId, preferenceId])
 }
 
 model People {
@@ -182,16 +191,6 @@ model ItemsInProfiles {
   addedAt   DateTime @default(now())
 
   @@id([profileId, itemId])
-}
-
-model TagsInProfiles {
-  profile   Profile  @relation(fields: [profileId], references: [id])
-  profileId Int
-  tag       Tag      @relation(fields: [tagId], references: [id])
-  tagId     Int
-  addedAt   DateTime @default(now())
-
-  @@id([profileId, tagId])
 }
 
 model Folder {

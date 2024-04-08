@@ -1,5 +1,3 @@
-// Import necessary interfaces
-import {getTagsFromItem} from "../database/TagsInItems";
 import {getBookByItemId} from "../database/book";
 import {getItemById} from "../database/item";
 import {isItemInLibrary} from "../database/itemsInLibraries";
@@ -7,6 +5,7 @@ import {getMovieByItemId} from "../database/movie";
 import {getPeopleFromItem} from "../database/peopleInItems";
 import {prismaClient} from "../database/prisma";
 import {getSongById} from "../database/song";
+import {getTagsFromItem} from "../database/tag";
 import {getUserById} from "../database/user";
 import {
   BookContent,
@@ -68,7 +67,7 @@ export async function getItemInfoByItemId(
       return undefined; // Return undefined for invalid item types
   }
 
-  const tagsFromItem = await getTagsFromItem(itemId);
+  const tagsFromItem = await getTagsFromItem(itemId, userId);
   let tags: string[] = []; // Initialize tags as an empty array
 
   if (tagsFromItem != undefined) {
@@ -178,6 +177,7 @@ export async function getItemInfoBySrcId(
 
 export async function getSimpleItemInfoByItemId(
   itemId: number,
+  userId: number,
 ): Promise<SimpleItem | undefined> {
   //return type is ItemInfo or undefined
   const item = await getItemById(itemId);
@@ -192,7 +192,7 @@ export async function getSimpleItemInfoByItemId(
   } else if (item.itemType == "movie") itemType = ItemType.Movie;
   else itemType = ItemType.Song;
   //get tags from item
-  const tagsFromItem = await getTagsFromItem(itemId);
+  const tagsFromItem = await getTagsFromItem(itemId, userId);
   let tags: string[] = []; // Initialize tags as an empty array
 
   if (tagsFromItem != undefined) {

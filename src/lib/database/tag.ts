@@ -27,11 +27,17 @@ export const getTagById = async (tagId: number) => {
 };
 
 //get tag by tag name
-export const getTagByName = async (tagName: string) => {
+export const getTagByNameAndUserIdAndItemId = async (
+  tagName: string,
+  userId: number,
+  itemId: number,
+) => {
   try {
     const tag = await prismaClient.tag.findFirst({
       where: {
         name: tagName,
+        userId: userId,
+        itemId: itemId,
       },
     });
     return tag;
@@ -41,11 +47,17 @@ export const getTagByName = async (tagName: string) => {
 };
 
 //create tag
-export const createTag = async (tagName: string) => {
+export const createTag = async (
+  tagName: string,
+  userId: number,
+  itemId: number,
+) => {
   try {
     const tag = await prismaClient.tag.create({
       data: {
         name: tagName,
+        userId: userId,
+        itemId: itemId,
       },
     });
     return tag;
@@ -61,7 +73,7 @@ export const updateTag = async (request: any) => {
     const tagData = request.body;
 
     delete tagData.id;
-
+    delete tagData.userId;
     const tag = await prismaClient.tag.update({
       where: {
         id: tagId,
@@ -75,10 +87,8 @@ export const updateTag = async (request: any) => {
 };
 
 //delete tag
-export const deleteMovie = async (request: any) => {
+export const deleteTag = async (tagId: number) => {
   try {
-    const tagId = request.params.id;
-
     await prismaClient.tag.delete({
       where: {
         id: tagId,
@@ -88,5 +98,19 @@ export const deleteMovie = async (request: any) => {
   } catch (e) {
     console.log(e);
     return {success: false};
+  }
+};
+
+export const getTagsFromItem = async (itemId: number, userId: number) => {
+  try {
+    const tags = await prismaClient.tag.findMany({
+      where: {
+        itemId: itemId,
+        userId: userId,
+      },
+    });
+    return tags;
+  } catch (error) {
+    console.error("Error fetching tags:", error);
   }
 };

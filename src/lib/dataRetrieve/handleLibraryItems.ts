@@ -1,3 +1,4 @@
+import {isItemInLibrary} from "../database/itemsInLibraries";
 import {prismaClient} from "../database/prisma";
 
 const prisma = prismaClient;
@@ -27,7 +28,12 @@ export async function addItemToLibrary(userId: number, itemId: number) {
       console.log(`Library with ID ${user.libraryId} does not exist.`);
       return false;
     }
+    const itemCheck = await isItemInLibrary(libraryId, itemId);
 
+    if (itemCheck) {
+      console.log(`Item with ID ${itemId} Already exist in library.`);
+      return false;
+    }
     // Add the item to the library
     await prisma.itemsInLibraries.create({
       data: {

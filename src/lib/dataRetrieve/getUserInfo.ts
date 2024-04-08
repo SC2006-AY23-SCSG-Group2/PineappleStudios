@@ -1,6 +1,6 @@
 import {countItemsInLibrary} from "../database/itemsInLibraries";
 import {getHistoryItemsInProfile} from "../database/itemsInProfiles";
-import {getAllTagsInProfile} from "../database/tagsInProfiles";
+import {getAllPreferencesInProfile} from "../database/preferenceInProfile";
 import {getUserById} from "../database/user";
 import {SimpleItem, User} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
@@ -16,15 +16,15 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   const historyItem: SimpleItem[] = [];
   for (const item of itemsInProfiles) {
     if (item) {
-      const simpleItem = await getSimpleItemInfoByItemId(item.id);
+      const simpleItem = await getSimpleItemInfoByItemId(item.id, userId);
       if (simpleItem) historyItem.push(simpleItem);
     }
   }
 
-  const tagsInProfile = await getAllTagsInProfile(user.profileId);
-  const preferences: string[] = [];
-  for (const tag of tagsInProfile) {
-    if (tag) preferences.push(tag?.name);
+  const preferencesInProfile = await getAllPreferencesInProfile(user.profileId);
+  let preferences: string[] = [];
+  for (const preference of preferencesInProfile) {
+    if (preference) preferences.push(preference?.name);
   }
 
   // Convert user.profile.registeredDate to Singapore time and format it
@@ -38,9 +38,9 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   const formatter = new Intl.DateTimeFormat("en-US", singaporeTimeOptions);
   const formattedDateJoined = formatter.format(registeredDate);
 
-  const count = await countItemsInLibrary(user.libraryId);
+  let count = await countItemsInLibrary(user.libraryId);
   const Name = user.userName ? user.userName : "";
-  return {
+  const userResult: User = {
     id: user.id,
     email: user.email,
     name: Name,
