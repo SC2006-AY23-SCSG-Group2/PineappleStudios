@@ -52,8 +52,6 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  // session.set("startTime", new Date());
-
   const id = params.id;
   if (!id) {
     return json({
