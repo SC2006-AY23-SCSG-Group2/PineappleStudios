@@ -35,6 +35,7 @@ export async function getUserByEmail(email: string) {
     },
     include: {
       profile: true, //also fetch "Profile"
+      library: true,
     },
   });
 }
