@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 
 import styles from "./tailwind.css";
+import { ThemeProvider, useTheme } from "./routes/utils/theme-provider";
 
 // export const links: LinksFunction = ()
 // => [{rel: "stylesheet", href:
@@ -33,9 +34,10 @@ export const links: LinksFunction = () => [
       ]),
 ];
 
-export default function App() {
+function App() {
+  const {theme} = useTheme();
   return (
-    <html lang="en" data-theme="cupcake">
+    <html lang="en" data-theme={theme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -50,5 +52,13 @@ export default function App() {
         <LiveReload />
       </body>
     </html>
+  );
+}
+
+export default function Root() {
+  return (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   );
 }
