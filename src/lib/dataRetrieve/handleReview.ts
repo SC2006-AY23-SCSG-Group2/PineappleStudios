@@ -26,6 +26,7 @@ export const handleReview = async (
     return {success: false, message: "An error occurred while handling review"};
   }
 };
+
 const getReviewByUserAndItem = async (userId: number, itemId: number) => {
   try {
     const review = await prisma.review.findFirst({
