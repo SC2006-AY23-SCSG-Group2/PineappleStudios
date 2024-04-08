@@ -2,7 +2,8 @@ export type User = {
   id: number;
   email: string;
   name: string;
-  dateJoined: Date;
+  //dateJoined: Date;
+  dateJoined: string;
   numberofLikedItem: number;
   numberOfRating: number;
   timeUsedAppInMins: number;
