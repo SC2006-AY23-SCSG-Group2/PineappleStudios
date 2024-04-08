@@ -281,12 +281,14 @@
 // }
 // -----------------------handle api ------------------------------------------
 import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {getLibraryInfoByUserId} from "src/lib/dataRetrieve/getLibraryInfo";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   addItemToFavourtie,
   removeItemFromFavourite,
   removeTagForItem,
 } from "src/lib/dataRetrieve/handleItemTag";
+import {addItemToLibrary} from "src/lib/dataRetrieve/handleLibraryItems";
 import {addHistoryItemForUser} from "src/lib/dataRetrieve/handleUserInfo";
 import {
   addPreferenceForUser,
@@ -295,6 +297,7 @@ import {
 import {createBookItem} from "src/lib/database/bookAPI";
 import {createMovieItem} from "src/lib/database/movieAPI";
 import {createSongItem} from "src/lib/database/songAPI";
+import {getUserById} from "src/lib/database/user";
 
 import {getSearchAPI} from "./../../../lib/dataRetrieve/getAPIInfo";
 import {
@@ -348,11 +351,14 @@ export async function loader({request}: LoaderFunctionArgs) {
     await addItemToFavourtie(1, 12);
     await addItemToFavourtie(1, 13);
     await removeItemFromFavourite(1, 11);
-    const userData = await getUserInfoByUserId(1);
+    const userData = await getUserInfoByUserId(2);
+    const user = await getUserById(2);
+    if (user) await addItemToLibrary(2, user?.libraryId, 12);
+    const libraryData = await getLibraryInfoByUserId(1);
     return json(
       {
         success: true,
-        data: userData,
+        data: libraryData,
         error: {},
       },
       {status: 200},
