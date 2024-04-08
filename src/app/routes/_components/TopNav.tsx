@@ -89,7 +89,7 @@ export default function TopNav(): React.JSX.Element {
               <NavLink to={"/tab/2"}>Browser</NavLink>
             </li>
             <li className="menu-item px-4">
-              <NavLink to={"/tab/3"}>Library</NavLink>
+              <NavLink to={"/tab/3"}>Search</NavLink>
             </li>
           </ul>
         </div>
