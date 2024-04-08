@@ -1,5 +1,5 @@
 import {cssBundleHref} from "@remix-run/css-bundle";
-import {LinksFunction} from "@remix-run/node";
+import {LinksFunction, LoaderFunctionArgs, json} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -9,7 +9,12 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import {
+  calculateUsageTimeInMinutes,
+  updateUserTimeUsedInApp,
+} from "../lib/dataRetrieve/handleUserInfo";
 import {ThemeProvider, useTheme} from "./routes/_utils/theme-provider";
+import {commitSession, getSession} from "./session";
 import styles from "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -27,6 +32,23 @@ export const links: LinksFunction = () => [
         },
       ]),
 ];
+
+export async function loader({request}: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("cookie"));
+  if (session.data.startTime && session.data.userId) {
+    const startTime = new Date(session.data.startTime);
+    const endTime = new Date(); // Current time
+    const timeUsed = await calculateUsageTimeInMinutes(startTime, endTime);
+    await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
+    session.set("startTime", endTime);
+  }
+
+  return json("", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
+}
 
 function App() {
   const {theme} = useTheme();
