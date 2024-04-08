@@ -12,14 +12,6 @@ import {
 import {ThemeProvider, useTheme} from "./routes/_utils/theme-provider";
 import styles from "./tailwind.css";
 
-// export const links: LinksFunction = ()
-
-// export const links: LinksFunction = ()
-// => [{rel: "stylesheet", href:
-
-// export const links: LinksFunction = () => [{rel: "stylesheet", href:
-// styles}];
-
 export const links: LinksFunction = () => [
   ...(cssBundleHref
     ? [
