@@ -22,6 +22,8 @@ async function getTagNameById(tagId: number): Promise<string | null> {
   }
 }
 
+
+
 export async function getLibraryInfoByUserId(
   userId: number,
 ): Promise<Library | null> {
@@ -97,6 +99,14 @@ export async function getLibraryInfoByUserId(
       });
     }
 
+
+    //image for folder
+    function randomInteger(min: number, max: number) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    const fakeImg = `https://picsum.photos/id/${randomInteger(0, 1084)}/400/600.webp`;
+
+
     // Process folders
     for (const folder of user.library.folders) {
       const value = folder.series == null ? false : true;
@@ -104,7 +114,7 @@ export async function getLibraryInfoByUserId(
         id: folder.id,
         name: folder.name,
         isSeries: value, // Assuming regular folder by default
-        img: "", // You need to determine how to get the folder image URL
+        img: folder.items.length >= 1 ? folder.items[0].item.image : fakeImg,
         items: [],
       };
 
