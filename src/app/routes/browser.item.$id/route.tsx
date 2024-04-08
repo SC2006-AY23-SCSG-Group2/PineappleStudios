@@ -1,27 +1,17 @@
-import {
-  LoaderFunctionArgs,
-  TypedResponse,
-  json,
-  redirect,
-} from "@remix-run/node";
-import {Form, useLoaderData} from "@remix-run/react";
-import React from "react";
+import { LoaderFunctionArgs, TypedResponse, json, redirect } from "@remix-run/node";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import React, { useEffect, useState } from "react";
 
-import {
-  getItemInfoByItemId,
-  getItemInfoBySrcId,
-} from "../../../lib/dataRetrieve/getItemInfo";
-import {
-  BookContent,
-  ItemInfo,
-  ItemType,
-  MovieContent,
-  SongContent,
-} from "../../../lib/interfaces";
-import {commitSession, destroySession, getSession} from "../../session";
-import {SmallPeopleList} from "../_components/SmallPeopleList";
-import {TagList} from "../_components/TagList";
+
+
+import { getItemInfoByItemId, getItemInfoBySrcId } from "../../../lib/dataRetrieve/getItemInfo";
+import { BookContent, ItemInfo, ItemType, MovieContent, SongContent } from "../../../lib/interfaces";
+import { commitSession, destroySession, getSession } from "../../session";
+import { SmallPeopleList } from "../_components/SmallPeopleList";
+import { TagList } from "../_components/TagList";
+import {ToastList} from "../_components/ToastList";
 import {HistoryItemList} from "../tab.4/components/HistoryItemList";
+
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -113,6 +103,57 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
 export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcherAddToLibrary = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "add-to-library"});
+  fetcherAddToLibrary.formAction = "post";
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [toasts, setToasts] = useState<
+    {
+      id: number;
+      message: string;
+      type: string;
+    }[]
+  >([]);
+  const autoClose = true;
+  const autoCloseDuration = 5;
+
+  // // eslint-disable-next-line
+  // @typescript-eslint/no-unused-vars,react-hooks/exhaustive-depsfunction showToast(message: string, type: string) {
+    const toast: {id: number; message: string; type: string} = {
+      id: Date.now(),
+      message,
+      type,
+    };
+
+    // if (toasts.length > 0 && toast.id - toasts[toasts.length - 1].id < 500) {
+    //   return;
+    // }
+
+    setToasts((prevToasts) => [...prevToasts, toast]);
+
+    if (autoClose) {
+      setTimeout(() => {
+        removeToast(toast.id);
+      }, autoCloseDuration * 1000);
+    }
+  }
+
+  function removeToast(id: number) {
+    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (fetcherAddToLibrary.data && !fetcherAddToLibrary.data.success) {
+      console.log(fetcherAddToLibrary.data.error.msg);
+      showToast(fetcherAddToLibrary.data.error.msg, "error");
+      fetcherAddToLibrary.data = undefined;
+    }
+  }, [fetcherAddToLibrary, showToast]);
 
   if (!loaderData.success) {
     return (
@@ -226,16 +267,15 @@ export default function tab_index(): React.JSX.Element {
           {/*Right Card Begin*/}
           <div className="self-start">
             <div className={"card w-full min-w-80 items-center"}>
-              <Form
+              <fetcherAddToLibrary.Form
                 className={"min-w-full"}
                 method={"POST"}
-                navigate={false}
                 action={"/api/item/add-to-library"}>
                 <input type="hidden" id="id" name="id" value={data.id} />
                 <button type="submit" className="btn btn-wide my-1 min-w-full">
                   Add to Library
                 </button>
-              </Form>
+              </fetcherAddToLibrary.Form>
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
             <div className="card min-w-[25rem] bg-base-200 shadow-xl max-md:w-96">
@@ -251,6 +291,7 @@ export default function tab_index(): React.JSX.Element {
           {/*Right Card End*/}
         </div>
       </div>
+      <ToastList data={toasts} removeToast={removeToast} />
     </>
   );
 }
