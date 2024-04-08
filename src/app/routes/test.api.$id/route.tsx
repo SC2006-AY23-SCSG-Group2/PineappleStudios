@@ -129,8 +129,9 @@ import {createMovieItem} from "src/lib/database/movieAPI";
 import {createSongItem} from "src/lib/database/songAPI";
 import {getUserById} from "src/lib/database/user";
 
-import {getSearchAPI} from "./../../../lib/dataRetrieve/getAPIInfo";
+import {getSearchAPI} from "../../../lib/dataRetrieve/getAPIInfo";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function loader({request}: LoaderFunctionArgs) {
   try {
     // Invoke the handleSearchAPI function
@@ -173,9 +174,10 @@ export async function loader({request}: LoaderFunctionArgs) {
     await addItemToFavourtie(1, 12);
     await addItemToFavourtie(1, 13);
     await removeItemFromFavourite(1, 11);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const userData = await getUserInfoByUserId(2);
     const user = await getUserById(2);
-    if (user) await addItemToLibrary(2, user?.libraryId, 12);
+    if (user) await addItemToLibrary(2, 12);
     const libraryData = await getLibraryInfoByUserId(1);
     return json(
       {
