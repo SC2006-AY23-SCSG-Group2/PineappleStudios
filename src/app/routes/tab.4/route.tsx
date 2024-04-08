@@ -1,4 +1,5 @@
 import {LoaderFunctionArgs} from "@remix-run/node";
+import {json} from "@remix-run/node";
 import {useLoaderData} from "@remix-run/react";
 import React from "react";
 import {commitSession, getSession} from "src/app/session";
@@ -8,7 +9,6 @@ import {
   updateUserTimeUsedInApp,
 } from "src/lib/dataRetrieve/handleUserInfo";
 
-import {SimpleItem} from "../../../lib/interfaces";
 import {TagList} from "../_components/TagList";
 import {HistoryItemList} from "./components/HistoryItemList";
 import {UserProfileCard} from "./components/UserProfileCard";
@@ -25,11 +25,6 @@ export async function loader({request}: LoaderFunctionArgs) {
     // Update the session's startTime to the current time
     session.set("startTime", endTime);
     await commitSession(session);
-
-    console.log(
-      "Updated StartTime : ",
-      session.data.startTime.toLocaleString(),
-    );
   }
 
   let userData;
@@ -40,28 +35,31 @@ export async function loader({request}: LoaderFunctionArgs) {
     return;
   }
 
-  return {
-    session: session,
-    user: {
-      name: userData?.name,
-      email: userData?.email,
-      time: userData?.timeUsedAppInMins,
-      date: userData?.dateJoined,
-      numOfLikes: userData?.numberofLikedItem,
-      numOfRatings: userData?.numberOfRating,
-      preferences: userData?.preference,
-      HistoryItems: userData?.history,
+  return json(
+    {
+      session: session,
+      user: {
+        name: userData?.name,
+        email: userData?.email,
+        time: userData?.timeUsedAppInMins,
+        date: userData?.dateJoined.toLocaleDateString(),
+        numOfLikes: userData?.numberofLikedItem,
+        numOfRatings: userData?.numberOfRating,
+        preferences: userData?.preference,
+        HistoryItems: userData?.history,
+      },
     },
-    headers: {
-      "Set-Cookie": await commitSession(session),
+    {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
     },
-  };
+  );
 }
 
 export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const {session, user} = useLoaderData<typeof loader>();
-
   const colors = ["accent", "primary", "secondary"];
   return (
     <>

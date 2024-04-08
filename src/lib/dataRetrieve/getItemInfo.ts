@@ -20,7 +20,6 @@ import {
   SimpleItem,
   SongContent,
 } from "../interfaces";
-import {Folder, Library, User} from "./../interfaces";
 
 export async function getItemInfoByItemId(
   itemId: number,
