@@ -2,13 +2,17 @@ import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
+import {
+  getItemInfoByItemId,
+  getItemInfoBySrcId,
+} from "../../../lib/dataRetrieve/getItemInfo";
 import {destroySession, getSession} from "../../session";
 import LibraryTopNav from "./components/LibraryTopNav";
 
 export async function loader({params, request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
 
-  if (!session.has("userId")) {
+  if (!session.has("userId") || !session.data.userId) {
     session.flash("error", "User not login");
 
     return redirect("/login", {
@@ -18,7 +22,24 @@ export async function loader({params, request}: LoaderFunctionArgs) {
     });
   }
 
+  if (isNaN(+session.data.userId)) {
+    session.flash("error", "User id is not a number");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
   const id = params.id;
+  if (!id) {
+    return json({
+      success: false,
+      data: {},
+      error: {context: "unknown url requested"},
+    });
+  }
 
   const regex = new RegExp(
     "^https?:\\/\\/[a-zA-z\\-0-9.]+:?\\d{0,5}\\/library\\/(folder|item)\\/(e?d?i?t?i?n?g?)\\/?\\d+$",
@@ -38,12 +59,33 @@ export async function loader({params, request}: LoaderFunctionArgs) {
     });
   }
 
-  let title: string = "";
+  let itemInfo;
+  if (isNaN(+id)) {
+    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+  } else if (!isNaN(+id)) {
+    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
+  }
+
+  let title: string | undefined = itemInfo?.title;
+
+  if (!title) {
+    if (type === "folder") {
+      return json({
+        success: true,
+        data: {title: "Browser Folder"},
+        error: null,
+      });
+    } else if (type === "item") {
+      return json({
+        success: true,
+        data: {title: "Browser Item"},
+        error: null,
+      });
+    }
+  }
 
   if (type === "folder") {
-    title = "Folder " + id;
-  } else if (type === "item") {
-    title = "Item " + id;
+    title = "Folder: " + title;
   }
 
   if (isEditing) {
@@ -53,7 +95,7 @@ export async function loader({params, request}: LoaderFunctionArgs) {
   return json({
     success: true,
     data: {title: title},
-    error: {},
+    error: null,
   });
 }
 
