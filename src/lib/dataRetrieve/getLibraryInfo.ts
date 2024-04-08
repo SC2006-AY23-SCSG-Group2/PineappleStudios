@@ -33,13 +33,22 @@ export async function getLibraryInfoByUserId(
       include: {
         library: {
           include: {
+            items: { // Include items directly from the library
+              include: {
+                item: { // Include item details
+                  include: {
+                    tags: true,
+                  },
+                },
+              },
+            },
             folders: {
               include: {
                 items: {
                   include: {
                     item: {
                       include: {
-                        tags: true, // Include tags for each item
+                        tags: true,
                       },
                     },
                   },
@@ -60,10 +69,33 @@ export async function getLibraryInfoByUserId(
     const library: Library = {
       id: user.libraryId,
       userId: userId,
-      items: [],
+      items: [], // Initialize items array
       folders: [],
       series: [],
     };
+
+    // Process items directly from the library
+    for (const libraryItem of user.library.items) {
+      const item = libraryItem.item;
+      const ids = item.tags.map((tag) => tag.tagId);
+      const tagNames = await Promise.all(ids.map((id) => getTagNameById(id)));
+      const nonNullTagNames = tagNames.filter(
+        (tagName) => tagName !== null,
+      ) as string[];
+      const types =
+        item.itemType == "song"
+          ? ItemType.Song
+          : item.itemType == "book"
+          ? ItemType.Book
+          : ItemType.Movie;
+      library.items.push({
+        id: item.id,
+        type: types,
+        img: item.image,
+        title: item.title,
+        tag: nonNullTagNames,
+      });
+    }
 
     // Process folders
     for (const folder of user.library.folders) {
