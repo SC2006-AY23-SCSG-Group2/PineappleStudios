@@ -26,13 +26,13 @@ export function loader({params}: LoaderFunctionArgs): TypedResponse<{
     });
   }
 
-  let itemInfo: ItemInfo | undefined = getItemInfoExample(id);
+  const itemInfo: ItemInfo | undefined = getItemInfoExample(id);
 
   if (itemInfo !== undefined && itemInfo.isInLibrary && !itemInfo.id) {
     return redirect("/library/item/" + itemInfo.id);
   }
 
-  let jsonData: {
+  const jsonData: {
     success: boolean;
     data: ItemInfo | undefined;
     error: {msg: string} | undefined;
