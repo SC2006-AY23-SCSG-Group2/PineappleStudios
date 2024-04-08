@@ -9,8 +9,10 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import {ThemeProvider, useTheme} from "./routes/utils/theme-provider";
+import {ThemeProvider, useTheme} from "./routes/_utils/theme-provider";
 import styles from "./tailwind.css";
+
+// export const links: LinksFunction = ()
 
 // export const links: LinksFunction = ()
 // => [{rel: "stylesheet", href:
