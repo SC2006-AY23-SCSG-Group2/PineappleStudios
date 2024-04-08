@@ -41,7 +41,6 @@ export async function loader({request}: LoaderFunctionArgs) {
         name: userData?.name,
         email: userData?.email,
         time: userData?.timeUsedAppInMins,
-        //date: userData?.dateJoined.toLocaleDateString(),
         date: userData?.dateJoined,
         numOfLikes: userData?.numberofLikedItem,
         numOfRatings: userData?.numberOfRating,
@@ -55,18 +54,6 @@ export async function loader({request}: LoaderFunctionArgs) {
       },
     },
   );
-}
-
-export function formatSingaporeDate(dateString: string): string {
-  const registeredDate = new Date(dateString);
-  const singaporeTimeOptions = {
-    timeZone: "Asia/Singapore",
-    month: "long" as const, // Ensure the month is specified as "long"
-    day: "numeric" as const, // Ensure the day is specified as "numeric"
-    year: "numeric" as const, // Ensure the year is specified as "numeric"
-  };
-  const formatter = new Intl.DateTimeFormat("en-US", singaporeTimeOptions);
-  return formatter.format(registeredDate);
 }
 
 export default function tab_index(): React.JSX.Element {

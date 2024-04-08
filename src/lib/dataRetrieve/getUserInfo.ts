@@ -13,7 +13,7 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   }
 
   const itemsInProfiles = await getHistoryItemsInProfile(user.profileId);
-  let historyItem: SimpleItem[] = [];
+  const historyItem: SimpleItem[] = [];
   for (const item of itemsInProfiles) {
     if (item) {
       const simpleItem = await getSimpleItemInfoByItemId(item.id);
@@ -22,7 +22,7 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   }
 
   const tagsInProfile = await getAllTagsInProfile(user.profileId);
-  let preferences: string[] = [];
+  const preferences: string[] = [];
   for (const tag of tagsInProfile) {
     if (tag) preferences.push(tag?.name);
   }
@@ -38,11 +38,9 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   const formatter = new Intl.DateTimeFormat("en-US", singaporeTimeOptions);
   const formattedDateJoined = formatter.format(registeredDate);
 
-
-
-  let count = await countItemsInLibrary(user.libraryId);
-  const Name = user.userName?user.userName:"";
-  const userResult: User = {
+  const count = await countItemsInLibrary(user.libraryId);
+  const Name = user.userName ? user.userName : "";
+  return {
     id: user.id,
     email: user.email,
     name: Name,
@@ -55,6 +53,4 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
     countItemsInLibrary: count,
     preference: preferences,
   };
-
-  return userResult;
 }

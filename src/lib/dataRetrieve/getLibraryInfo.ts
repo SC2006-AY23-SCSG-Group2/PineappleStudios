@@ -1,6 +1,6 @@
 // Import necessary interfaces
 import {prismaClient} from "../database/prisma";
-import {Folder, ItemType, Library} from "./../interfaces";
+import {Folder, ItemType, Library} from "../interfaces";
 
 async function getTagNameById(tagId: number): Promise<string | null> {
   try {
@@ -22,8 +22,6 @@ async function getTagNameById(tagId: number): Promise<string | null> {
   }
 }
 
-
-
 export async function getLibraryInfoByUserId(
   userId: number,
 ): Promise<Library | null> {
@@ -35,9 +33,11 @@ export async function getLibraryInfoByUserId(
       include: {
         library: {
           include: {
-            items: { // Include items directly from the library
+            items: {
+              // Include items directly from the library
               include: {
-                item: { // Include item details
+                item: {
+                  // Include item details
                   include: {
                     tags: true,
                   },
@@ -88,8 +88,8 @@ export async function getLibraryInfoByUserId(
         item.itemType == "song"
           ? ItemType.Song
           : item.itemType == "book"
-          ? ItemType.Book
-          : ItemType.Movie;
+            ? ItemType.Book
+            : ItemType.Movie;
       library.items.push({
         id: item.id,
         type: types,
@@ -99,17 +99,16 @@ export async function getLibraryInfoByUserId(
       });
     }
 
-
     //image for folder
+    // eslint-disable-next-line no-inner-declarations
     function randomInteger(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     const fakeImg = `https://picsum.photos/id/${randomInteger(0, 1084)}/400/600.webp`;
 
-
     // Process folders
     for (const folder of user.library.folders) {
-      const value = folder.series == null ? false : true;
+      const value = folder.series != null;
       const folderInfo: Folder = {
         id: folder.id,
         name: folder.name,
