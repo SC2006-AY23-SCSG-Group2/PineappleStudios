@@ -112,7 +112,7 @@ export default function tab_index(): React.JSX.Element {
           />
         </>
       )}
-      <div className="divider p-4 m-4"></div>
+      <div className="divider m-4 p-4"></div>
     </>
   );
 }

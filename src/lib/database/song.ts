@@ -60,7 +60,7 @@ export const createSong = async (reqSong: any) => {
     return song;
   } catch (e) {
     console.error("Error occurred while creating song:", e);
-    return '1';
+    return "1";
   }
 };
 
@@ -254,7 +254,7 @@ export const getSongDetailsRequest = async (songTitle: string) => {
         thumbnailUrl: song.artworkUrl100, // Use artworkUrl100 for thumbnail
         genre: song.primaryGenreName, // Genre information
         releaseDate: song.releaseDate,
-        language: song.language? song.language:"English",
+        language: song.language ? song.language : "English",
         duration: millisToSeconds(song.trackTimeMillis), // Duration
         // in
         // milliseconds

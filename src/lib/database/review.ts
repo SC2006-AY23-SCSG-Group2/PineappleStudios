@@ -1,8 +1,13 @@
-import {prismaClient} from "../database/prisma"
+import {prismaClient} from "../database/prisma";
+
 const prisma = prismaClient;
 
 // Create a review
-export const createReview = async (userId: number, itemId: number, content: string) => {
+export const createReview = async (
+  userId: number,
+  itemId: number,
+  content: string,
+) => {
   try {
     const review = await prisma.review.create({
       data: {
@@ -13,7 +18,7 @@ export const createReview = async (userId: number, itemId: number, content: stri
     });
     return review;
   } catch (error) {
-    console.error('Error occurred while creating review:', error);
+    console.error("Error occurred while creating review:", error);
     return null;
   }
 };
@@ -28,7 +33,7 @@ export const getReviewsByItemId = async (itemId: number) => {
     });
     return reviews;
   } catch (error) {
-    console.error('Error occurred while fetching reviews for item:', error);
+    console.error("Error occurred while fetching reviews for item:", error);
     return [];
   }
 };
@@ -46,7 +51,7 @@ export const updateReview = async (reviewId: number, content: string) => {
     });
     return updatedReview;
   } catch (error) {
-    console.error('Error occurred while updating review:', error);
+    console.error("Error occurred while updating review:", error);
     return null;
   }
 };
@@ -61,7 +66,7 @@ export const deleteReview = async (reviewId: number) => {
     });
     return true;
   } catch (error) {
-    console.error('Error occurred while deleting review:', error);
+    console.error("Error occurred while deleting review:", error);
     return false;
   }
 };

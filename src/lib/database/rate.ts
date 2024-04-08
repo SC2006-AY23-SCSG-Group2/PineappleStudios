@@ -1,4 +1,5 @@
 import {prismaClient} from "./prisma";
+
 const prisma = prismaClient;
 
 export const createRating = async (
@@ -55,7 +56,10 @@ export const getAverageRatingByItemId = async (itemId: number) => {
 
     return averageRating;
   } catch (error) {
-    console.error('Error occurred while fetching average rating for item:', error);
+    console.error(
+      "Error occurred while fetching average rating for item:",
+      error,
+    );
     return 0; // Return 0 in case of error
   }
 };
@@ -73,7 +77,7 @@ export const updateRating = async (ratingId: number, newRating: number) => {
     });
     return updatedRating;
   } catch (error) {
-    console.error('Error occurred while updating rating:', error);
+    console.error("Error occurred while updating rating:", error);
     return null;
   }
 };
@@ -88,7 +92,7 @@ export const deleteRating = async (ratingId: number) => {
     });
     return true;
   } catch (error) {
-    console.error('Error occurred while deleting rating:', error);
+    console.error("Error occurred while deleting rating:", error);
     return false;
   }
 };
