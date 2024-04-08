@@ -38,7 +38,7 @@ export const getFolderById = async (folderId: number) => {
 };
 
 // Update folder
-export const updateFolder = async (folderId: number, name: string) => {
+export const updateFolderName = async (folderId: number, name: string) => {
   try {
     const updatedFolder = await prisma.folder.update({
       where: {
@@ -51,7 +51,6 @@ export const updateFolder = async (folderId: number, name: string) => {
     return updatedFolder;
   } catch (error) {
     console.error("Error occurred while updating folder:", error);
-    return null;
   }
 };
 
