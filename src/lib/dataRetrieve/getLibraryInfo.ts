@@ -67,7 +67,7 @@ export async function getLibraryInfoByUserId(
 
     // Process folders
     for (const folder of user.library.folders) {
-      const value = folder.series == null ? false : true;
+      const value = folder.series != null;
       const folderInfo: Folder = {
         id: folder.id,
         name: folder.name,
