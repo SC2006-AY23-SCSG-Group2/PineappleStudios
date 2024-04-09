@@ -1,4 +1,5 @@
 // SomeParentComponent.tsx or similar
+import {sha256} from "js-sha256";
 import React from "react";
 
 import LeftCard from "../../_components/LeftCard";
@@ -20,7 +21,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
   return (
     <>
       <LeftCard
-        imageUrl="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+        imageUrl={`https://gravatar.com/avatar/${sha256(
+          user.email,
+        )}?d=identicon`}
         title={user.name}
         subtitle={user.email}>
         <div>
