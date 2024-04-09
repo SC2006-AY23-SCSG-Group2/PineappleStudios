@@ -2,7 +2,7 @@ import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import {commitSession, getSession} from "../../session";
+import {commitSession, destroySession, getSession} from "../../session";
 import BtmNav from "../_components/BtmNav";
 import TopNav from "../_components/TopNav";
 import TabTopNav from "./components/TabTopNav";
@@ -12,9 +12,10 @@ export async function loader({request}: LoaderFunctionArgs) {
 
   if (!session.has("userId")) {
     session.flash("error", "User not login");
+
     return redirect("/login", {
       headers: {
-        "Set-Cookie": await commitSession(session),
+        "Set-Cookie": await destroySession(session),
       },
     });
   }

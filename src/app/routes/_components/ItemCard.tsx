@@ -1,8 +1,8 @@
+import {NavLink} from "@remix-run/react";
 import React, {useState} from "react";
 
 import {SimpleItem} from "../../../lib/interfaces";
 import {HeartButton} from "./HeartButton";
-import { PlayIcon } from "@heroicons/react/16/solid";
 
 interface ItemCardProps {
   data: SimpleItem;
@@ -11,15 +11,19 @@ interface ItemCardProps {
 export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
   const [fav, setFav] = useState(false);
 
+  const type = ["Book", "Song", "Movie"];
+
   return (
-    <div className="col-span group relative h-[12vw] m-3">
-      <img
-        src={data.img}
-        alt={data.title || "Item"}
-        draggable={false}
-        className="h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
-      />
-      {data.tag.find(str => str === "favorite") && (
+    <div className="col-span group relative m-3 h-[12vw]">
+      <NavLink to={`/browser/item/${data.id}`}>
+        <img
+          src={data.img}
+          alt={data.title || "Item"}
+          draggable={false}
+          className="h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
+        />
+      </NavLink>
+      {data.tag.find((str) => str === "favorite") && (
         <div className="absolute right-2 top-2">
           <HeartButton onClick={() => setFav(!fav)} />
         </div>
@@ -69,10 +73,7 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
             lg:p-4
             ">
           <div className="flex flex-row items-center gap-3">
-            <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white transition hover:bg-neutral-300 lg:h-10 lg:w-10">
-              <PlayIcon className="w-4 text-black lg:w-6" />
-            </div>
-            <div className="group/item ml-auto flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-2 border-white transition hover:border-neutral-300 lg:h-10 lg:w-10">
+            <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-2 border-white transition hover:border-neutral-300 lg:h-10 lg:w-10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -84,12 +85,13 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
                 />
               </svg>
             </div>
+            Add to favourites
           </div>
-          <p className="mt-4 font-semibold text-green-400">
+          <p className="ml-1 mt-4 font-semibold text-green-400">
             <span className="text-white">{data.title}</span>
           </p>
-          <div className="mt-4 flex flex-row items-center gap-2 text-[8px] text-white lg:text-sm">
-            <p>{data.type}</p>
+          <div className="ml-1 mt-4 flex flex-row items-center gap-2 text-[8px] text-white lg:text-sm">
+            <p>Type: {type[data.type]}</p>
           </div>
         </div>
       </div>

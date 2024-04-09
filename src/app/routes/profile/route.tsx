@@ -1,16 +1,17 @@
 import {LoaderFunctionArgs, redirect} from "@remix-run/node";
 import React from "react";
 
-import {commitSession, getSession} from "../../session";
+import {destroySession, getSession} from "../../session";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
 
   if (!session.has("userId")) {
     session.flash("error", "User not login");
+
     return redirect("/login", {
       headers: {
-        "Set-Cookie": await commitSession(session),
+        "Set-Cookie": await destroySession(session),
       },
     });
   }

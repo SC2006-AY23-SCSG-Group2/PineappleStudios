@@ -1,8 +1,8 @@
 import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
 import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
+import {createNewUser} from "src/lib/dataRetrieve/createUser";
 
-import {createUser, getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
 
 //import {action} from "../../../lib/connection/signup"
@@ -39,17 +39,19 @@ export async function action({request}: ActionFunctionArgs) {
     return json({errors, value: data});
   }
 
-  const user = await getUserByEmail(data.email);
+  const userResult = await createNewUser(
+    data.email,
+    data.userName,
+    data.password,
+  );
 
-  if (user) {
-    errors.email = "You already have an account";
+  if (userResult && "error" in userResult) {
+    errors.email = userResult.error;
     return json({errors, value: data});
   }
 
-  const userResult = await createUser(data.email, data.userName, data.password);
-  if (userResult) {
-    return redirect("/tab");
-  }
+  // User creation was successful
+  return redirect("/login");
 }
 
 export default function tab_index(): React.JSX.Element {

@@ -1,40 +1,14 @@
-import {createTag, getTagByName} from "../database/tag";
+import {createPreference, getPreferenceByName} from "../database/preference";
 import {
-  createTagInProfileAssignments,
-  deleteTagInProfileAssignment,
-  getTagInProfileAssignment,
-} from "../database/tagsInProfiles";
+  createPreferenceInProfileAssignments,
+  deletePreferenceInProfileAssignment,
+  getPreferenceInProfileAssignment,
+} from "../database/preferenceInProfile";
 import {getUserById} from "../database/user";
 
-export async function addPreferenceForUser(userId: number, preference: string) {
-  //sanity check
-  const user = await getUserById(userId);
-  if (!user) {
-    console.log("User for userId: ", userId, " is not created.");
-    return;
-  }
-  let tag = await getTagByName(preference);
-  if (!tag) {
-    tag = await createTag(preference);
-    console.log("New tag : ", preference, " created");
-  }
-  //Sanity Check
-  if (!tag) return;
-
-  let preferenceCheck = await getTagInProfileAssignment(user.profileId, tag.id);
-  if (!preferenceCheck) {
-    preferenceCheck = await createTagInProfileAssignments(
-      user.profileId,
-      tag.id,
-    );
-  }
-  console.log("The preference for user is created.");
-  return preferenceCheck;
-}
-
-export async function removePreferenceForUser(
+export async function addPreferenceForUser(
   userId: number,
-  preference: string,
+  preferenceName: string,
 ) {
   //sanity check
   const user = await getUserById(userId);
@@ -42,16 +16,55 @@ export async function removePreferenceForUser(
     console.log("User for userId: ", userId, " is not created.");
     return;
   }
-  let tag = await getTagByName(preference);
-  if (!tag) {
-    console.log("There is no preference : ", preference, " existed");
+  let preference = await getPreferenceByName(preferenceName);
+  if (!preference) {
+    preference = await createPreference(preferenceName);
+    console.log("New preference : ", preference, " created in database");
+  }
+  //Sanity Check
+  if (!preference) return;
+
+  let preferenceCheck = await getPreferenceInProfileAssignment(
+    user.profileId,
+    preference.id,
+  );
+  if (!preferenceCheck) {
+    preferenceCheck = await createPreferenceInProfileAssignments(
+      user.profileId,
+      preference.id,
+    );
+  }
+  console.log("The preference assignment for user is created.");
+  return preferenceCheck;
+}
+
+export async function removePreferenceForUser(
+  userId: number,
+  preferenceName: string,
+) {
+  //sanity check
+  const user = await getUserById(userId);
+  if (!user) {
+    console.log("User for userId: ", userId, " is not created.");
     return;
   }
-  let preferenceCheck = await getTagInProfileAssignment(user.profileId, tag.id);
+  let tag = await getPreferenceByName(preferenceName);
+  if (!tag) {
+    console.log(
+      "There is no preference : ",
+      preferenceName,
+      " existed ofr user",
+    );
+    return;
+  }
+  let preferenceCheck = await getPreferenceInProfileAssignment(
+    user.profileId,
+    tag.id,
+  );
   if (preferenceCheck) {
-    await deleteTagInProfileAssignment(user.profileId, tag.id);
-    console.log("The preference : ", preference, "is removed");
+    await deletePreferenceInProfileAssignment(user.profileId, tag.id);
+    console.log("The preference : ", preferenceName, "is removed");
   } else {
-    console.log("The preference : ", preference, "is already removed");
+    console.log("The preference : ", preferenceName, "is already removed");
   }
 }

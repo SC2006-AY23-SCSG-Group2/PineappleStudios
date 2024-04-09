@@ -2,18 +2,32 @@ import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
-import {getItemInfoExample} from "../../../lib/database/functions";
-import {commitSession, getSession} from "../../session";
+import {
+  getItemInfoByItemId,
+  getItemInfoBySrcId,
+} from "../../../lib/dataRetrieve/getItemInfo";
+import {destroySession, getSession} from "../../session";
 import {BrowserTopNav} from "./components/BrowserTopNav";
 
 export async function loader({params, request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
 
-  if (!session.has("userId")) {
+  if (!session.has("userId") || !session.data.userId) {
     session.flash("error", "User not login");
+
     return redirect("/login", {
       headers: {
-        "Set-Cookie": await commitSession(session),
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  if (isNaN(+session.data.userId)) {
+    session.flash("error", "User id is not a number");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
       },
     });
   }
@@ -27,7 +41,14 @@ export async function loader({params, request}: LoaderFunctionArgs) {
     });
   }
 
-  let title: string = getItemInfoExample(id)?.title ?? "Browser Item";
+  let itemInfo;
+  if (isNaN(+id)) {
+    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+  } else if (!isNaN(+id)) {
+    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
+  }
+
+  const title: string = itemInfo?.title ?? "Browser Item";
 
   return json({
     success: true,

@@ -114,12 +114,14 @@ export async function decrementLikedItemsByOne(userId: number) {
 }
 
 export async function calculateUsageTimeInMinutes(
-  oldStartTime: Date,
-): Promise<number> {
-  const currentTime = new Date();
+  startTime: Date,
+  endTime: Date,
+) {
+  if (!startTime || !endTime) {
+    throw new Error("Invalid start or end time");
+  }
 
-  const timeDifferenceInMilliseconds =
-    currentTime.getTime() - oldStartTime.getTime();
+  const timeDifferenceInMilliseconds = endTime.getTime() - startTime.getTime();
 
   const timeDifferenceInMinutes = timeDifferenceInMilliseconds / (1000 * 60); // Convert milliseconds to minutes
 

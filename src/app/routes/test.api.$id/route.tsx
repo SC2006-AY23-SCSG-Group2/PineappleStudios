@@ -303,25 +303,105 @@
 //   }
 // }
 // -----------------------handle api ------------------------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
-import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
-import { getSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
+// import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
+// import { getSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
 
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   try {
+//     // Invoke the handleSearchAPI function
+//     const searchData = await getSearchAPI("Harry Potter");
+
+//     // Log the search data
+//     console.log("Search Data:", searchData);
+
+//     // Return the search data
+//     return json(
+//       {
+//         success: true,
+//         data: searchData,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while fetching search results" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+//------------------------------------handle folder---------------------------------------
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { addFolderToLibrary, removeFolderFromLibrary } from "./../../../lib/dataRetrieve/handleLibraryFolders";
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   try {
+//     // Add folder to library
+//     const userId = 3;
+//     const libraryId = 3;
+//     const folderId = 4;
+//     //const addFolderResult = await addFolderToLibrary(userId, libraryId, folderId); // Replace with appropriate values
+
+//     // Remove folder from library
+//     const removeFolderResult = await removeFolderFromLibrary(userId, libraryId, folderId); // Replace with appropriate values
+
+//     // Return the results
+//     return json(
+//       {
+//         success: true,
+//         data: {
+//           //addFolderResult,
+//           removeFolderResult,
+//         },
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while testing folder functions" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
+
+//---------------------------- handleSeries --------------------------------------
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { updateSeriesToFolder, createSeriesInFolder, deleteSeriesFromFolder } from "./../../../lib/dataRetrieve/handleSeries";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    // Invoke the handleSearchAPI function
-    const searchData = await getSearchAPI("Harry Potter");
+    // Add series to folder
+    const folderId = 2; // Replace with the ID of the folder
+    const seriesId = 1; // Replace with the ID of the series
+    const seriesName = "rudra";
+    //const addSeriesResult = await addSeriesToFolder(folderId, seriesId);
 
-    // Log the search data
-    console.log("Search Data:", searchData);
+    // Remove series from folder
+    const removeSeriesResult = await createSeriesInFolder(seriesName,folderId); // Uncomment to test removal
 
-    // Return the search data
+    // Return the results
     return json(
       {
         success: true,
-        data: searchData,
+        data: {
+          //addSeriesResult,
+          removeSeriesResult, // Uncomment to include removal result
+        },
         error: {},
       },
       { status: 200 }
@@ -332,12 +412,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while fetching search results" },
+        error: { msg: "An error occurred while testing series functions" },
       },
       { status: 500 }
     );
   }
 }
+
+
+
+
 
 
 

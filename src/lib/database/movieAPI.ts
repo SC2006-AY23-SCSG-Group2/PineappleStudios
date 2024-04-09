@@ -1,7 +1,7 @@
-import { createMovie, getMovieBySrcId } from "./movie";
-import { createItem } from "./item";
-import { createPeople, getPeopleByNameAndRole } from "./people";
-import { createPeopleinItemsAssignments } from "./peopleInItems";
+import {createItem} from "./item";
+import {createMovie, getMovieBySrcId} from "./movie";
+import {createPeople, getPeopleByNameAndRole} from "./people";
+import {createPeopleinItemsAssignments} from "./peopleInItems";
 
 export const createMovieItem = async (singleMovieData: any) => {
   // Sanity check

@@ -1,4 +1,5 @@
 import {prismaClient} from "./prisma";
+
 const prisma = prismaClient;
 
 // Create a new folder
@@ -16,7 +17,7 @@ export const createFolder = async (name: string, libraryId: number) => {
     });
     return newFolder;
   } catch (error) {
-    console.error('Error occurred while creating folder:', error);
+    console.error("Error occurred while creating folder:", error);
     return null;
   }
 };
@@ -31,13 +32,13 @@ export const getFolderById = async (folderId: number) => {
     });
     return folder;
   } catch (error) {
-    console.error('Error occurred while fetching folder by ID:', error);
+    console.error("Error occurred while fetching folder by ID:", error);
     return null;
   }
 };
 
 // Update folder
-export const updateFolder = async (folderId: number, name: string) => {
+export const updateFolderName = async (folderId: number, name: string) => {
   try {
     const updatedFolder = await prisma.folder.update({
       where: {
@@ -49,8 +50,7 @@ export const updateFolder = async (folderId: number, name: string) => {
     });
     return updatedFolder;
   } catch (error) {
-    console.error('Error occurred while updating folder:', error);
-    return null;
+    console.error("Error occurred while updating folder:", error);
   }
 };
 
@@ -64,7 +64,7 @@ export const deleteFolderById = async (folderId: number) => {
     });
     return true;
   } catch (error) {
-    console.error('Error occurred while deleting folder by ID:', error);
+    console.error("Error occurred while deleting folder by ID:", error);
     return false;
   }
 };
@@ -80,7 +80,7 @@ export const getFolderByName = async (name: string, libraryId: number) => {
     });
     return folder;
   } catch (error) {
-    console.error('Error occurred while fetching folder by name:', error);
+    console.error("Error occurred while fetching folder by name:", error);
     return null;
   }
 };
