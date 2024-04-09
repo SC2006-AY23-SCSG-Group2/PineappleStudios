@@ -196,15 +196,8 @@ model ItemsInProfiles {
 model Folder {
   id        Int              @id @default(autoincrement())
   name      String
-  series    Series?
+  isSeries  Boolean          @default(false)
   items     ItemsInFolders[]
   Library   Library?         @relation(fields: [libraryId], references: [id])
   libraryId Int?
-}
-
-model Series {
-  id       Int    @id @default(autoincrement())
-  name     String
-  folder   Folder @relation(fields: [folderId], references: [id])
-  folderId Int    @unique
 }
