@@ -28,7 +28,7 @@ export async function addItemToLibrary(userId: number, itemId: number) {
       console.log(`Library with ID ${user.libraryId} does not exist.`);
       return false;
     }
-    const itemCheck = await isItemInLibrary(libraryId, itemId);
+    const itemCheck = await isItemInLibrary(user.libraryId, itemId);
 
     if (itemCheck) {
       console.log(`Item with ID ${itemId} Already exist in library.`);
