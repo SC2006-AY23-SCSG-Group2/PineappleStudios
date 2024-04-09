@@ -43,7 +43,7 @@ export async function addItemToFolderOrSeries(
 
     const item = await getItemById(itemId);
     if (!item) {
-      console.error("Item is not exsit");
+      console.error("Item is not exit");
       return false;
     }
 
@@ -70,7 +70,7 @@ export async function addItemToFolderOrSeries(
     };
     const existingInFolder = await isItemInFolder(folder.id, item.id);
     if (existingInFolder) {
-      console.log("Item is already exsiting in the folder");
+      console.log("Item is already existing in the folder");
       return false;
     }
 
