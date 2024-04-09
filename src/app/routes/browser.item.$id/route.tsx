@@ -254,10 +254,10 @@ export default function tab_index(): React.JSX.Element {
                 />
               </figure>
 
-              <div className="card-title">
-                <h1 className="block text-4xl">{data.title}</h1>
-              </div>
               <div className="card-body">
+                <div className="card-title">
+                  <h1 className="block text-4xl">{data.title}</h1>
+                </div>
                 <p className="mt-2 block text-lg">Type: {type[data.type]}</p>
                 {data.country && (
                   <p className="mt-2 block text-lg">Country: {data.country}</p>
