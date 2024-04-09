@@ -1,13 +1,25 @@
-import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
-import {Outlet, useLoaderData} from "@remix-run/react";
-import React from "react";
+import {
+  LoaderFunctionArgs,
+  TypedResponse,
+  json,
+  redirect,
+} from "@remix-run/node";
+import {Outlet, useLoaderData, useLocation} from "@remix-run/react";
+import React, {useEffect, useState} from "react";
 
+import {getUserInfoByUserId} from "../../../lib/dataRetrieve/getUserInfo";
 import {commitSession, destroySession, getSession} from "../../session";
 import BtmNav from "../_components/BtmNav";
 import TopNav from "../_components/TopNav";
 import TabTopNav from "./components/TabTopNav";
 
-export async function loader({request}: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs): Promise<
+  TypedResponse<{
+    success: boolean;
+    email: string | null;
+    error: {msg: string} | undefined;
+  }>
+> {
   const session = await getSession(request.headers.get("cookie"));
 
   if (!session.has("userId")) {
@@ -20,39 +32,34 @@ export async function loader({request}: LoaderFunctionArgs) {
     });
   }
 
-  // const id = params.id;
-
-  const regex = /https?:\/\/[A-Z|a-z|\.]+:?\d{0,5}\/tab\/(\d).*/gm;
-
-  const m = regex.exec(request.url);
-  const type = m ? m.at(1) ?? "" : "";
-
-  let title = "Pineapple Studio";
-
-  switch (type) {
-    case "1":
-      title = "Library";
-      break;
-    case "2":
-      title = "Browser Online";
-      break;
-    case "3":
-      title = "Search Online";
-      break;
-    case "4":
-      title = "Profile";
-      break;
+  let userData;
+  if (session.data.userId) {
+    userData = await getUserInfoByUserId(parseInt(session.data.userId));
   }
-  // const isEditing: boolean = m ? m.at(2) === "editing" : false;
+  if (!userData || !userData.history) {
+    return json(
+      {
+        success: false,
+        email: null,
+        error: {msg: "User Information cannot load."},
+      },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      },
+    );
+  }
+
+  const email = userData.email;
 
   return json(
     {
       success: true,
-      data: {title: title},
-      error: {},
+      email: email,
+      error: undefined,
     },
     {
-      status: 200,
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -63,15 +70,49 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function tab(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useLoaderData<typeof loader>();
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  // const navigate = useNavigate();
+  const [title, setTitle] = useState("Pineapple Studio");
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const location = useLocation();
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect((): void => {
+    const regex: RegExp = /\/tab\/(\d).*/gm;
+
+    const m: RegExpExecArray | null = regex.exec(location.pathname);
+    const type: string = m ? m.at(1) ?? "" : "";
+    let newTitle: string = "Pineapple Studio";
+
+    switch (type) {
+      case "1":
+        newTitle = "Library";
+        break;
+      case "2":
+        newTitle = "Browser Online";
+        break;
+      case "3":
+        newTitle = "Search Online";
+        break;
+      case "4":
+        newTitle = "Profile";
+        break;
+    }
+
+    if (newTitle !== title) {
+      setTitle(newTitle);
+    }
+  }, [data, setTitle, title, location]);
+
   return (
     <>
-      <TabTopNav
-        title={!data.success ? "Pineapple Studio" : data.data!.title}
-        additionalClassName={"lg:hidden"}
+      <TabTopNav title={title} additionalClassName={"lg:hidden"} />
+      <TopNav
+        email={
+          data.success && data && data.email ? data.email : "Pineapple User"
+        }
       />
-      <TopNav />
       <div className="mx-6 lg:mx-12">
         <Outlet />
       </div>

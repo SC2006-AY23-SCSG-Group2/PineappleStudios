@@ -1,4 +1,5 @@
 import {Link, NavLink} from "@remix-run/react";
+import {sha256} from "js-sha256";
 import React, {useState} from "react";
 
 import {useTheme} from "../_utils/theme-provider";
@@ -57,7 +58,13 @@ function ThemeToggle() {
   );
 }
 
-export default function TopNav(): React.JSX.Element {
+interface TopNavLinkProps {
+  email?: string;
+}
+
+export default function TopNav({
+  email = "",
+}: TopNavLinkProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   // const action = async ({request}: ActionFunctionArgs) => {
@@ -105,7 +112,9 @@ export default function TopNav(): React.JSX.Element {
                 <div className="w-11 rounded-full">
                   <Link to="/tab/4">
                     <img
-                      src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                      src={`https://gravatar.com/avatar/${sha256(
+                        email,
+                      )}?d=identicon`}
                       alt="Avatar"
                     />
                   </Link>
