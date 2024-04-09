@@ -1,5 +1,3 @@
-import {User} from "@prisma/client";
-
 import {createLibrary} from "./library";
 import {prismaClient} from "./prisma";
 import {createProfile, deleteProfile} from "./profile";

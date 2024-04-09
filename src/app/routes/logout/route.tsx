@@ -14,7 +14,7 @@ export async function loader({request}: LoaderFunctionArgs) {
     await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
   }
 
-  await destroySession(session);
+  // await destroySession(session);
   return redirect("/login", {
     headers: {
       "Set-Cookie": await destroySession(session),

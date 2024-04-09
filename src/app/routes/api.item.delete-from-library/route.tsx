@@ -1,7 +1,7 @@
 import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 
 import {getItemIdBySrcId} from "../../../lib/dataRetrieve/getItemInfo";
-import {addItemToLibrary} from "../../../lib/dataRetrieve/handleLibraryItems";
+import {removeItemFromLibrary} from "../../../lib/dataRetrieve/handleLibraryItems";
 import {destroySession, getSession} from "../../session";
 
 export async function action({request}: LoaderFunctionArgs) {
@@ -48,7 +48,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
   // console.log(">>>> User" + +session.data.userId + ", Item: " + numID);
 
-  const result = await addItemToLibrary(+session.data.userId, numID);
+  const result = await removeItemFromLibrary(+session.data.userId, numID);
 
   if (!result) {
     console.log(result);

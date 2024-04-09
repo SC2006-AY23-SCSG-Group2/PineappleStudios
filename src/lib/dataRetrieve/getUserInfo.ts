@@ -13,7 +13,7 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   }
 
   const itemsInProfiles = await getHistoryItemsInProfile(user.profileId);
-  let historyItem: SimpleItem[] = [];
+  const historyItem: SimpleItem[] = [];
   for (const item of itemsInProfiles) {
     if (item) {
       const simpleItem = await getSimpleItemInfoByItemId(item.id, userId);
@@ -53,6 +53,4 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
     countItemsInLibrary: count,
     preference: preferences,
   };
-
-  return userResult;
 }

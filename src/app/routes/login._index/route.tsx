@@ -17,8 +17,6 @@ import {commitSession, getSession} from "src/app/session";
 import {getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
 
-//import {action} from "../../../lib/connection/login"
-
 type FormData = {
   email: string;
   password: string;
@@ -98,9 +96,9 @@ export async function action({request}: ActionFunctionArgs) {
   });
 }
 
-//loader function may be not neccessary
+//loader function may be not necessary
 export async function loader({request}: LoaderFunctionArgs) {
-  let session = await getSession(request.headers.get("cookie"));
+  const session = await getSession(request.headers.get("cookie"));
 
   return session.data;
 }

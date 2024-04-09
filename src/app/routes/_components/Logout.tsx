@@ -1,4 +1,4 @@
-import {Form, NavLink} from "@remix-run/react";
+import {Form} from "@remix-run/react";
 import {useRef} from "react";
 
 export default function Logout(): React.JSX.Element {

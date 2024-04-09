@@ -76,9 +76,9 @@ export const deleteItem = async (request: any) => {
 export async function countItems() {
   try {
     const count = await prismaClient.item.count();
-    console.log("Total number of Items:", count);
+    // console.log("Total number of Items:", count);
     return count;
   } catch (error) {
-    console.error("Error counting Ttems:", error);
+    console.error("Error counting Items:", error);
   }
 }

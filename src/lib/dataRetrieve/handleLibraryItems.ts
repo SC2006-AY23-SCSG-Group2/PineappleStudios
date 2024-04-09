@@ -2,11 +2,8 @@ import {isItemInLibrary} from "../database/itemsInLibraries";
 import {prismaClient} from "../database/prisma";
 
 const prisma = prismaClient;
-export async function addItemToLibrary(
-  userId: number,
-  libraryId: number,
-  itemId: number,
-) {
+
+export async function addItemToLibrary(userId: number, itemId: number) {
   try {
     // Fetch the user to ensure it exists
     const user = await prisma.user.findUnique({
@@ -23,12 +20,12 @@ export async function addItemToLibrary(
     // Fetch the library to ensure it exists
     const library = await prisma.library.findUnique({
       where: {
-        id: libraryId,
+        id: user.libraryId,
       },
     });
 
     if (!library) {
-      console.log(`Library with ID ${libraryId} does not exist.`);
+      console.log(`Library with ID ${user.libraryId} does not exist.`);
       return false;
     }
     const itemCheck = await isItemInLibrary(libraryId, itemId);
@@ -40,7 +37,7 @@ export async function addItemToLibrary(
     // Add the item to the library
     await prisma.itemsInLibraries.create({
       data: {
-        libraryId: libraryId,
+        libraryId: user.libraryId,
         itemId: itemId, // Use the provided item ID
       },
     });
@@ -52,11 +49,7 @@ export async function addItemToLibrary(
   }
 }
 
-export async function removeItemFromLibrary(
-  userId: number,
-  libraryId: number,
-  itemId: number,
-) {
+export async function removeItemFromLibrary(userId: number, itemId: number) {
   try {
     // Fetch the user to ensure it exists
     const user = await prisma.user.findUnique({
@@ -73,19 +66,19 @@ export async function removeItemFromLibrary(
     // Fetch the library to ensure it exists
     const library = await prisma.library.findUnique({
       where: {
-        id: libraryId,
+        id: user.libraryId,
       },
     });
 
     if (!library) {
-      console.log(`Library with ID ${libraryId} does not exist.`);
+      console.log(`Library with ID ${user.libraryId} does not exist.`);
       return false;
     }
 
     // Check if the item exists in the library
     const itemInLibrary = await prisma.itemsInLibraries.findFirst({
       where: {
-        libraryId: libraryId,
+        libraryId: user.libraryId,
         itemId: itemId,
       },
     });
@@ -99,7 +92,7 @@ export async function removeItemFromLibrary(
     await prisma.itemsInLibraries.delete({
       where: {
         libraryId_itemId: {
-          libraryId: libraryId,
+          libraryId: user.libraryId,
           itemId: itemId,
         },
       },
