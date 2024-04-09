@@ -249,13 +249,27 @@ export default function tab_index(): React.JSX.Element {
           {/*Left Card Begin*/}
           <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:bottom-[16px] lg:max-w-md">
             <div className="card items-center bg-base-200 shadow-xl ">
-              <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
-                <img
-                  className="h-72 w-72"
-                  src={data.img}
-                  alt="Poster of the item"
-                />
-              </figure>
+              <div className="indicator">
+                <span className="badge indicator-item badge-primary badge-lg indicator-start">
+                  In Library
+                </span>
+                {data.tag.filter(
+                  (e: string) =>
+                    e.toLowerCase() === "favourite" ||
+                    e.toLowerCase() === "favorite",
+                ).length >= 1 && (
+                  <span className="badge indicator-item badge-primary badge-lg">
+                    Favourite
+                  </span>
+                )}
+                <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
+                  <img
+                    className="h-72 w-72"
+                    src={data.img}
+                    alt="Poster of the item"
+                  />
+                </figure>
+              </div>
 
               <div className="card-title">
                 <h1 className="block text-4xl">{data.title}</h1>
@@ -296,6 +310,10 @@ export default function tab_index(): React.JSX.Element {
               <div className="card-body">
                 <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
                 <TagList tag={data.genre} />
+              </div>
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-2xl lg:text-3xl">Tags</h2>
+                <TagList tag={data.tag} />
               </div>
               <SmallPeopleList items={data.people} />
               {/*used as an item list */}
