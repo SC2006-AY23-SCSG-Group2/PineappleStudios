@@ -19,7 +19,7 @@ import {
 
 export async function getItemInfoByItemId(
   itemId: number,
-  userId: any,
+  userId: number,
 ): Promise<ItemInfo | undefined> {
   const user = await getUserById(userId);
   if (!user) {
@@ -32,14 +32,17 @@ export async function getItemInfoByItemId(
     console.log("Item not existing");
     return undefined;
   }
-  let isItemInLibraryCheck: boolean;
-  isItemInLibraryCheck = await isItemInLibrary(user.libraryId, itemId);
+  const isItemInLibraryCheck: boolean = await isItemInLibrary(
+    user.libraryId,
+    itemId,
+  );
 
   let content: SongContent | MovieContent | BookContent | undefined; // Initialize content variable as undefined
   let itemType: ItemType;
   // Based on the item type, retrieve additional content information
   switch (item.itemType) {
     case "book":
+      // eslint-disable-next-line no-case-declarations
       const book = await getBookByItemId(itemId);
       content = {
         pageCount: book?.pages ?? undefined,
@@ -47,6 +50,7 @@ export async function getItemInfoByItemId(
       itemType = ItemType.Book;
       break;
     case "movie":
+      // eslint-disable-next-line no-case-declarations
       const movie = await getMovieByItemId(itemId);
       content = {
         duration: movie?.duration ?? undefined,
@@ -55,6 +59,7 @@ export async function getItemInfoByItemId(
       itemType = ItemType.Movie;
       break;
     case "song":
+      // eslint-disable-next-line no-case-declarations
       const song = await getSongById(itemId);
       content = {
         duration: song?.duration ?? undefined,
@@ -68,7 +73,7 @@ export async function getItemInfoByItemId(
   }
 
   const tagsFromItem = await getTagsFromItem(itemId, userId);
-  let tags: string[] = []; // Initialize tags as an empty array
+  const tags: string[] = []; // Initialize tags as an empty array
 
   if (tagsFromItem != undefined) {
     for (const tag of tagsFromItem) {
@@ -76,7 +81,7 @@ export async function getItemInfoByItemId(
     }
   }
 
-  let people: People[] = [];
+  const people: People[] = [];
   const peopleFromItem = await getPeopleFromItem(itemId);
   if (peopleFromItem != undefined) {
     for (const person of peopleFromItem) {
@@ -90,21 +95,7 @@ export async function getItemInfoByItemId(
     }
   }
 
-  // export interface ItemInfo {
-  //   id: number;
-  //   title: string;
-  //   isInLibrary: boolean;
-  //   img: string; // string of the url
-  //   genre: string[];
-  //   tag: string[];
-  //   country?: string;
-  //   publicationDate?: string;
-  //   type: ItemType; // movie song or book
-  //   otherContent: MovieContent | SongContent | BookContent;
-  //   people: People[];
-  // }
-
-  const itemInfo: ItemInfo = {
+  return {
     id: itemId,
     title: item.title,
     isInLibrary: isItemInLibraryCheck,
@@ -117,8 +108,6 @@ export async function getItemInfoByItemId(
     otherContent: content,
     people: people,
   };
-
-  return itemInfo;
 }
 
 export async function getItemIdBySrcId(
@@ -193,7 +182,7 @@ export async function getSimpleItemInfoByItemId(
   else itemType = ItemType.Song;
   //get tags from item
   const tagsFromItem = await getTagsFromItem(itemId, userId);
-  let tags: string[] = []; // Initialize tags as an empty array
+  const tags: string[] = []; // Initialize tags as an empty array
 
   if (tagsFromItem != undefined) {
     for (const tag of tagsFromItem) {
@@ -201,13 +190,11 @@ export async function getSimpleItemInfoByItemId(
     }
   }
 
-  const simpleItemInfo: SimpleItem = {
+  return {
     id: item.id,
     title: item.title,
     img: item.image,
     tag: tags,
     type: itemType,
   };
-
-  return simpleItemInfo;
 }

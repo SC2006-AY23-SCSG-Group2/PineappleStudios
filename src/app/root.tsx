@@ -35,14 +35,14 @@ export const links: LinksFunction = () => [
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("cookie"));
+  const endTime = new Date(); // Current time
   if (session.data.startTime && session.data.userId) {
     const startTime = new Date(session.data.startTime);
-    const endTime = new Date(); // Current time
     const timeUsed = await calculateUsageTimeInMinutes(startTime, endTime);
     await updateUserTimeUsedInApp(parseInt(session.data.userId), timeUsed);
     session.set("startTime", endTime);
   }
-
+  session.set("startTime", endTime);
   return json("", {
     headers: {
       "Set-Cookie": await commitSession(session),

@@ -59,6 +59,7 @@ export async function updatePassword(userId: number, newPassword: string) {
     },
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updatedUser = await updateUser(userId, data);
   return {
     message: "Password updated successfully.",
@@ -183,7 +184,7 @@ export async function removeHistoryItemForUser(userId: number, itemId: number) {
     return;
   }
 
-  let assignmentCheck = await getItemInProfileAssignment(
+  const assignmentCheck = await getItemInProfileAssignment(
     user.profileId,
     itemId,
   );

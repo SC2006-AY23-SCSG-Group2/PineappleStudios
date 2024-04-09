@@ -6,7 +6,10 @@ import TestComponent from "../_components/TestComponent";
 export const meta: MetaFunction = () => {
   return [
     {title: "New Remix App"},
-    {name: "description", content: "Welcome to Remix!"},
+    {
+      name: "description",
+      content: "Welcome to Remix!",
+    },
   ];
 };
 
@@ -31,7 +34,11 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Index() {
   return (
-    <div style={{fontFamily: "system-ui, sans-serif", lineHeight: "1.8"}}>
+    <div
+      style={{
+        fontFamily: "system-ui, sans-serif",
+        lineHeight: "1.8",
+      }}>
       <h1>Welcome to Login</h1>
       <TestComponent />
     </div>

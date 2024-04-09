@@ -48,7 +48,7 @@ export async function removePreferenceForUser(
     console.log("User for userId: ", userId, " is not created.");
     return;
   }
-  let tag = await getPreferenceByName(preferenceName);
+  const tag = await getPreferenceByName(preferenceName);
   if (!tag) {
     console.log(
       "There is no preference : ",
@@ -57,7 +57,7 @@ export async function removePreferenceForUser(
     );
     return;
   }
-  let preferenceCheck = await getPreferenceInProfileAssignment(
+  const preferenceCheck = await getPreferenceInProfileAssignment(
     user.profileId,
     tag.id,
   );

@@ -36,7 +36,10 @@ export async function action({request}: ActionFunctionArgs) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({errors, value: data});
+    return json({
+      errors,
+      value: data,
+    });
   }
 
   const userResult = await createNewUser(
@@ -47,7 +50,10 @@ export async function action({request}: ActionFunctionArgs) {
 
   if (userResult && "error" in userResult) {
     errors.email = userResult.error;
-    return json({errors, value: data});
+    return json({
+      errors,
+      value: data,
+    });
   }
 
   // User creation was successful
