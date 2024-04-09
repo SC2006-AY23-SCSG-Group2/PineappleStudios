@@ -2,7 +2,11 @@ import {countItems, getItemById} from "../database/item";
 import {SimpleItem} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
 
-async function getRandomItemsByType(type: string, count: number) {
+async function getRandomItemsByType(
+  type: string,
+  count: number,
+  userId: number,
+) {
   const Items: SimpleItem[] = [];
   let fetchedItems = 0;
   let itemId = 1; // Start from the first item id
@@ -14,7 +18,7 @@ async function getRandomItemsByType(type: string, count: number) {
   while (fetchedItems < count && itemId <= totalItemCount) {
     const item = await getItemById(itemId);
     if (item && item.itemType === type) {
-      let simpleItemData = await getSimpleItemInfoByItemId(itemId);
+      let simpleItemData = await getSimpleItemInfoByItemId(itemId, userId);
       if (simpleItemData) Items.push(simpleItemData);
       fetchedItems++;
     }
@@ -27,11 +31,12 @@ export async function getMultipleSimpleItems(
   numberOfBooks: number,
   numberOfMovies: number,
   numberOfSongs: number,
+  userId: number,
 ) {
   // Initialize arrays to hold random items for each type
-  const Books = await getRandomItemsByType("book", numberOfBooks);
-  const Movies = await getRandomItemsByType("movie", numberOfMovies);
-  const Songs = await getRandomItemsByType("song", numberOfSongs);
+  const Books = await getRandomItemsByType("book", numberOfBooks, userId);
+  const Movies = await getRandomItemsByType("movie", numberOfMovies, userId);
+  const Songs = await getRandomItemsByType("song", numberOfSongs, userId);
 
   // Return the combined array of random items
   return [...Books, ...Movies, ...Songs];

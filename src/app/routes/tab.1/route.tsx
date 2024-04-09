@@ -41,7 +41,12 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  const itemList: SimpleItem[] = await getMultipleSimpleItems(10, 10, 10);
+  const itemList: SimpleItem[] = await getMultipleSimpleItems(
+    10,
+    10,
+    10,
+    +session.data.userId,
+  );
 
   let jsonData: {
     success: boolean;
