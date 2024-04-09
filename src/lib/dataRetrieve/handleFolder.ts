@@ -1,5 +1,16 @@
-import {getFolderById, updateFolderName} from "../database/folder";
+import {
+  getFolderById,
+  toggleIsSeries,
+  updateFolderName,
+} from "../database/folder";
+import {getItemById} from "../database/item";
+import {
+  createItemsInFolders,
+  deleteItemInFolderAssignment,
+  isItemInFolder,
+} from "../database/itemsInFolders";
 import {prismaClient} from "../database/prisma";
+import {getUserById} from "../database/user";
 
 const prisma = prismaClient;
 
@@ -17,34 +28,53 @@ export async function updateFolderWithNewName(
   console.log("Folder name updated");
 }
 
-export async function addItemToFolder(
-  libraryId: number,
+export async function addItemToFolderOrSeries(
+  userId: number,
   folderId: number,
   itemId: number,
 ) {
   try {
     // Check if the folder exists in the library
+    const user = await getUserById(userId);
+    if (!user) {
+      console.error("User is not exist");
+      return false;
+    }
+
+    const item = await getItemById(itemId);
+    if (!item) {
+      console.error("Item is not exsit");
+      return false;
+    }
+
     const folder = await prisma.folder.findFirst({
       where: {
         id: folderId,
-        libraryId: libraryId,
+        libraryId: user.libraryId,
       },
     });
 
     if (!folder) {
       console.log(
-        `Folder with ID ${folderId} does not exist in the library with ID ${libraryId}`,
+        `Folder with ID ${folderId} does not exist in the library with ID ${user.libraryId}`,
       );
       return false;
     }
 
     // Add the item to the folder
-    await prisma.itemsInFolders.create({
-      data: {
-        folderId: folderId,
-        itemId: itemId,
+    const data = {
+      body: {
+        folderId: folder.id,
+        itemId: item,
       },
-    });
+    };
+    const existingInFolder = await isItemInFolder(folder.id, item.id);
+    if (existingInFolder) {
+      console.log("Item is already exsiting in the folder");
+      return false;
+    }
+
+    await createItemsInFolders(data);
 
     return true; // Return true to indicate success
   } catch (error) {
@@ -53,55 +83,70 @@ export async function addItemToFolder(
   }
 }
 
-export async function removeItemFromFolder(
-  libraryId: number,
+export async function removeItemFromFolderOrSeries(
+  userId: number,
   folderId: number,
   itemId: number,
 ) {
   try {
     // Check if the folder exists in the library
+    const user = await getUserById(userId);
+    if (!user) {
+      console.error("User is not exist");
+      return false;
+    }
+
+    const item = await getItemById(itemId);
+    if (!item) {
+      console.error("Item is not exsit");
+      return false;
+    }
+
     const folder = await prisma.folder.findFirst({
       where: {
         id: folderId,
-        libraryId: libraryId,
+        libraryId: user.libraryId,
       },
     });
 
     if (!folder) {
       console.log(
-        `Folder with ID ${folderId} does not exist in the library with ID ${libraryId}`,
+        `Folder with ID ${folderId} does not exist in the library with ID ${user.libraryId}`,
       );
       return false;
     }
 
-    // Check if the item exists in the folder
-    const itemInFolder = await prisma.itemsInFolders.findFirst({
-      where: {
-        folderId: folderId,
-        itemId: itemId,
-      },
-    });
-
-    if (!itemInFolder) {
-      console.log(
-        `Item with ID ${itemId} does not exist in the folder with ID ${folderId}`,
-      );
+    const existingInFolder = await isItemInFolder(folder.id, item.id);
+    if (!existingInFolder) {
+      console.log("Item is NOT exsiting in the folder");
       return false;
     }
 
-    // Remove the item from the folder
-    await prisma.itemsInFolders.delete({
-      where: {
-        folderId_itemId: {
-          folderId: folderId,
-          itemId: itemId,
-        },
-      },
-    });
+    await deleteItemInFolderAssignment(folder.id, item.id);
 
     return true; // Return true to indicate success
   } catch (error) {
-    console.error("Error removing item from folder:", error);
+    console.error("Error removing item to folder:", error);
     return false;
   }
+}
+
+export async function setFolderToSeries(folderId: number) {
+  const folder = await getFolderById(folderId);
+  if (folder?.isSeries) {
+    return {error: 'The folder for", folderId , "is ALREADY a series'};
+  }
+
+  await toggleIsSeries(folderId);
+  console.log("The folder with folder Id: ", folderId, "is a series now");
+}
+
+export async function unSetFolderFromSeries(folderId: number) {
+  const folder = await getFolderById(folderId);
+  if (!folder?.isSeries) {
+    return {error: 'The folder for", folderId , "is ALREADY NOT a series'};
+  }
+
+  await toggleIsSeries(folderId);
+  console.log("The folder with folder Id: ", folderId, "is not a series now");
 }

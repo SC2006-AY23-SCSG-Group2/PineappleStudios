@@ -37,7 +37,7 @@ export const getFolderById = async (folderId: number) => {
   }
 };
 
-// Update folder
+// Update folder name
 export const updateFolderName = async (folderId: number, name: string) => {
   try {
     const updatedFolder = await prisma.folder.update({
@@ -46,6 +46,27 @@ export const updateFolderName = async (folderId: number, name: string) => {
       },
       data: {
         name: name,
+      },
+    });
+    return updatedFolder;
+  } catch (error) {
+    console.error("Error occurred while updating folder:", error);
+  }
+};
+
+// Toggle folder's isseries
+export const toggleIsSeries = async (folderId: number) => {
+  try {
+    const folder = await getFolderById(folderId);
+    let newValue;
+    if (folder?.isSeries == false) newValue = true;
+    else newValue = false;
+    const updatedFolder = await prisma.folder.update({
+      where: {
+        id: folderId,
+      },
+      data: {
+        isSeries: newValue,
       },
     });
     return updatedFolder;
