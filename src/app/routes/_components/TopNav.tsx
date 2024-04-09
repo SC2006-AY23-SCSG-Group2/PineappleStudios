@@ -93,7 +93,7 @@ export default function TopNav({
               <NavLink to={"/tab/1"}>Home</NavLink>
             </li>
             <li className="menu-item px-4">
-              <NavLink to={"/tab/2"}>Browser</NavLink>
+              <NavLink to={"/tab/2"}>Library</NavLink>
             </li>
             <li className="menu-item px-4">
               <NavLink to={"/tab/3"}>Search</NavLink>

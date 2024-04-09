@@ -87,10 +87,10 @@ export default function tab(): React.JSX.Element {
 
     switch (type) {
       case "1":
-        newTitle = "Library";
+        newTitle = "Home";
         break;
       case "2":
-        newTitle = "Browser Online";
+        newTitle = "Library";
         break;
       case "3":
         newTitle = "Search Online";
