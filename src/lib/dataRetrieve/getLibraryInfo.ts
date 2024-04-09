@@ -59,7 +59,6 @@ export async function getLibraryInfoByUserId(
                     },
                   },
                 },
-                series: true,
               },
             },
           },
@@ -114,11 +113,10 @@ export async function getLibraryInfoByUserId(
 
     // Process folders
     for (const folder of user.library.folders) {
-      const value = folder.series != null;
       const folderInfo: Folder = {
         id: folder.id,
         name: folder.name,
-        isSeries: value, // Assuming regular folder by default
+        isSeries: folder.isSeries, // Assuming regular folder by default
         img: folder.items.length >= 1 ? folder.items[0].item.image : fakeImg,
         items: [],
       };
@@ -150,59 +148,6 @@ export async function getLibraryInfoByUserId(
 
       library.folders.push(folderInfo);
     }
-
-    // Process series
-    for (const series of user.library.folders.filter(
-      (folder) => folder.series,
-    )) {
-      const seriesInfo: Folder = {
-        id: series.series!.id,
-        name: series.series!.name,
-        isSeries: true,
-        img: "", // You need to determine how to get the series image URL
-        items: [], // Initialize items array
-      };
-
-      // Access the folder directly associated with the series using 'folderId'
-      const folderId = series.series!.folderId;
-
-      // Find the folder with the corresponding folderId
-      const folder = user.library.folders.find(
-        (folder) => folder.id === folderId,
-      );
-
-      if (folder) {
-        // Process items within the folder
-        for (const folderItem of folder.items) {
-          const item = folderItem.item;
-          const ids = item.tags.map((tag) => tag.id);
-          const tagNames = await Promise.all(
-            ids.map((id) => getTagNameByIdAndUserId(id, userId)),
-          );
-          const nonNullTagNames = tagNames.filter(
-            (tagName) => tagName !== null,
-          ) as string[];
-          const types =
-            item.itemType == "song"
-              ? ItemType.Song
-              : item.itemType == "book"
-                ? ItemType.Book
-                : ItemType.Movie;
-          seriesInfo.items.push({
-            id: item.id,
-            type: types,
-            img: item.image,
-            title: item.title,
-            tag: nonNullTagNames, // Fill tags field with tag names
-          });
-        }
-      } else {
-        console.error(`Folder with ID ${folderId} not found.`);
-      }
-
-      library.series.push(seriesInfo);
-    }
-
     return library;
   } catch (error) {
     console.error("Error fetching library info:", error);
