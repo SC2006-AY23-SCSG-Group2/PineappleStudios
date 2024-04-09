@@ -1,5 +1,5 @@
-import {prismaClient} from "./../database/prisma";
-import {createRating, updateRating} from "./../database/rate";
+import {prismaClient} from "../database/prisma";
+import {createRating, updateRating} from "../database/rate";
 
 const prisma = prismaClient;
 
