@@ -28,16 +28,50 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
           <HeartButton onClick={() => setFav(!fav)} />
         </div>
       )}
-      <div className="duration-400 invisible absolute top-0 z-50 w-full scale-0 opacity-0 transition delay-100 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
-        <NavLink to={`/browser/item/${data.id}`}>
-          <img
-            src={data.img}
-            alt={data.title || "Item"}
-            draggable={false}
-            className="duration h-[12vw] w-full cursor-pointer rounded-t-md object-cover shadow-xl transition"
-          />
-        </NavLink>
-        <div className="absolute z-50 w-full rounded-b-md bg-zinc-800 p-2 shadow-md transition lg:p-4">
+      <div
+        className="
+          duration-400
+          invisible
+          absolute
+          top-0
+          z-10
+          w-full
+          scale-0
+          opacity-0
+          transition
+          delay-100
+          group-hover:-translate-y-[6vw]
+          group-hover:scale-110
+          group-hover:opacity-100
+          sm:visible
+        ">
+        <img
+          src={data.img}
+          alt={data.title || "Item"}
+          draggable={false}
+          className="
+            duration
+            h-[12vw]
+            w-full
+            cursor-pointer
+            rounded-t-md
+            object-cover
+            shadow-xl
+            transition
+          "
+        />
+        <div
+          className="
+            absolute
+            z-10
+            w-full
+            rounded-b-md
+            bg-zinc-800
+            p-2
+            shadow-md
+            transition
+            lg:p-4
+            ">
           <div className="flex flex-row items-center gap-3">
             <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-2 border-white transition hover:border-neutral-300 lg:h-10 lg:w-10">
               <svg
