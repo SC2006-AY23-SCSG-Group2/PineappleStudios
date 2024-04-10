@@ -60,7 +60,7 @@ export default function BtmNav(): React.JSX.Element {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span className="btm-nav-label">Browser</span>
+          <span className="btm-nav-label">Library</span>
         </NavLink>
         <NavLink to={"/tab/3"}>
           <svg

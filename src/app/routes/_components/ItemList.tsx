@@ -35,7 +35,10 @@ export const ItemList: React.FC<ItemsListProps> = ({
           <button
             className="absolute left-0 z-30 flex h-full items-center justify-center p-4"
             onClick={prevPage}
-            style={{top: "50%", transform: "translateY(-50%)"}}>
+            style={{
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -55,7 +58,9 @@ export const ItemList: React.FC<ItemsListProps> = ({
           <div
             className="flex transition-transform duration-700 ease-in-out"
             style={{
-              transform: `translateX(-${currentPage * (100 / itemsPerPage) * nMinusOne}%)`,
+              transform: `translateX(-${
+                currentPage * (100 / itemsPerPage) * nMinusOne
+              }%)`,
             }}>
             {items.map((item, index) => (
               <div
@@ -71,7 +76,10 @@ export const ItemList: React.FC<ItemsListProps> = ({
           <button
             className="absolute right-0 z-30 flex h-full items-center justify-center p-4"
             onClick={nextPage}
-            style={{top: "50%", transform: "translateY(-50%)"}}>
+            style={{
+              top: "50%",
+              transform: "translateY(-50%)",
+            }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

@@ -1,6 +1,6 @@
-import {getBookDetailsRequest} from "./../database/book";
-import {getMovieDetailsRequest} from "./../database/movie";
-import {getSongDetailsRequest} from "./../database/song";
+import {getBookDetailsRequest} from "../database/book";
+import {getMovieDetailsRequest} from "../database/movie";
+import {getSongDetailsRequest} from "../database/song";
 
 export const getSearchAPI = async (searchValue: string): Promise<any[]> => {
   try {

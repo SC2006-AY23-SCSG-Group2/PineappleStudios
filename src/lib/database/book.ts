@@ -149,10 +149,12 @@ export const getBookDetailsRequest = async (searchValue: string) => {
           : "N/A",
         language: item.volumeInfo.language || "N/A",
         averageRating: item.volumeInfo.averageRating || "N/A",
+        description: item.volumeInfo.description,
         ratingsCount: item.volumeInfo.ratingsCount || "N/A",
         authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
         publishedDate: item.volumeInfo.publishedDate || "N/A",
         year: item.volumeInfo.Year || "N/A", // Add year
+        itemType:'book',
         // Add other properties of a book as needed
       }));
       return booksData;

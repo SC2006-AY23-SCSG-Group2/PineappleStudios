@@ -205,10 +205,10 @@
 // import { handleRating } from "../../../lib/dataRetrieve/handleRating";
 
 // export async function loader({ request }: LoaderFunctionArgs) {
-//   const userId: number = 2; // Provide a valid user ID for testing
-//   const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
+//   const userId: number = 1; // Provide a valid user ID for testing
+//   const itemId: number = 2; // Provide the ID of the existing item (movie, song, or book)
 //   const reviewContent: string = "Worst song that i have heard so far."; // Provide the review content
-//   const rating: number = 4; // Provide the rating (out of 5) to be assigned
+//   const rating: number = 2; // Provide the rating (out of 5) to be assigned
 
 //   try {
 //     // Create a new review
@@ -236,38 +236,45 @@
 //     );
 //   }
 // }
-//---------------------------avgRating---------------------------
-// import { LoaderFunctionArgs, json } from "@remix-run/node";
-// import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path
+//---------------------------avgRating and create item---------------------------
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path
+import { handleBookSearchAPI, handleMovieSearchAPI, handleSongSearchAPI } from "src/lib/dataRetrieve/getAPIInfo";
+import { handleCreateItem } from "src/lib/dataRetrieve/createItems";
 
-// export async function loader({ params }: LoaderFunctionArgs) {
-//   const itemId: number = 44; // Provide the item ID for testing
+export async function loader({ params }: LoaderFunctionArgs) {
+  const itemId: number = 2; // Provide the item ID for testing
 
-//   try {
-//     const averageRating = await getAverageRatingByItemId(itemId);
+  try {
+    const averageRating = await getAverageRatingByItemId(itemId);
     
-//     console.log("Average Rating:", averageRating);
+    console.log("Average Rating:", averageRating);
+    // Fetch book data
+    //const books = await handleMovieSearchAPI('harry potter');
+    // Pick a random book
+    //const randomBook = books[Math.floor(Math.random() * books.length)];
+    //const averageRating = await handleCreateItem(books[1]);
 
-//     return json(
-//       {
-//         success: true,
-//         data: { averageRating },
-//         error: {},
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Error:", error);
-//     return json(
-//       {
-//         success: false,
-//         data: {},
-//         error: { msg: "An error occurred while fetching average rating for item" },
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return json(
+      {
+        success: true,
+        data: { averageRating },
+        error: {},
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return json(
+      {
+        success: false,
+        data: {},
+        error: { msg: "An error occurred while fetching average rating for item" },
+      },
+      { status: 500 }
+    );
+  }
+}
 //------------------------------handle folder----------------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // //import { createFolder } from "../../../lib/database/folder";
@@ -306,13 +313,13 @@
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
 // import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
-// import { getSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
+// import { getSearchAPI, handleBookSearchAPI, handleMovieSearchAPI,handleSongSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
 
 
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   try {
 //     // Invoke the handleSearchAPI function
-//     const searchData = await getSearchAPI("Harry Potter");
+//     const searchData = await handleMovieSearchAPI("Harry Potter");
 
 //     // Log the search data
 //     console.log("Search Data:", searchData);
@@ -380,44 +387,44 @@
 // }
 
 //---------------------------- handleSeries --------------------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { updateSeriesToFolder, createSeriesInFolder, deleteSeriesFromFolder } from "./../../../lib/dataRetrieve/handleSeries";
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { updateSeriesToFolder, createSeriesInFolder, deleteSeriesFromFolder } from "./../../../lib/dataRetrieve/handleSeries";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  try {
-    // Add series to folder
-    const folderId = 2; // Replace with the ID of the folder
-    const seriesId = 1; // Replace with the ID of the series
-    const seriesName = "rudra";
-    //const addSeriesResult = await addSeriesToFolder(folderId, seriesId);
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   try {
+//     // Add series to folder
+//     const folderId = 2; // Replace with the ID of the folder
+//     const seriesId = 1; // Replace with the ID of the series
+//     const seriesName = "rudra";
+//     //const addSeriesResult = await addSeriesToFolder(folderId, seriesId);
 
-    // Remove series from folder
-    const removeSeriesResult = await createSeriesInFolder(seriesName,folderId); // Uncomment to test removal
+//     // Remove series from folder
+//     const removeSeriesResult = await createSeriesInFolder(seriesName,folderId); // Uncomment to test removal
 
-    // Return the results
-    return json(
-      {
-        success: true,
-        data: {
-          //addSeriesResult,
-          removeSeriesResult, // Uncomment to include removal result
-        },
-        error: {},
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error:", error);
-    return json(
-      {
-        success: false,
-        data: {},
-        error: { msg: "An error occurred while testing series functions" },
-      },
-      { status: 500 }
-    );
-  }
-}
+//     // Return the results
+//     return json(
+//       {
+//         success: true,
+//         data: {
+//           //addSeriesResult,
+//           removeSeriesResult, // Uncomment to include removal result
+//         },
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while testing series functions" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 
 

@@ -1,10 +1,15 @@
 import {
   LoaderFunctionArgs,
+  Session,
   TypedResponse,
   json,
   redirect,
 } from "@remix-run/node";
-import {useFetcher, useLoaderData} from "@remix-run/react";
+import {
+  FetcherWithComponents,
+  useFetcher,
+  useLoaderData,
+} from "@remix-run/react";
 import React, {useEffect, useState} from "react";
 
 import {
@@ -18,7 +23,13 @@ import {
   MovieContent,
   SongContent,
 } from "../../../lib/interfaces";
-import {commitSession, destroySession, getSession} from "../../session";
+import {
+  SessionData,
+  SessionFlashData,
+  commitSession,
+  destroySession,
+  getSession,
+} from "../../session";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
 import {ToastList} from "../_components/ToastList";
@@ -31,7 +42,9 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     error: {msg: string} | undefined;
   }>
 > {
-  const session = await getSession(request.headers.get("cookie"));
+  const session: Session<SessionData, SessionFlashData> = await getSession(
+    request.headers.get("cookie"),
+  );
 
   if (!session.has("userId") || !session.data.userId) {
     session.flash("error", "User not login");
@@ -53,9 +66,8 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  // session.set("startTime", new Date());
+  const id: string | undefined = params.id;
 
-  const id = params.id;
   if (!id) {
     return json({
       success: false,
@@ -133,8 +145,11 @@ export default function tab_index(): React.JSX.Element {
     );
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const fetcherAddToLibrary = useFetcher<{
+  const fetcherAddToLibrary: FetcherWithComponents<{
+    success: false;
+    error: {msg: string};
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  }> = useFetcher<{
     success: false;
     error: {msg: string};
   }>({key: "add-to-library"});
@@ -148,36 +163,40 @@ export default function tab_index(): React.JSX.Element {
       type: string;
     }[]
   >([]);
-  const autoClose = true;
-  const autoCloseDuration = 5;
+  const autoClose: boolean = true;
+  const autoCloseDuration: number = 5;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const showToast = (message: string, type: string) => {
+  const showToast = (message: string, type: string): void => {
     const toast: {id: number; message: string; type: string} = {
       id: Date.now(),
       message,
       type,
     };
 
-    // if (toasts.length > 0 && toast.id - toasts[toasts.length - 1].id < 500) {
-    //   return;
-    // }
-
-    setToasts((prevToasts) => [...prevToasts, toast]);
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) => [
+      ...prevToasts,
+      toast,
+    ]);
 
     if (autoClose) {
-      setTimeout(() => {
+      setTimeout((): void => {
         removeToast(toast.id);
       }, autoCloseDuration * 1000);
     }
   };
 
   function removeToast(id: number) {
-    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) =>
+      prevToasts.filter(
+        (toast: {id: number; message: string; type: string}): boolean =>
+          toast.id !== id,
+      ),
+    );
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
+  useEffect((): void => {
     if (fetcherAddToLibrary.data && !fetcherAddToLibrary.data.success) {
       console.log(fetcherAddToLibrary.data.error.msg);
       showToast(fetcherAddToLibrary.data.error.msg, "error");
@@ -188,9 +207,9 @@ export default function tab_index(): React.JSX.Element {
   const data: ItemInfo = loaderData.data;
   const content: MovieContent | SongContent | BookContent = data.otherContent;
 
-  const type = ["Book", "Song", "Movie"];
+  const type: string[] = ["Book", "Song", "Movie"];
 
-  function funcContent() {
+  function funcContent(): React.JSX.Element | null {
     switch (data.type) {
       case ItemType.Book: {
         return (
@@ -249,18 +268,32 @@ export default function tab_index(): React.JSX.Element {
           {/*Left Card Begin*/}
           <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:bottom-[16px] lg:max-w-md">
             <div className="card items-center bg-base-200 shadow-xl ">
-              <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
-                <img
-                  className="h-72 w-72"
-                  src={data.img}
-                  alt="Poster of the item"
-                />
-              </figure>
-
-              <div className="card-title">
-                <h1 className="block text-4xl">{data.title}</h1>
+              <div className="indicator">
+                <span className="badge indicator-item badge-primary badge-lg indicator-start">
+                  In Library
+                </span>
+                {data.tag.filter(
+                  (e: string) =>
+                    e.toLowerCase() === "favourite" ||
+                    e.toLowerCase() === "favorite",
+                ).length >= 1 && (
+                  <span className="badge indicator-item badge-primary badge-lg">
+                    Favourite
+                  </span>
+                )}
+                <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
+                  <img
+                    className="h-72 w-72"
+                    src={data.img}
+                    alt="Poster of the item"
+                  />
+                </figure>
               </div>
+
               <div className="card-body">
+                <div className="card-title">
+                  <h1 className="block text-4xl">{data.title}</h1>
+                </div>
                 <p className="mt-2 block text-lg">Type: {type[data.type]}</p>
                 {data.country && (
                   <p className="mt-2 block text-lg">Country: {data.country}</p>
@@ -296,6 +329,10 @@ export default function tab_index(): React.JSX.Element {
               <div className="card-body">
                 <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
                 <TagList tag={data.genre} />
+              </div>
+              <div className="card-body">
+                <h2 className="card-title mx-2 text-2xl lg:text-3xl">Tags</h2>
+                <TagList tag={data.tag} />
               </div>
               <SmallPeopleList items={data.people} />
               {/*used as an item list */}

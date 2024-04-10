@@ -22,7 +22,7 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   }
 
   const preferencesInProfile = await getAllPreferencesInProfile(user.profileId);
-  let preferences: string[] = [];
+  const preferences: string[] = [];
   for (const preference of preferencesInProfile) {
     if (preference) preferences.push(preference?.name);
   }
@@ -38,15 +38,15 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
   const formatter = new Intl.DateTimeFormat("en-US", singaporeTimeOptions);
   const formattedDateJoined = formatter.format(registeredDate);
 
-  let count = await countItemsInLibrary(user.libraryId);
+  const count = await countItemsInLibrary(user.libraryId);
   const Name = user.userName ? user.userName : "";
-  const userResult: User = {
+  return {
     id: user.id,
     email: user.email,
     name: Name,
     //dateJoined: user.profile.registeredDate,
     dateJoined: formattedDateJoined,
-    numberofLikedItem: user.profile.likedItem,
+    numberOfLikedItem: user.profile.likedItem,
     numberOfRating: user.rate.length,
     timeUsedAppInMins: user.profile.timeUsedInApp,
     history: historyItem,

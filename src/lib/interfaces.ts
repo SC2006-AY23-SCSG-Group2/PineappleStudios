@@ -4,7 +4,7 @@ export type User = {
   name: string;
   //dateJoined: Date;
   dateJoined: string;
-  numberofLikedItem: number;
+  numberOfLikedItem: number;
   numberOfRating: number;
   timeUsedAppInMins: number;
   history?: SimpleItem[];
@@ -44,7 +44,7 @@ export type OnlineContent = {
 };
 
 export type SimpleItem = {
-  id: number;
+  id: number | string;
   title: string;
   img: string; // string of the url
   tag: string[];
@@ -74,6 +74,7 @@ export type People = {
 export type MovieContent = {
   duration?: number;
   country?: string;
+  description?: string;
 };
 
 export type SongContent = {
@@ -83,4 +84,5 @@ export type SongContent = {
 
 export type BookContent = {
   pageCount?: number;
+  description?: string;
 };

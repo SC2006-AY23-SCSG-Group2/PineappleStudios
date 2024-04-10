@@ -1,9 +1,4 @@
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
+import {ActionFunctionArgs, Session, json, redirect} from "@remix-run/node";
 import {
   Form,
   Link,
@@ -12,7 +7,12 @@ import {
   useNavigation,
 } from "@remix-run/react";
 import React from "react";
-import {commitSession, getSession} from "src/app/session";
+import {
+  SessionData,
+  SessionFlashData,
+  commitSession,
+  getSession,
+} from "src/app/session";
 
 import {getUserByEmail} from "../../../lib/database/user";
 import {TextField} from "../_components/TextField";
@@ -23,12 +23,12 @@ type FormData = {
 };
 
 export async function action({request}: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const formData: globalThis.FormData = await request.formData();
   const data: FormData = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
-  let errors = {
+  let errors: {email: string; password: string} = {
     email: "",
     password: "",
   };
@@ -58,7 +58,9 @@ export async function action({request}: ActionFunctionArgs) {
     });
   }
 
-  const user = await getUserByEmail(data.email);
+  const user: {id: number; password: string} | null = await getUserByEmail(
+    data.email,
+  );
 
   if (!user) {
     errors = {
@@ -84,23 +86,17 @@ export async function action({request}: ActionFunctionArgs) {
     });
   }
 
-  const session = await getSession();
+  const session: Session<SessionData, SessionFlashData> = await getSession();
   session.set("userId", user.id.toString());
   session.set("startTime", new Date());
 
-  //returns a redirect response to a specific URL ("/tab"), along with the cookie containing the session information.
+  //returns a redirect response to a specific URL ("/tab"), along with the
+  // cookie containing the session information.
   return redirect("/tab/1", {
     headers: {
       "Set-Cookie": await commitSession(session),
     },
   });
-}
-
-//loader function may be not necessary
-export async function loader({request}: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("cookie"));
-
-  return session.data;
 }
 
 export default function Login(): React.JSX.Element {
@@ -167,7 +163,7 @@ export default function Login(): React.JSX.Element {
         <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
             <div className="form-control mt-6">
-              <NavLink className="btn btn-neutral" to="/login/gmail">
+              <NavLink className="btn disabled btn-neutral" to="/login/gmail">
                 Login with Gmail
               </NavLink>
             </div>

@@ -31,7 +31,10 @@ export async function action({request}: ActionFunctionArgs) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({errors, value: data});
+    return json({
+      errors,
+      value: data,
+    });
   }
 
   if (user) {

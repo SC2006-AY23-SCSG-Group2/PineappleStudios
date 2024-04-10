@@ -18,11 +18,11 @@ export const getLiraryById = async (request: any) => {
 // create library
 export const createLibrary = async () => {
   try {
-    //   const libraryData = request.body;
+    // const libraryData = request.body;
 
-    // Create the song
+    // Create the library
     const library = await prismaClient.library.create({
-      // data: libraryData,
+      //  data: libraryData,
     });
 
     return library;

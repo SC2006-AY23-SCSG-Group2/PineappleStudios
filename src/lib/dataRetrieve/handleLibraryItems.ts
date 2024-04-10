@@ -1,5 +1,11 @@
+import {getItemById} from "../database/item";
 import {isItemInLibrary} from "../database/itemsInLibraries";
 import {prismaClient} from "../database/prisma";
+import {
+  createRecentItemAssignments,
+  deleteRecentItemAssignments,
+  getRecentItemAddedByUser,
+} from "../database/recentItems";
 
 const prisma = prismaClient;
 
@@ -41,6 +47,7 @@ export async function addItemToLibrary(userId: number, itemId: number) {
         itemId: itemId, // Use the provided item ID
       },
     });
+    await createRecentItemAssignments(itemId, userId);
 
     return true; // Return true to indicate success
   } catch (error) {
@@ -97,10 +104,26 @@ export async function removeItemFromLibrary(userId: number, itemId: number) {
         },
       },
     });
-
+    await deleteRecentItemAssignments(itemId, userId);
     return true; // Return true to indicate success
   } catch (error) {
     console.error("Error removing item from library:", error);
     return false;
   }
+}
+//return a list of string (item's titles)
+export async function getRecentItemsFromLibrary(userId: number) {
+  let itemTitles: string[] = [];
+  const assignments = await getRecentItemAddedByUser(userId);
+  if (!assignments) {
+    console.log("Items in library library is too less");
+  } else {
+    for (const assingment of assignments) {
+      if (assingment) {
+        const item = await getItemById(assingment.itemId);
+        if (item) itemTitles.push(item.title);
+      }
+    }
+  }
+  return itemTitles;
 }

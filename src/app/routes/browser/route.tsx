@@ -71,7 +71,7 @@ export default function tab(): React.JSX.Element {
               key={"btn-sm"}
               className="btn btn-circle lg:hidden"
               onClick={() => {
-                navigate(-1);
+                navigate("/tab/2");
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ export default function tab(): React.JSX.Element {
               key={"btn-lg"}
               className="btn max-lg:hidden lg:visible"
               onClick={() => {
-                navigate(-1);
+                navigate("/tab/1");
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

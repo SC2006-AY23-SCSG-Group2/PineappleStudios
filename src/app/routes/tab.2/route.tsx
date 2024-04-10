@@ -7,15 +7,16 @@ import {
 import {NavLink, useLoaderData} from "@remix-run/react";
 import React from "react";
 
-import {getMultipleSimpleItems} from "../../../lib/dataRetrieve/getItems";
-import {ItemType, SimpleItem} from "../../../lib/interfaces";
+import {getLibraryInfoByUserId} from "../../../lib/dataRetrieve/getLibraryInfo";
+import {ItemType, Library, SimpleItem} from "../../../lib/interfaces";
 import {commitSession, destroySession, getSession} from "../../session";
+import {ItemFolderList} from "../_components/ItemFolderList";
 import {ItemList} from "../_components/ItemList";
 
 export async function loader({request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
     success: boolean;
-    data: SimpleItem[] | null;
+    data: Library | null;
     error: {msg: string} | undefined;
   }>
 > {
@@ -41,30 +42,27 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  const itemList: SimpleItem[] = await getMultipleSimpleItems(
-    10,
-    10,
-    10,
-    parseInt(session.data.userId),
+  const library: Library | null = await getLibraryInfoByUserId(
+    +session.data.userId,
   );
 
   let jsonData: {
     success: boolean;
-    data: SimpleItem[] | null;
+    data: Library | null;
     error: {msg: string} | undefined;
   } = {
     success: true,
-    data: itemList,
+    data: library,
     error: undefined,
   };
 
-  if (!itemList || itemList.length < 1) {
+  if (!library) {
     session.flash("error", "Library Cannot found");
 
     jsonData = {
       success: false,
       data: null,
-      error: {msg: "Items not found"},
+      error: {msg: "Library not found"},
     };
   }
 
@@ -79,57 +77,129 @@ export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
 
+  if (!loaderData.success) {
+    return (
+      <>
+        <h1 className={"text-error"}>{loaderData.error?.msg}</h1>
+      </>
+    );
+  }
+
+  if (!loaderData.success || !loaderData.data) {
+    return (
+      <>
+        <h1 className={"text-error"}>Error</h1>
+      </>
+    );
+  }
+
+  const favoriteItems: SimpleItem[] = loaderData.data.items.filter(
+    (item: SimpleItem): boolean =>
+      item.tag.filter(
+        (e: string) =>
+          e.toLowerCase() === "favourite" || e.toLowerCase() === "favorite",
+      ).length >= 1,
+  );
+  const notFavoriteItems: SimpleItem[] = loaderData.data.items.filter(
+    (item: SimpleItem): boolean =>
+      item.tag.filter(
+        (e: string) =>
+          e.toLowerCase() === "favourite" || e.toLowerCase() === "favorite",
+      ).length < 1,
+  );
+
   return (
     <>
-      {loaderData?.data && (
-        <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent">
-          Today&apos;s Hits
-        </h1>
+      {favoriteItems.length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList title="Favorites" items={favoriteItems} />
+        </>
       )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Song)
-          .length > 0 && (
+
+      {loaderData.data.folders.length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemFolderList title="Folders" items={loaderData.data.folders} />
+        </>
+      )}
+
+      {loaderData.data.series.length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemFolderList title="Series" items={loaderData.data.series} />
+        </>
+      )}
+
+      {notFavoriteItems.filter(
+        (x: SimpleItem): boolean => x.type === ItemType.Song,
+      ).length !== 0 && (
+        <>
+          <div className="divider m-4"></div>
           <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Song,
+            title="Music"
+            items={notFavoriteItems.filter(
+              (x: SimpleItem): boolean => x.type === ItemType.Song,
             )}
-            title="Top Music"
           />
-        )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Movie)
-          .length > 0 && (
+        </>
+      )}
+
+      {notFavoriteItems.filter(
+        (x: SimpleItem): boolean => x.type === ItemType.Movie,
+      ).length !== 0 && (
+        <>
+          <div className="divider"></div>
           <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Movie,
+            title="Movies & TV Shows"
+            items={notFavoriteItems.filter(
+              (x: SimpleItem): boolean => x.type === ItemType.Movie,
             )}
-            title="Top Movies"
           />
-        )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Book)
-          .length > 0 && (
+        </>
+      )}
+
+      {notFavoriteItems.filter(
+        (x: SimpleItem): boolean => x.type === ItemType.Book,
+      ).length !== 0 && (
+        <>
+          <div className="divider"></div>
           <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Book,
+            title="Books"
+            items={notFavoriteItems.filter(
+              (x: SimpleItem): boolean => x.type === ItemType.Book,
             )}
-            title="Top Books"
           />
-        )}
-      {(!loaderData.data ||
-        loaderData.data.length +
-          loaderData.data.length +
-          loaderData.data.length ===
-          0) && (
+        </>
+      )}
+
+      {notFavoriteItems.filter(
+        (x: SimpleItem) => x.type === undefined || x.type > 2,
+      ).length !== 0 && (
+        <>
+          <div className="divider"></div>
+          <ItemList
+            title="Others"
+            items={notFavoriteItems.filter(
+              (x: SimpleItem) => x.type === undefined || x.type > 2,
+            )}
+          />
+        </>
+      )}
+
+      {loaderData.data.items.length +
+        loaderData.data.folders.length +
+        loaderData.data.series.length ===
+        0 && (
         <>
           <div className="hero min-h-screen bg-base-200">
             <div className="hero-content text-center">
               <div className="max-w-md">
                 <h1 className="text-3xl font-bold text-error">
-                  There is recommendations, you may search what you like.
+                  There is no item in your library yet, browser more.
                 </h1>
-                <NavLink className="btn btn-primary" to="/tab/3">
-                  Go to Search Page
+                <NavLink className="btn btn-primary" to="/tab/2">
+                  Browser More
                 </NavLink>
               </div>
             </div>

@@ -1,3 +1,1 @@
-import process from "process";
-
-export const SPOTIFY_CLIENT_ID: string = process.env.SPOTIFY_CLIENT_ID ?? "";
+export const MAX_SLOTS_PER_USER_FOR_RECENT_ITEM = 5;

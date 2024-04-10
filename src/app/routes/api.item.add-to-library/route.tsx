@@ -1,12 +1,18 @@
-import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
+import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
 
 import {getItemIdBySrcId} from "../../../lib/dataRetrieve/getItemInfo";
 import {addItemToLibrary} from "../../../lib/dataRetrieve/handleLibraryItems";
-import {destroySession, getSession} from "../../session";
+import {
+  SessionData,
+  SessionFlashData,
+  destroySession,
+  getSession,
+} from "../../session";
 
 export async function action({request}: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("cookie"));
-
+  const session: Session<SessionData, SessionFlashData> = await getSession(
+    request.headers.get("cookie"),
+  );
   if (!session.has("userId") || !session.data.userId) {
     session.flash("error", "User not login");
 

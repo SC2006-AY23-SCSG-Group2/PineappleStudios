@@ -1,4 +1,8 @@
 import {
+  createRecentItemAssignments,
+  deleteRecentItemAssignments,
+} from "../database/recentItems";
+import {
   createTag,
   deleteTag,
   getTagByNameAndUserIdAndItemId,
@@ -10,10 +14,15 @@ export async function addItemToFavourtie(userId: number, itemId: number) {
   if (!tag) {
     return {error: "Error occured when adding item to favourite"};
   }
+
+  await createRecentItemAssignments(itemId, userId);
 }
 
 export async function removeItemFromFavourite(userId: number, itemId: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const tag = await removeTagForItem(userId, "favourite", itemId);
+
+  await deleteRecentItemAssignments(itemId, userId);
 }
 
 export async function addTagForItem(
@@ -47,7 +56,7 @@ export async function removeTagForItem(
     return {error: "User for userId " + userId + " is invalid."};
   }
 
-  let tag = await getTagByNameAndUserIdAndItemId(tagName, userId, itemId);
+  const tag = await getTagByNameAndUserIdAndItemId(tagName, userId, itemId);
 
   if (tag) {
     await deleteTag(tag.id);
