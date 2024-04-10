@@ -44,7 +44,6 @@ export const countRating = async (userId: number) => {
 //         rating: true,
 //       },
 //     });
-    
 
 //     // Calculate the average rating manually
 //     const totalRatings = ratings.length;
@@ -102,7 +101,9 @@ export const getAverageRatingByItemId = async (itemId: number) => {
     // Calculate the average rating manually
     const totalRatings = ratings.length;
     const sumOfRatings = ratings.reduce((acc, curr) => acc + curr.rating, 0);
-    const averageRating = (sumOfRatings + (avgRate !== null ? avgRate * totalRatings : 0)) / (totalRatings + (avgRate !== null ? totalRatings : 0));
+    const averageRating =
+      (sumOfRatings + (avgRate !== null ? avgRate * totalRatings : 0)) /
+      (totalRatings + (avgRate !== null ? totalRatings : 0));
 
     return averageRating;
   } catch (error) {
@@ -113,7 +114,6 @@ export const getAverageRatingByItemId = async (itemId: number) => {
     return 0; // Return 0 in case of error
   }
 };
-
 
 // Update a rating
 export const updateRating = async (ratingId: number, newRating: number) => {
