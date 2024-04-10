@@ -68,3 +68,20 @@ export const deleteLibrary = async (request: any) => {
     return {success: false};
   }
 };
+
+
+// count item in library
+export const createLibrary = async () => {
+  try {
+    //   const libraryData = request.body;
+
+    // Create the song
+    const library = await prismaClient.library.create({
+      // data: libraryData,
+    });
+
+    return library;
+  } catch (error) {
+    console.error("Error occurred while creating library:", error);
+  }
+};
