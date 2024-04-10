@@ -28,7 +28,9 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
           <HeartButton onClick={() => setFav(!fav)} />
         </div>
       )}
-      <div className="duration-400 invisible absolute top-0 z-50 w-full scale-0 opacity-0 transition delay-100 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
+      <div
+        className="duration-400 invisible absolute top-0 z-50 w-full scale-0 opacity-0 transition
+          delay-100 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
         <NavLink to={`/browser/item/${data.id}`}>
           <img
             src={data.img}
