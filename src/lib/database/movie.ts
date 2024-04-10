@@ -223,10 +223,12 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
           genre: detailData.Genre || "N/A",
           language: detailData.Language || "N/A",
           averageRating: detailData.imdbRating || "N/A",
+          description: detailData.Plot,
           ratingsCount: detailData.imdbVotes || "N/A",
           year: movie.Year,
           duration: duration, // Store duration as an integer
           releaseDate: detailData.Released || "N/A",
+          itemType: 'movie',
           // Add other properties of a movie as needed
         });
       }

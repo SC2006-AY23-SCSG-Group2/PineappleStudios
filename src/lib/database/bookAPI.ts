@@ -47,6 +47,7 @@ export const createBookItem = async (singleBookData: any) => {
       genre: singleBookData.genre,
       language: singleBookData.language,
       publishedDate: singleBookData.publishedDate,
+      avgRate: parseFloat(singleBookData.averageRating)/2
     },
   };
 
@@ -82,6 +83,7 @@ export const createBookItem = async (singleBookData: any) => {
       srcId: singleBookData.srcId,
       pages: singleBookData.pages,
       itemId: item.id,
+      description: singleBookData.description
     },
   };
 

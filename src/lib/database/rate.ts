@@ -34,8 +34,57 @@ export const countRating = async (userId: number) => {
 };
 
 // Get average rating for an item
+// export const getAverageRatingByItemId = async (itemId: number) => {
+//   try {
+//     const ratings = await prisma.rate.findMany({
+//       where: {
+//         itemId: itemId,
+//       },
+//       select: {
+//         rating: true,
+//       },
+//     });
+    
+
+//     // Calculate the average rating manually
+//     const totalRatings = ratings.length;
+//     if (totalRatings === 0) {
+//       return 0; // Return 0 if there are no ratings for the item
+//     }
+
+//     const sumOfRatings = ratings.reduce((acc, curr) => acc + curr.rating, 0);
+//     const averageRating = sumOfRatings / totalRatings;
+
+//     return averageRating;
+//   } catch (error) {
+//     console.error(
+//       "Error occurred while fetching average rating for item:",
+//       error,
+//     );
+//     return 0; // Return 0 in case of error
+//   }
+// };
 export const getAverageRatingByItemId = async (itemId: number) => {
   try {
+    // Fetch the item with its avgRate
+    const item = await prisma.item.findUnique({
+      where: {
+        id: itemId,
+      },
+      select: {
+        avgRate: true,
+      },
+    });
+
+    if (!item) {
+      // If item with given itemId does not exist, return 0
+      return 0;
+    }
+
+    // Extract avgRate from the fetched item
+    const avgRate = item.avgRate;
+
+    // Fetch ratings for the item
     const ratings = await prisma.rate.findMany({
       where: {
         itemId: itemId,
@@ -45,14 +94,15 @@ export const getAverageRatingByItemId = async (itemId: number) => {
       },
     });
 
-    // Calculate the average rating manually
-    const totalRatings = ratings.length;
-    if (totalRatings === 0) {
-      return 0; // Return 0 if there are no ratings for the item
+    // If there are no ratings for the item, return the stored avgRate
+    if (ratings.length === 0) {
+      return avgRate !== null ? avgRate : 0;
     }
 
+    // Calculate the average rating manually
+    const totalRatings = ratings.length;
     const sumOfRatings = ratings.reduce((acc, curr) => acc + curr.rating, 0);
-    const averageRating = sumOfRatings / totalRatings;
+    const averageRating = (sumOfRatings + (avgRate !== null ? avgRate * totalRatings : 0)) / (totalRatings + (avgRate !== null ? totalRatings : 0));
 
     return averageRating;
   } catch (error) {
@@ -63,6 +113,7 @@ export const getAverageRatingByItemId = async (itemId: number) => {
     return 0; // Return 0 in case of error
   }
 };
+
 
 // Update a rating
 export const updateRating = async (ratingId: number, newRating: number) => {
