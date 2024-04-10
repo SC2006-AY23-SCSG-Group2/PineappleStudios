@@ -7,6 +7,7 @@ export const handleRating = async (
   userId: number,
   itemId: number,
   rating: number,
+  rateFromApi: number,
 ) => {
   try {
     // Check if the user has already rated the item
@@ -18,7 +19,7 @@ export const handleRating = async (
       return {success: true, message: "Rating updated successfully"};
     } else {
       // If the user hasn't rated, create a new rating
-      await createRating(userId, itemId, rating);
+      await createRating(userId, itemId, rating, rateFromApi);
       return {success: true, message: "Rating added successfully"};
     }
   } catch (error) {

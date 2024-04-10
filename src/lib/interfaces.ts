@@ -74,6 +74,7 @@ export type People = {
 export type MovieContent = {
   duration?: number;
   country?: string;
+  description?: string;
 };
 
 export type SongContent = {
@@ -83,4 +84,5 @@ export type SongContent = {
 
 export type BookContent = {
   pageCount?: number;
+  description?: string;
 };

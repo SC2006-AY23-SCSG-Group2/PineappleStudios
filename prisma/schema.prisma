@@ -75,17 +75,19 @@ model Item {
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  srcId    String @unique // id from datasource
-  duration Int?
-  itemId   Int    @unique
-  item     Item   @relation(fields: [itemId], references: [id])
+  srcId       String @unique // id from datasource
+  duration    Int?
+  description String
+  itemId      Int    @unique
+  item        Item   @relation(fields: [itemId], references: [id])
 }
 
 model Book {
-  srcId  String @unique // id from datasource
-  pages  Int?
-  itemId Int    @unique
-  item   Item   @relation(fields: [itemId], references: [id])
+  srcId       String @unique // id from datasource
+  pages       Int?
+  description String
+  itemId      Int    @unique
+  item        Item   @relation(fields: [itemId], references: [id])
 }
 
 model Song {
@@ -139,12 +141,13 @@ model People {
 }
 
 model Rate {
-  id     Int  @id @default(autoincrement())
-  rating Int
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-  itemId Int
-  item   Item @relation(fields: [itemId], references: [id])
+  id          Int  @id @default(autoincrement())
+  rating      Int
+  rateFromApi Int
+  userId      Int
+  user        User @relation(fields: [userId], references: [id])
+  itemId      Int
+  item        Item @relation(fields: [itemId], references: [id])
 }
 
 model Review {

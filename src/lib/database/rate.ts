@@ -6,6 +6,7 @@ export const createRating = async (
   userId: number,
   itemId: number,
   rating: number,
+  rateFromApi: number,
 ) => {
   try {
     const rate = await prismaClient.rate.create({
@@ -13,6 +14,7 @@ export const createRating = async (
         userId: userId,
         itemId: itemId,
         rating: rating,
+        rateFromApi: rateFromApi,
       },
     });
     return rate;
