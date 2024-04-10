@@ -44,7 +44,7 @@ export type OnlineContent = {
 };
 
 export type SimpleItem = {
-  id: number;
+  id: number | string;
   title: string;
   img: string; // string of the url
   tag: string[];

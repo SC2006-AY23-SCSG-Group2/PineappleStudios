@@ -10,22 +10,23 @@ export async function loader({params}: LoaderFunctionArgs) {
     return redirect("404");
   }
 
+  let imgUrl = "https://picsum.photos/600.webp";
+
   let item;
   if (isNaN(+id)) {
     const newId = await getItemIdBySrcId(id);
-    if (!newId) {
-      return redirect("/404");
+    if (newId) {
+      item = await getItemById(newId);
     }
-    item = await getItemById(newId);
   } else if (!isNaN(+id)) {
     item = await getItemById(+id);
   }
 
-  if (!item) {
-    return redirect("/404");
+  if (item && item.image && item.image != "") {
+    imgUrl = item.image;
   }
 
-  const img: Response = await fetch(item?.image);
+  const img: Response = await fetch(imgUrl);
 
   return new Response(img.body, {
     status: 200,
