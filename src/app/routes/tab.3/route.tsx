@@ -269,7 +269,7 @@ export default function tab_index(): React.JSX.Element {
         <>
           <div className="divider"></div>
           <ItemList
-            title="Movies & TV Shows"
+            title="Songs"
             items={items.filter(
               (x: SimpleItem): boolean => x.type === ItemType.Song,
             )}

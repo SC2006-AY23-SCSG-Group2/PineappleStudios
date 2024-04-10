@@ -1,10 +1,13 @@
 import {getBookByItemId} from "../database/book";
+import {createBookItem} from "../database/bookAPI";
 import {getItemById} from "../database/item";
 import {isItemInLibrary} from "../database/itemsInLibraries";
 import {getMovieByItemId} from "../database/movie";
+import {createMovieItem} from "../database/movieAPI";
 import {getPeopleFromItem} from "../database/peopleInItems";
 import {prismaClient} from "../database/prisma";
 import {getSongById} from "../database/song";
+import {createSongItem} from "../database/songAPI";
 import {getTagsFromItem} from "../database/tag";
 import {getUserById} from "../database/user";
 import {
@@ -152,15 +155,38 @@ export async function getItemIdBySrcId(
   }
 }
 
+//create Item here
 export async function getItemInfoBySrcId(
   srcId: string,
   userId: number,
+  singleItemData: any, // can get it from getSearchAPI()
 ): Promise<ItemInfo | undefined> {
-  const itemId = await getItemIdBySrcId(srcId);
+  // Search item in DB
+  let itemId = await getItemIdBySrcId(srcId);
+
+  // Item is not found in DB
   if (itemId === undefined) {
-    console.log("Item ID not found for source ID:", srcId);
-    return undefined;
+    let resultItem;
+    switch (singleItemData.itemType) {
+      case "book":
+        resultItem = await createBookItem(singleItemData);
+        break;
+      case "movie":
+        resultItem = await createMovieItem(singleItemData);
+        break;
+      case "song":
+        resultItem = await createSongItem(singleItemData);
+        break;
+    }
+
+    if (resultItem?.item) {
+      itemId = resultItem.item.id;
+    } else {
+      return undefined; // Return undefined if resultItem is undefined
+    }
   }
+
+  // Return the result of getItemInfoByItemId
   return getItemInfoByItemId(itemId, userId);
 }
 

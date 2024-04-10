@@ -154,7 +154,6 @@ export const getBookDetailsRequest = async (searchValue: string) => {
         authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
         publishedDate: item.volumeInfo.publishedDate || "N/A",
         year: item.volumeInfo.Year || "N/A", // Add year
-        itemType: "book",
         // Add other properties of a book as needed
       }));
       return booksData;

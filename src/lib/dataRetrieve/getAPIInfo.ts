@@ -23,7 +23,7 @@ export const getSearchAPI = async (searchValue: string): Promise<any[]> => {
   }
 };
 
-// Function to handle search for books
+// Function to handle search for books, return 10 books data from API
 export const handleBookSearchAPI = async (
   searchValue: string,
 ): Promise<any[]> => {
@@ -38,7 +38,7 @@ export const handleBookSearchAPI = async (
   }
 };
 
-// Function to handle search for movies
+// Function to handle search for movies, return 10 movies data from API
 export const handleMovieSearchAPI = async (
   searchValue: string,
 ): Promise<any[]> => {
@@ -53,7 +53,7 @@ export const handleMovieSearchAPI = async (
   }
 };
 
-// Function to handle search for songs
+// Function to handle search for songs, return 10 songs data from API
 export const handleSongSearchAPI = async (
   searchValue: string,
 ): Promise<any[]> => {
