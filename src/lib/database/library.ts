@@ -18,11 +18,11 @@ export const getLiraryById = async (request: any) => {
 // create library
 export const createLibrary = async () => {
   try {
-    //   const libraryData = request.body;
+    // const libraryData = request.body;
 
-    // Create the song
+    // Create the library
     const library = await prismaClient.library.create({
-      // data: libraryData,
+      //  data: libraryData,
     });
 
     return library;
@@ -66,22 +66,5 @@ export const deleteLibrary = async (request: any) => {
   } catch (e) {
     console.log(e);
     return {success: false};
-  }
-};
-
-
-// count item in library
-export const createLibrary = async () => {
-  try {
-    //   const libraryData = request.body;
-
-    // Create the song
-    const library = await prismaClient.library.create({
-      // data: libraryData,
-    });
-
-    return library;
-  } catch (error) {
-    console.error("Error occurred while creating library:", error);
   }
 };
