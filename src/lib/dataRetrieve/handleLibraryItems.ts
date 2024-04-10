@@ -104,3 +104,9 @@ export async function removeItemFromLibrary(userId: number, itemId: number) {
     return false;
   }
 }
+
+//return a list of string (item's titles)
+export async function getRecentItemsFromLibrary(
+  userId: number,
+  numberOfItem: number,
+) {}
