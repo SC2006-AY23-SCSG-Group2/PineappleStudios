@@ -49,6 +49,7 @@ export const createMovieItem = async (singleMovieData: any) => {
       genre: singleMovieData.genre,
       language: singleMovieData.language,
       publishedDate: singleMovieData.releaseDate,
+      avgRate: parseFloat(singleMovieData.averageRating)/2
     },
   };
 
@@ -84,6 +85,7 @@ export const createMovieItem = async (singleMovieData: any) => {
       srcId: singleMovieData.srcId,
       duration: singleMovieData.duration,
       itemId: item.id,
+      description: singleMovieData.description
     },
   };
 
