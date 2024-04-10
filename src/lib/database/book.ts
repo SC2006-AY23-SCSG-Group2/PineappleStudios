@@ -135,7 +135,7 @@ export const getBookDetailsRequest = async (searchValue: string) => {
     if (responseData.items) {
       // Extract book information from response data
       const booksData: any[] = responseData.items.map((item: any) => ({
-        srcId: item.id,
+        srcId: "book+" + item.id,
         pages:
           item.volumeInfo.pageCount != 0
             ? item.volumeInfo.pageCount
@@ -154,7 +154,7 @@ export const getBookDetailsRequest = async (searchValue: string) => {
         authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
         publishedDate: item.volumeInfo.publishedDate || "N/A",
         year: item.volumeInfo.Year || "N/A", // Add year
-        itemType:'book',
+        itemType: "book",
         // Add other properties of a book as needed
       }));
       return booksData;

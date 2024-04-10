@@ -216,7 +216,7 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
         const duration = runtimeMatch ? parseInt(runtimeMatch[0]) : 0; // Convert the numeric part to an integer
 
         movieData.push({
-          srcId: movie.imdbID,
+          srcId: "movie+" + movie.imdbID,
           actors: detailData.Actors || "N/A",
           itemTitle: movie.Title,
           thumbnailUrl: movie.Poster === "N/A" ? "N/A" : movie.Poster,
@@ -228,7 +228,7 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
           year: movie.Year,
           duration: duration, // Store duration as an integer
           releaseDate: detailData.Released || "N/A",
-          itemType: 'movie',
+          itemType: "movie",
           // Add other properties of a movie as needed
         });
       }
