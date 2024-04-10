@@ -10,6 +10,10 @@ import {
   isItemInFolder,
 } from "../database/itemsInFolders";
 import {prismaClient} from "../database/prisma";
+import {
+  createRecentItemAssignments,
+  deleteRecentItemAssignments,
+} from "../database/recentItems";
 import {getUserById} from "../database/user";
 
 const prisma = prismaClient;
@@ -75,7 +79,7 @@ export async function addItemToFolderOrSeries(
     }
 
     await createItemsInFolders(data);
-
+    await createRecentItemAssignments(itemId, userId);
     return true; // Return true to indicate success
   } catch (error) {
     console.error("Error adding item to folder:", error);
@@ -123,7 +127,7 @@ export async function removeItemFromFolderOrSeries(
     }
 
     await deleteItemInFolderAssignment(folder.id, item.id);
-
+    await deleteRecentItemAssignments(itemId, userId);
     return true; // Return true to indicate success
   } catch (error) {
     console.error("Error removing item to folder:", error);
