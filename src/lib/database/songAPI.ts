@@ -53,7 +53,7 @@ export const createSongItem = async (singleSongData: any) => {
       genre: singleSongData.genre,
       language: singleSongData.language,
       publishedDate: releaseDate,
-      avgRate: -1
+      avgRate: -1,
     },
   };
 
@@ -90,8 +90,7 @@ export const createSongItem = async (singleSongData: any) => {
       album: singleSongData.album,
       duration: singleSongData.duration,
       itemId: item.id,
-      decription: singleSongData.description
-      
+      decription: singleSongData.description,
     },
   };
 

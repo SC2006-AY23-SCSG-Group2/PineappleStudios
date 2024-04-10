@@ -256,7 +256,7 @@ export const getSongDetailsRequest = async (songTitle: string) => {
         releaseDate: song.releaseDate,
         language: song.language ? song.language : "English",
         duration: millisToSeconds(song.trackTimeMillis), // Duration
-        itemType: 'song',
+        itemType: "song",
         // in
         // milliseconds
         // Add other properties of a song as needed

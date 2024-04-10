@@ -228,7 +228,7 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
           year: movie.Year,
           duration: duration, // Store duration as an integer
           releaseDate: detailData.Released || "N/A",
-          itemType: 'movie',
+          itemType: "movie",
           // Add other properties of a movie as needed
         });
       }
