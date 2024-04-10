@@ -1,20 +1,35 @@
-// import {LoaderFunctionArgs, json} from "@remix-run/node";
-// import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
-// import {addHistoryItemForUser} from
-// "src/lib/dataRetrieve/handleHistoryItems"; import {
-// decrementLikedItemsByOne, incrementLikedItemsByOne, updateUserName, } from
-// "src/lib/dataRetrieve/handleUserInfo"; import { addPreferenceForUser,
-// removePreferenceForUser, } from
-// "src/lib/dataRetrieve/handleUserPreferences"; import {getUserById} from
-// "src/lib/database/user"; export async function loader({params}:
-// LoaderFunctionArgs) { // const booksData = await getSongDetailsRequest("Maze
-// Runner"); // await updateUserName(2, "POP"); await
-// decrementLikedItemsByOne(2); const frontendUser = await
-// getUserInfoByUserId(2); const user = await getUserById(2); // const book =
-// await getItemInfoExample("1"); // if (user != null) //
-// console.log("SUCCESSFULLY CREATED ITEM, PEOPLE, ITEM, ASSIGNMENT, BOOK");
-// return json( { success: true, dataFromDataBase: user, dataForFronted:
-// frontendUser, error: {}, }, {status: 200}, ); } --------------------Testing
+import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
+import {
+  decrementLikedItemsByOne,
+  incrementLikedItemsByOne,
+  updateUserName,
+} from "src/lib/dataRetrieve/handleUserInfo";
+import {
+  addPreferenceForUser,
+  removePreferenceForUser,
+} from "src/lib/dataRetrieve/handleUserPreferences";
+import {getSongDetailsRequest} from "src/lib/database/song";
+import {getUserById} from "src/lib/database/user";
+
+export async function loader({params}: LoaderFunctionArgs) {
+  const booksData = await getSongDetailsRequest("Maze Runner"); // await updateUserName(2, "POP"); await
+  decrementLikedItemsByOne(2);
+  const frontendUser = await getUserInfoByUserId(2);
+  const user = await getUserById(2);
+  // if (user != null) //
+  console.log("SUCCESSFULLY CREATED ITEM, PEOPLE, ITEM, ASSIGNMENT, BOOK");
+  return json(
+    {
+      success: true,
+      dataFromDataBase: user,
+      dataForFronted: frontendUser,
+      error: {},
+    },
+    {status: 200},
+  );
+}
+// --------------------Testing
 // getItemInfoBySrcId,getItemIdBySrcId functions ----------------------- import
 // { LoaderFunctionArgs, json } from "@remix-run/node"; import {
 // getItemInfoBySrcId, getItemIdBySrcId, getItemInfoByItemId, } from
@@ -78,7 +93,7 @@
 //     const seriesId = 1; // Replace with the ID of the series
 //     const seriesName = "rudra";
 //     //const addSeriesResult = await addSeriesToFolder(folderId, seriesId);
-//
+
 //     // Remove series from folder
 //     const removeSeriesResult = await createSeriesInFolder(seriesName,
 // folderId); // Uncomment to test removal  // Return the results return json(
