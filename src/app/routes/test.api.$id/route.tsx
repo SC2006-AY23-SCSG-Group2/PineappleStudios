@@ -11,7 +11,6 @@
 //   removePreferenceForUser,
 // } from "src/lib/dataRetrieve/handleUserPreferences";
 // import {getUserById} from "src/lib/database/user";
-
 // export async function loader({params}: LoaderFunctionArgs) {
 //   // const booksData = await getSongDetailsRequest("Maze Runner");
 //   // await updateUserName(2, "POP");
@@ -88,10 +87,8 @@
 //-------------Testing for getLibraryInfoByUserId ----------------------------
 // import {LoaderFunctionArgs, json} from "@remix-run/node";
 // import {getLibraryInfoByUserId} from "src/lib/dataRetrieve/getLibraryInfo";
-
 // export async function loader({params}: LoaderFunctionArgs) {
 //   const userId: number = 2; // Provide a valid user ID for testing
-
 //   try {
 //     const libraryInfo = await getLibraryInfoByUserId(userId);
 //     if (!libraryInfo) {
@@ -104,7 +101,6 @@
 //         {status: 400},
 //       );
 //     }
-
 //     console.log("Library Info:", libraryInfo);
 //     return json(
 //       {
@@ -126,21 +122,17 @@
 //     );
 //   }
 // }
-
 // ----------------------------- addItemToLibrary funciton -----------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import { addItemToLibrary, removeItemFromLibrary } from "../../../lib/dataRetrieve/handleLibraryItems";
-
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   const userId: number = 2; // Provide a valid user ID for testing
 //   const libraryId: number = 1; // Provide the library ID where you want to add the item
 //   const movieId: number = 45; // Provide the ID of the existing movie
-
 //   try {
 //     // Add the existing movie to the library
 //     const addedMovie = await removeItemFromLibrary(userId, libraryId, movieId);
 //     console.log("Added Movie to Library:", addedMovie);
-
 //     return json(
 //       {
 //         success: true,
@@ -161,22 +153,18 @@
 //     );
 //   }
 // }
-
 //---------------------------------folder function -------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // import { addItemToFolder, removeItemFromFolder } from "../../../lib/dataRetrieve/handleFolder";
-
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   const userId: number = 2; // Provide a valid user ID for testing
 //   const libraryId: number = 2; // Provide the library ID where you want to add the item
 //   const folderId: number = 2; // Provide the ID of the folder where you want to add the item
 //   const itemId: number = 43; // Provide the ID of the existing item (movie, song, or book)
-
 //   try {
 //     // Add the existing item to the folder
 //     const addedItem = await addItemToFolder(libraryId, folderId, itemId);
 //     console.log("Added Item to Folder:", addedItem);
-
 //     return json(
 //       {
 //         success: true,
@@ -197,25 +185,21 @@
 //     );
 //   }
 // }
-
 // ---------------------- createReview ------------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // //import { createReview } from "../../../lib/database/review";
 // import { createRating } from "../../../lib/database/rate";
 // import { handleRating } from "../../../lib/dataRetrieve/handleRating";
-
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   const userId: number = 1; // Provide a valid user ID for testing
 //   const itemId: number = 2; // Provide the ID of the existing item (movie, song, or book)
 //   const reviewContent: string = "Worst song that i have heard so far."; // Provide the review content
 //   const rating: number = 2; // Provide the rating (out of 5) to be assigned
-
 //   try {
 //     // Create a new review
 //     //const newReview = await createReview(userId, itemId, reviewContent);
 //     const newReview = await handleRating(userId, itemId, rating);
 //     console.log("Created Review:", newReview);
-
 //     return json(
 //       {
 //         success: true,
@@ -237,31 +221,38 @@
 //   }
 // }
 //---------------------------avgRating and create item---------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { getAverageRatingByItemId } from "../../../lib/database/rate"; // Update the import path
-import { handleBookSearchAPI, handleMovieSearchAPI, handleSongSearchAPI } from "src/lib/dataRetrieve/getAPIInfo";
-import { handleCreateItem } from "src/lib/dataRetrieve/createItems";
+import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {handleCreateItem} from "src/lib/dataRetrieve/createItems";
+// Update the import path
+import {
+  handleBookSearchAPI,
+  handleMovieSearchAPI,
+  handleSongSearchAPI,
+} from "src/lib/dataRetrieve/getAPIInfo";
 
-export async function loader({ params }: LoaderFunctionArgs) {
+import {getAverageRatingByItemId} from "../../../lib/database/rate";
+
+export async function loader({params}: LoaderFunctionArgs) {
   const itemId: number = 2; // Provide the item ID for testing
 
   try {
     const averageRating = await getAverageRatingByItemId(itemId);
-    
+
     console.log("Average Rating:", averageRating);
     // Fetch book data
-    //const books = await handleMovieSearchAPI('harry potter');
+    const books = await handleMovieSearchAPI("harry potter");
+    for (const book in books) await handleCreateItem(book);
     // Pick a random book
-    //const randomBook = books[Math.floor(Math.random() * books.length)];
-    //const averageRating = await handleCreateItem(books[1]);
+    const randomBook = books[Math.floor(Math.random() * books.length)];
+    // const averageRating = await handleCreateItem(books[1]);
 
     return json(
       {
         success: true,
-        data: { averageRating },
+        data: {averageRating},
         error: {},
       },
-      { status: 200 }
+      {status: 200},
     );
   } catch (error) {
     console.error("Error:", error);
@@ -269,9 +260,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while fetching average rating for item" },
+        error: {
+          msg: "An error occurred while fetching average rating for item",
+        },
       },
-      { status: 500 }
+      {status: 500},
     );
   }
 }
@@ -314,7 +307,6 @@ export async function loader({ params }: LoaderFunctionArgs) {
 // import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
 // import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
 // import { getSearchAPI, handleBookSearchAPI, handleMovieSearchAPI,handleSongSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
-
 
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   try {
@@ -425,10 +417,3 @@ export async function loader({ params }: LoaderFunctionArgs) {
 //     );
 //   }
 // }
-
-
-
-
-
-
-

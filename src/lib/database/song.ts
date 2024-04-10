@@ -248,7 +248,7 @@ export const getSongDetailsRequest = async (songTitle: string) => {
       // Extract song information from response data
       const songsData: any[] = responseData.results.map((song: any) => ({
         album: song.collectionName,
-        srcId: song.trackId.toString(),
+        srcId: "song+" + song.trackId.toString(),
         itemTitle: song.trackName,
         artist: song.artistName,
         thumbnailUrl: song.artworkUrl100, // Use artworkUrl100 for thumbnail
@@ -256,7 +256,6 @@ export const getSongDetailsRequest = async (songTitle: string) => {
         releaseDate: song.releaseDate,
         language: song.language ? song.language : "English",
         duration: millisToSeconds(song.trackTimeMillis), // Duration
-        itemType: "song",
         // in
         // milliseconds
         // Add other properties of a song as needed
