@@ -221,53 +221,53 @@
 //   }
 // }
 //---------------------------avgRating and create item---------------------------
-import {LoaderFunctionArgs, json} from "@remix-run/node";
-import {handleCreateItem} from "src/lib/dataRetrieve/createItems";
-// Update the import path
-import {
-  handleBookSearchAPI,
-  handleMovieSearchAPI,
-  handleSongSearchAPI,
-} from "src/lib/dataRetrieve/getAPIInfo";
+// import {LoaderFunctionArgs, json} from "@remix-run/node";
+// import {handleCreateItem} from "src/lib/dataRetrieve/createItems";
+// // Update the import path
+// import {
+//   handleBookSearchAPI,
+//   handleMovieSearchAPI,
+//   handleSongSearchAPI,
+// } from "src/lib/dataRetrieve/getAPIInfo";
 
-import {getAverageRatingByItemId} from "../../../lib/database/rate";
+// import {getAverageRatingByItemId} from "../../../lib/database/rate";
 
-export async function loader({params}: LoaderFunctionArgs) {
-  const itemId: number = 2; // Provide the item ID for testing
+// export async function loader({params}: LoaderFunctionArgs) {
+//   const itemId: number = 2; // Provide the item ID for testing
 
-  try {
-    const averageRating = await getAverageRatingByItemId(itemId);
+//   try {
+//     const averageRating = await getAverageRatingByItemId(itemId);
 
-    console.log("Average Rating:", averageRating);
-    // Fetch book data
-    const books = await handleMovieSearchAPI("harry potter");
-    for (const book in books) await handleCreateItem(book);
-    // Pick a random book
-    const randomBook = books[Math.floor(Math.random() * books.length)];
-    // const averageRating = await handleCreateItem(books[1]);
+//     console.log("Average Rating:", averageRating);
+//     // Fetch book data
+//     const books = await handleMovieSearchAPI("harry potter");
+//     for (const book in books) await handleCreateItem(book);
+//     // Pick a random book
+//     const randomBook = books[Math.floor(Math.random() * books.length)];
+//     // const averageRating = await handleCreateItem(books[1]);
 
-    return json(
-      {
-        success: true,
-        data: {averageRating},
-        error: {},
-      },
-      {status: 200},
-    );
-  } catch (error) {
-    console.error("Error:", error);
-    return json(
-      {
-        success: false,
-        data: {},
-        error: {
-          msg: "An error occurred while fetching average rating for item",
-        },
-      },
-      {status: 500},
-    );
-  }
-}
+//     return json(
+//       {
+//         success: true,
+//         data: {averageRating},
+//         error: {},
+//       },
+//       {status: 200},
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: {
+//           msg: "An error occurred while fetching average rating for item",
+//         },
+//       },
+//       {status: 500},
+//     );
+//   }
+// }
 //------------------------------handle folder----------------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // //import { createFolder } from "../../../lib/database/folder";
@@ -417,3 +417,39 @@ export async function loader({params}: LoaderFunctionArgs) {
 //     );
 //   }
 // }
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { getSongDetailsRequest, getSongDetailsRequestById } from "src/lib/database/song";
+import { getMovieDetailsRequestById } from "src/lib/database/movie";
+import { getSpotifyTokens } from "src/lib/database/spotify";
+import { getBookDetailsRequestById } from "src/lib/database/book";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const search = "shape of you";
+  const song_id = "song+54SMw8TnDcuieolVRXBmni"
+  const movie_id = "movie+tt1201607"
+  const book_id = "book+XeDzzwEACAAJ"
+
+  try {
+    // Call the actual function to fetch song details
+    const addedItem = await getSongDetailsRequestById(song_id);
+    //const addedItem = await getSpotifyToken();
+    return json(
+      {
+        success: true,
+        data: addedItem,
+        error: {},
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return json(
+      {
+        success: false,
+        data: {},
+        error: { msg: "An error occurred while adding item to folder" },
+      },
+      { status: 500 }
+    );
+  }
+}

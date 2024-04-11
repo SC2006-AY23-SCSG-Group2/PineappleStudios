@@ -243,6 +243,48 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
   }
 };
 
+export const getMovieDetailsRequestById = async (srcId: string) => {
+  //Split the input
+  const parts = srcId.split("+")
+  const id = parts[1]
+  const url = `http://www.omdbapi.com/?i=${encodeURIComponent(id)}&apikey=411ddaa2`;
+
+  try {
+    const response = await fetch(url);
+    const responseData = await response.json();
+
+    if (response.ok) {
+      const runtimeMatch = responseData.Runtime?.match(/\d+/); // Optional chaining
+      const duration = runtimeMatch ? parseInt(runtimeMatch[0]) : 0;
+
+      const movieData = {
+        srcId: srcId,
+        actors: responseData.Actors ?? "N/A",
+        itemTitle: responseData.Title,
+        thumbnailUrl: responseData.Poster === "N/A" ? "N/A" : responseData.Poster,
+        genre: responseData.Genre ?? "N/A",
+        language: responseData.Language ?? "N/A",
+        averageRating: responseData.imdbRating ?? "N/A",
+        description: responseData.Plot,
+        ratingsCount: responseData.imdbVotes ?? "N/A",
+        year: responseData.Year,
+        duration: duration,
+        releaseDate: responseData.Released ?? "N/A",
+        // Add other properties of a movie as needed
+      };
+
+      return movieData;
+    } else {
+      console.error("Movie details not found.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    return null;
+  }
+};
+
+
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {
 //   try {
