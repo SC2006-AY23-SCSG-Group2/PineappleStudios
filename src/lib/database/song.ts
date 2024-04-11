@@ -1,6 +1,6 @@
 import {deleteItem} from "./item";
 import {prismaClient} from "./prisma";
-import { getSpotifyTokens } from "./spotify";
+import {getSpotifyTokens} from "./spotify";
 
 // getAllSongs
 
@@ -226,7 +226,6 @@ export const deleteSong = async (request: any) => {
 // } catch (error) { console.error('Error fetching songs:', error); return [];
 // } };
 
-
 // Modify the function to query an appropriate endpoint for song details
 // export const getSongDetailsRequest = async (searchValue: string) => {
 //   const url =
@@ -337,11 +336,16 @@ export const deleteSong = async (request: any) => {
 //   const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
 //   return `${minutes}:${parseInt(seconds) < 10 ? '0' : ''}${seconds}`;
 // };
-const accessToken = 'BQBlSNBq-FBxW9SVDsp9Xy68PzCZs8pIhpWKG7qfi935HmxvtijCEBTwaSV9rjM8EQVbXdjvlzjJPHg3ne_T2q9NcKWELDFHF588Fdix-DabI8GAep4';
-export const getSongRequest = async (searchValue: string) => { try { const response = await fetch(
-`https://api.spotify.com/v1/search?q=${encodeURIComponent( searchValue,
-)}&type=track`, { headers: { Authorization: `Bearer ${accessToken}`, }, },
-);
+const accessToken =
+  "BQBlSNBq-FBxW9SVDsp9Xy68PzCZs8pIhpWKG7qfi935HmxvtijCEBTwaSV9rjM8EQVbXdjvlzjJPHg3ne_T2q9NcKWELDFHF588Fdix-DabI8GAep4";
+export const getSongRequest = async (searchValue: string) => {
+  try {
+    const response = await fetch(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+        searchValue,
+      )}&type=track`,
+      {headers: {Authorization: `Bearer ${accessToken}`}},
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch songs");
@@ -412,7 +416,8 @@ export const getSongDetailsRequest = async (songTitle: string) => {
   };
   try {
     //const accessToken = await getSpotifyTokens();
-    const accessToken = 'BQB0xdxaMG1u6ouIHCR0qAw5RA9UNJHbLQW7zTp1WiYlBoDJuwbXPzrjlYAb0wJW_TmzAO_sx8T5lJTNDh2Ttu7yTdCyZkgZylOYs7GNHVmEH_xLHSc';
+    const accessToken =
+      "BQB0xdxaMG1u6ouIHCR0qAw5RA9UNJHbLQW7zTp1WiYlBoDJuwbXPzrjlYAb0wJW_TmzAO_sx8T5lJTNDh2Ttu7yTdCyZkgZylOYs7GNHVmEH_xLHSc";
     //const accessToken = 'BQBlSNBq-FBxW9SVDsp9Xy68PzCZs8pIhpWKG7qfi935HmxvtijCEBTwaSV9rjM8EQVbXdjvlzjJPHg3ne_T2q9NcKWELDFHF588Fdix-DabI8GAep4';
     const response = await fetch(url, {
       headers: {
@@ -421,14 +426,19 @@ export const getSongDetailsRequest = async (songTitle: string) => {
     });
     const responseData = await response.json();
 
-    if (response.ok && responseData.tracks && responseData.tracks.items.length > 0) {
+    if (
+      response.ok &&
+      responseData.tracks &&
+      responseData.tracks.items.length > 0
+    ) {
       // Extract song information from response data
       const songsData: any[] = responseData.tracks.items.map((song: any) => ({
         album: song.album.name,
-        srcId: song.id,
+        srcId: "song+" + song.id,
         itemTitle: song.name,
         artist: song.artists.map((artist: any) => artist.name).join(", "),
-        thumbnailUrl: song.album.images.length > 0 ? song.album.images[0].url : "", // Use the first image as thumbnail
+        thumbnailUrl:
+          song.album.images.length > 0 ? song.album.images[0].url : "", // Use the first image as thumbnail
         genre: song.album.genres ? song.album.genres.join(", ") : "", // Check if genres exist before joining
         releaseDate: song.album.release_date,
         language: "English", // Spotify doesn't provide language information directly
@@ -447,8 +457,8 @@ export const getSongDetailsRequest = async (songTitle: string) => {
 
 export const getSongDetailsRequestById = async (srcId: string) => {
   //Split the input
-  const parts = srcId.split("+")
-  const id = parts[1]
+  const parts = srcId.split("+");
+  const id = parts[1];
   const url = `https://api.spotify.com/v1/tracks/${encodeURIComponent(id)}`;
   const millisToMinutesAndSeconds = (millis: number) => {
     const minutes = Math.floor(millis / 60000);
@@ -476,9 +486,11 @@ export const getSongDetailsRequestById = async (srcId: string) => {
       // Check if responseData and its nested properties exist before accessing them
       const songData = {
         album: responseData?.album?.name || "",
-        srcId: srcId,
+        srcId: id,
         itemTitle: responseData?.name || "",
-        artist: responseData?.artists?.map((artist: any) => artist.name).join(", ") || "",
+        artist:
+          responseData?.artists?.map((artist: any) => artist.name).join(", ") ||
+          "",
         thumbnailUrl: responseData?.album?.images?.[0]?.url || "",
         genre: responseData?.album?.genres?.join(", ") || "",
         releaseDate: responseData?.album?.release_date || "",
@@ -494,5 +506,3 @@ export const getSongDetailsRequestById = async (srcId: string) => {
     return null;
   }
 };
-
-

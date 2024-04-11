@@ -168,8 +168,8 @@ export const getBookDetailsRequest = async (searchValue: string) => {
 
 export const getBookDetailsRequestById = async (srcId: string) => {
   //Split the input
-  const parts = srcId.split("+")
-  const id = parts[1]
+  const parts = srcId.split("+");
+  const id = parts[1];
 
   const url = `https://www.googleapis.com/books/v1/volumes/${encodeURIComponent(id)}`;
   try {
@@ -180,18 +180,27 @@ export const getBookDetailsRequestById = async (srcId: string) => {
       const item = responseData;
 
       const bookData = {
-        srcId: srcId,
-        pages: item.volumeInfo.pageCount != 0 ? item.volumeInfo.pageCount : undefined,
+        srcId: id,
+        pages:
+          item.volumeInfo.pageCount != 0
+            ? item.volumeInfo.pageCount
+            : undefined,
         itemTitle: item.volumeInfo.title,
-        thumbnailUrl: item.volumeInfo.imageLinks ? item.volumeInfo.imageLinks.thumbnail : "N/A",
-        genre: item.volumeInfo.categories ? item.volumeInfo.categories.join(", ") : "N/A",
+        thumbnailUrl: item.volumeInfo.imageLinks
+          ? item.volumeInfo.imageLinks.thumbnail
+          : "N/A",
+        genre: item.volumeInfo.categories
+          ? item.volumeInfo.categories.join(", ")
+          : "N/A",
         language: item.volumeInfo.language || "N/A",
         averageRating: item.volumeInfo.averageRating || "N/A",
         description: item.volumeInfo.description,
         ratingsCount: item.volumeInfo.ratingsCount || "N/A",
         authors: item.volumeInfo.authors ? item.volumeInfo.authors : "N/A",
         publishedDate: item.volumeInfo.publishedDate || "N/A",
-        year: item.volumeInfo.publishedDate ? new Date(item.volumeInfo.publishedDate).getFullYear() : "N/A",
+        year: item.volumeInfo.publishedDate
+          ? new Date(item.volumeInfo.publishedDate).getFullYear()
+          : "N/A",
         // Add other properties of a book as needed
       };
 
@@ -205,7 +214,6 @@ export const getBookDetailsRequestById = async (srcId: string) => {
     return null;
   }
 };
-
 
 // // Add a review to a book
 // export const addBookReview = async (bookId: number, review: String) => {

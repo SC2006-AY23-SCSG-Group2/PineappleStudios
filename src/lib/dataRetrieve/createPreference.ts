@@ -11,7 +11,7 @@ export async function createNewPreference(preferenceName: string) {
     return false;
   }
 
-  await createPreference(preferenceName);
+  await createPreference(preferenceName.toUpperCase());
   return true;
 }
 
