@@ -415,9 +415,7 @@ export const getSongDetailsRequest = async (songTitle: string) => {
     return Math.floor(millis / 1000);
   };
   try {
-    //const accessToken = await getSpotifyTokens();
-    const accessToken =
-      "BQB0xdxaMG1u6ouIHCR0qAw5RA9UNJHbLQW7zTp1WiYlBoDJuwbXPzrjlYAb0wJW_TmzAO_sx8T5lJTNDh2Ttu7yTdCyZkgZylOYs7GNHVmEH_xLHSc";
+    const accessToken = await getSpotifyTokens();
     //const accessToken = 'BQBlSNBq-FBxW9SVDsp9Xy68PzCZs8pIhpWKG7qfi935HmxvtijCEBTwaSV9rjM8EQVbXdjvlzjJPHg3ne_T2q9NcKWELDFHF588Fdix-DabI8GAep4';
     const response = await fetch(url, {
       headers: {
@@ -457,6 +455,7 @@ export const getSongDetailsRequest = async (songTitle: string) => {
 
 export const getSongDetailsRequestById = async (srcId: string) => {
   //Split the input
+  console.log(srcId);
   const parts = srcId.split("+");
   const id = parts[1];
   const url = `https://api.spotify.com/v1/tracks/${encodeURIComponent(id)}`;
@@ -477,10 +476,10 @@ export const getSongDetailsRequestById = async (srcId: string) => {
       },
     });
 
-    console.log("Response status:", response.ok);
+    // console.log("Response status:", response.ok);
 
     const responseData = await response.json();
-    console.log("Response data:", responseData);
+    // console.log("Response data:", responseData);
 
     if (response.ok) {
       // Check if responseData and its nested properties exist before accessing them

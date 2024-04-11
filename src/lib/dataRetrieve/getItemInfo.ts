@@ -161,12 +161,15 @@ export async function getItemInfoBySrcId(
   userId: number,
 ): Promise<ItemInfo | undefined> {
   // Search item in DB
-  let itemId = await getItemIdBySrcId(srcId);
-
-  // Item is not found in DB
+  console.log(srcId);
   const parts = srcId.split("+");
   const itemType = parts[0];
-  if (itemId === undefined) {
+  const id = parts[1];
+
+  let itemId = await getItemIdBySrcId(id);
+
+  // Item is not found in DB
+  if (itemId === undefined || itemId === null) {
     let resultItem;
     switch (itemType) {
       case "book":
