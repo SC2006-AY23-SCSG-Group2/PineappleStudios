@@ -245,8 +245,8 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
 
 export const getMovieDetailsRequestById = async (srcId: string) => {
   //Split the input
-  const parts = srcId.split("+")
-  const id = parts[1]
+  const parts = srcId.split("+");
+  const id = parts[1];
   const url = `http://www.omdbapi.com/?i=${encodeURIComponent(id)}&apikey=411ddaa2`;
 
   try {
@@ -258,10 +258,11 @@ export const getMovieDetailsRequestById = async (srcId: string) => {
       const duration = runtimeMatch ? parseInt(runtimeMatch[0]) : 0;
 
       const movieData = {
-        srcId: srcId,
+        srcId: id,
         actors: responseData.Actors ?? "N/A",
         itemTitle: responseData.Title,
-        thumbnailUrl: responseData.Poster === "N/A" ? "N/A" : responseData.Poster,
+        thumbnailUrl:
+          responseData.Poster === "N/A" ? "N/A" : responseData.Poster,
         genre: responseData.Genre ?? "N/A",
         language: responseData.Language ?? "N/A",
         averageRating: responseData.imdbRating ?? "N/A",
@@ -283,7 +284,6 @@ export const getMovieDetailsRequestById = async (srcId: string) => {
     return null;
   }
 };
-
 
 // // Rate a movie by ID using a raw SQL query
 // export const rateMovie = async (movieId: number, rating: number) => {

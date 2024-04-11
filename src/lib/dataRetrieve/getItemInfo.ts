@@ -1,12 +1,12 @@
-import {getBookByItemId} from "../database/book";
+import {getBookByItemId, getBookDetailsRequestById} from "../database/book";
 import {createBookItem} from "../database/bookAPI";
 import {getItemById} from "../database/item";
 import {isItemInLibrary} from "../database/itemsInLibraries";
-import {getMovieByItemId} from "../database/movie";
+import {getMovieByItemId, getMovieDetailsRequestById} from "../database/movie";
 import {createMovieItem} from "../database/movieAPI";
 import {getPeopleFromItem} from "../database/peopleInItems";
 import {prismaClient} from "../database/prisma";
-import {getSongById} from "../database/song";
+import {getSongById, getSongDetailsRequestById} from "../database/song";
 import {createSongItem} from "../database/songAPI";
 import {getTagsFromItem} from "../database/tag";
 import {getUserById} from "../database/user";
@@ -159,23 +159,27 @@ export async function getItemIdBySrcId(
 export async function getItemInfoBySrcId(
   srcId: string,
   userId: number,
-  singleItemData: any, // can get it from getSearchAPI()
 ): Promise<ItemInfo | undefined> {
   // Search item in DB
   let itemId = await getItemIdBySrcId(srcId);
 
   // Item is not found in DB
+  const parts = srcId.split("+");
+  const itemType = parts[0];
   if (itemId === undefined) {
     let resultItem;
-    switch (singleItemData.itemType) {
+    switch (itemType) {
       case "book":
-        resultItem = await createBookItem(singleItemData);
+        const bookData = await getBookDetailsRequestById(srcId);
+        resultItem = await createBookItem(bookData);
         break;
       case "movie":
-        resultItem = await createMovieItem(singleItemData);
+        const movieData = await getMovieDetailsRequestById(srcId);
+        resultItem = await createMovieItem(movieData);
         break;
       case "song":
-        resultItem = await createSongItem(singleItemData);
+        const songData = await getSongDetailsRequestById(srcId);
+        resultItem = await createSongItem(songData);
         break;
     }
 
@@ -185,7 +189,6 @@ export async function getItemInfoBySrcId(
       return undefined; // Return undefined if resultItem is undefined
     }
   }
-
   // Return the result of getItemInfoByItemId
   return getItemInfoByItemId(itemId, userId);
 }
