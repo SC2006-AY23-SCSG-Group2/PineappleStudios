@@ -33,8 +33,13 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
           </div>
           <div className="stat">
             <div className="stat-title">Time Used</div>
-            <div className="stat-value max-lg:text-xl">{user.time} minutes</div>
+            <div className="stat-value max-lg:text-xl">
+              {user.time >= 60
+                ? `${Math.floor(user.time / 60)} hours ${user.time % 60} minutes`
+                : `${user.time} minutes`}
+            </div>
           </div>
+
           <div className="stat">
             <div className="stat-title">Liked items</div>
             <div className="stat-value max-lg:text-xl">{user.numOfLikes}</div>
