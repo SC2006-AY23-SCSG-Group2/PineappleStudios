@@ -7,6 +7,7 @@ import {
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React from "react";
 import {useState} from "react";
+import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 import {createPreferenceInProfileAssignments} from "src/lib/database/preferenceInProfile";
 
@@ -39,10 +40,10 @@ export async function action({request}: LoaderFunctionArgs) {
     },
   );
 
-  for (const temp in preferences) {
+  for (const temp of preferences) {
     const preference = await getPreferenceByName(temp);
     if (user && preference)
-      await createPreferenceInProfileAssignments(user.profileId, preference.id);
+      await addPreferenceForUser(user.id, preference.name);
   }
 
   return redirect("/tab/4");
@@ -149,7 +150,7 @@ export default function TabIndex({}): React.JSX.Element {
         ))}
         <p className="mb-6 mt-6 text-center text-2xl">
           <h2>All Good! Press next to continue!</h2>
-          <input type="submit" value="Submit" className="btn glass" />
+          <input type="submit" value="Next" className="btn glass" />
         </p>
       </fetcher.Form>
     </div>
