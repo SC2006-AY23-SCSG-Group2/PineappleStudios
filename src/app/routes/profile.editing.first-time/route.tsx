@@ -9,7 +9,6 @@ import React from "react";
 import {useState} from "react";
 import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
-import {createPreferenceInProfileAssignments} from "src/lib/database/preferenceInProfile";
 
 import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
 import {getUserById} from "../../../lib/database/user";
@@ -126,15 +125,19 @@ export default function TabIndex({}): React.JSX.Element {
           You have selected <strong>{formData.length}</strong> preference.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {loaderData.preferenceData.map((preference, index) => (
-          <PreferenceList
-            key={index}
-            preference={[preference]}
-            selected={formData}
-            onPreferenceClick={handlePreferenceClick}
-          />
-        ))}
+      <div className="flex h-full items-center justify-center">
+        <div className="artboard artboard-horizontal phone-4">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {loaderData.preferenceData.map((preference, index) => (
+              <PreferenceList
+                key={index}
+                preference={[preference]}
+                selected={formData}
+                onPreferenceClick={handlePreferenceClick}
+              />
+            ))}
+          </div>
+        </div>
       </div>
       <fetcher.Form
         className={"join mt-2 w-full min-w-full"}
