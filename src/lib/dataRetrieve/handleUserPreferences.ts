@@ -2,6 +2,8 @@ import {createPreference, getPreferenceByName} from "../database/preference";
 import {
   createPreferenceInProfileAssignments,
   deletePreferenceInProfileAssignment,
+  getAllPreferencesInProfile,
+  getAllProfilesUseSpecificPreference,
   getPreferenceInProfileAssignment,
 } from "../database/preferenceInProfile";
 import {getUserById} from "../database/user";
@@ -67,4 +69,23 @@ export async function removePreferenceForUser(
   } else {
     console.log("The preference : ", preferenceName, "is already removed");
   }
+}
+
+export async function getPreferencesOfUser(userId: number) {
+  const user = await getUserById(userId);
+  if (!user) {
+    console.log("User for userId: ", userId, " is not created.");
+    return;
+  }
+
+  const preferenceAssignments = await getAllPreferencesInProfile(
+    user.profileId,
+  );
+
+  let listOfPrefence: string[] = [];
+  for (const preference of preferenceAssignments) {
+    if (preference) listOfPrefence.push(preference.name);
+  }
+
+  return listOfPrefence;
 }
