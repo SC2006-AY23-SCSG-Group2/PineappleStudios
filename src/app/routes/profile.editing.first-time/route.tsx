@@ -19,6 +19,7 @@ import {
   getSession,
 } from "../../session";
 import {PreferenceList} from "../_components/PreferenceList";
+import { PrefListChoose } from "./components/PrefListChoose";
 
 export async function action({request}: LoaderFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
@@ -120,16 +121,16 @@ export default function TabIndex({}): React.JSX.Element {
         Welcome, {loaderData.userName}
       </h1>
       <div className="mb-4 text-center">
-        <h2 className="text-lg font-semibold">Choose what you like:</h2>
+        <h2 className="text-lg font-bold">Choose what you like:</h2>
         <p className="text-md">
-          You have selected <strong>{formData.length}</strong> preference.
+          You have selected <strong>{formData.length}</strong> preferences.
         </p>
       </div>
       <div className="flex h-full items-center justify-center">
         <div className="artboard artboard-horizontal phone-4">
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {loaderData.preferenceData.map((preference, index) => (
-              <PreferenceList
+              <PrefListChoose
                 key={index}
                 preference={[preference]}
                 selected={formData}
@@ -151,10 +152,11 @@ export default function TabIndex({}): React.JSX.Element {
             value={preference}
           />
         ))}
-        <p className="mb-6 mt-6 text-center text-2xl">
+        <div className="flex flex-col items-center mb-6 mt-6 text-2xl w-full">
           <h2>All Good! Press next to continue!</h2>
-          <input type="submit" value="Next" className="btn glass" />
-        </p>
+          <input type="submit" value="Next" className="text-black my-2 btn px-6 text-lg w-32 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:scale-95" />
+        </div>
+
       </fetcher.Form>
     </div>
   );
