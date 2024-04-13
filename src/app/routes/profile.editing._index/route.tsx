@@ -18,7 +18,6 @@ import {getPreferenceByName} from "src/lib/database/preference";
 import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
 import {getUserById} from "../../../lib/database/user";
 import { updateUserEmail, updateUserName } from "src/lib/dataRetrieve/handleUserInfo";
-import { TextField } from "../_components/TextField";
 
 export async function action({request}: LoaderFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
@@ -116,6 +115,7 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
 export default function tab_index(): React.JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+  const [emailError, setEmailError] = useState('');
 
   // Initial form data setup with useState
   const [formData, setFormData] = useState<EditData>({
@@ -127,6 +127,7 @@ export default function tab_index(): React.JSX.Element {
   // Handle changes in the input fields
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    setEmailError('')
     setFormData(prev => ({
       ...prev,
       [name]: value 
@@ -161,8 +162,9 @@ export default function tab_index(): React.JSX.Element {
     });
   };
   
-  
-  
+  function isValidEmail(email: string) {
+    return /\S+@\S+\.\S+/.test(email); // Simple regex for email validation
+  }  
 
   const addPreference = (preference: string) => {
     if (!formData.preferences.includes(preference)) {
@@ -182,19 +184,27 @@ export default function tab_index(): React.JSX.Element {
 
   const submitForm = async () => {
     // Create a FormData object to include the preferences
-    const updatedFormData = new FormData();
-    updatedFormData.append('name', formData.name);
-    updatedFormData.append('email', formData.email);
-    // Join the preferences array into a string
-    updatedFormData.append('preferences', formData.preferences.join(','));
-    
-    // Log FormData to ensure correct data is being sent
-    for (let [key, value] of updatedFormData.entries()) { 
-      console.log(key, value);
+    if (!isValidEmail(formData.email)) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+      const updatedFormData = new FormData();
+      updatedFormData.append('name', formData.name);
+      updatedFormData.append('email', formData.email);
+      // Join the preferences array into a string
+      updatedFormData.append('preferences', formData.preferences.join(','));
+      
+      // Log FormData to ensure correct data is being sent
+      for (let [key, value] of updatedFormData.entries()) { 
+        console.log(key, value);
+      }
+      
+      // Use the FormData in the fetcher.submit call
+      await fetcher.submit(updatedFormData, { method: "post" });
+      console.log('Form submitted:', formData);
+      // Add your form submission logic here
     }
     
-    // Use the FormData in the fetcher.submit call
-    await fetcher.submit(updatedFormData, { method: "post" });
   };
   
 
@@ -218,15 +228,18 @@ export default function tab_index(): React.JSX.Element {
                 />
               </div>
               <div className="form-control">
-              <TextField id={"email"} label={"Email"} type={"username"} />
+              <label className="label">
+                  <span className="label-text">Email</span>
+                </label>
                 <input 
                   type="email" 
                   placeholder="Your email" 
                   name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
+                  value={formData.email} 
+                  onChange={handleInputChange} 
                   className="input input-bordered w-full"
                 />
+                {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
               </div>
               <div className="flex flex-row justify-center gap-6 my-2">
                 <div className="card-actions">
