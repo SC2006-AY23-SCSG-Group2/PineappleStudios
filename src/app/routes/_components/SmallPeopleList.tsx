@@ -15,7 +15,7 @@ export const SmallPeopleList: React.FC<ItemsListProps> = ({
     <div className="card w-full">
       <div className="card-body pt-0">
         <h2 className="card-title mx-2 text-2xl lg:text-3xl">{title}</h2>
-        <div className="m-6 grid grid-cols-4 gap-1 max-md:m-0 max-md:grid-cols-3 lg:grid-cols-3">
+        <div className="m-6 grid grid-cols-4 gap-1 max-md:m-0 max-md:grid-cols-3 lg:grid-cols-3 text-black-100">
           {items.map((item, index) => (
             <div
               key={index}
