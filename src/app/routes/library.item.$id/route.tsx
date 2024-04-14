@@ -16,6 +16,7 @@ import {
   getItemInfoByItemId,
   getItemInfoBySrcId,
 } from "../../../lib/dataRetrieve/getItemInfo";
+import {addHistoryItemForUser} from "../../../lib/dataRetrieve/handleUserInfo";
 import {
   BookContent,
   ItemInfo,
@@ -30,10 +31,10 @@ import {
   destroySession,
   getSession,
 } from "../../session";
+import {HistoryItemList} from "../_components/HistoryItemList";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
 import {ToastList} from "../_components/ToastList";
-import {HistoryItemList} from "../tab.4/components/HistoryItemList";
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -117,6 +118,8 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
+
+  await addHistoryItemForUser(+session.data.userId, +id);
 
   return json(jsonData, {
     headers: {
@@ -319,7 +322,9 @@ export default function tab_index(): React.JSX.Element {
                 method={"POST"}
                 action={"/api/item/delete-from-library"}>
                 <input type="hidden" id="id" name="id" value={data.id} />
-                <button type="submit" className="btn btn-wide my-1 min-w-full">
+                <button
+                  type="submit"
+                  className="btn btn-neutral btn-wide my-1 min-w-full">
                   Delete from Library
                 </button>
               </fetcherAddToLibrary.Form>
