@@ -28,7 +28,6 @@ import {
   SessionData,
   SessionFlashData,
   commitSession,
-  destroySession,
   getSession,
 } from "../../session";
 import {TagList} from "../_components/TagList";
@@ -47,6 +46,7 @@ export async function action({request}: LoaderFunctionArgs) {
   // Extract userName and email from the form data.
   const newUserName = formData.get("name")?.toString() || user?.userName; // Notice we're using 'userName' here
   const newEmail = formData.get("email")?.toString() || user?.email;
+
   const preferences = formData.get("preferences");
   let preferencesArray: string[] = [];
   if (typeof preferences === "string") {

@@ -90,7 +90,7 @@ export const createSongItem = async (singleSongData: any) => {
       album: singleSongData.album,
       duration: singleSongData.duration,
       itemId: item.id,
-      decription: singleSongData.description,
+      description: singleSongData.description,
     },
   };
 

@@ -1,12 +1,6 @@
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  Session,
-  redirect,
-} from "@remix-run/node";
+import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
-import React from "react";
-import {useState} from "react";
+import React, {useState} from "react";
 import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 
@@ -18,8 +12,7 @@ import {
   destroySession,
   getSession,
 } from "../../session";
-import {PreferenceList} from "../_components/PreferenceList";
-import { PrefListChoose } from "./components/PrefListChoose";
+import {PrefListChoose} from "./components/PrefListChoose";
 
 export async function action({request}: LoaderFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
@@ -152,11 +145,14 @@ export default function TabIndex({}): React.JSX.Element {
             value={preference}
           />
         ))}
-        <div className="flex flex-col items-center mb-6 mt-6 text-2xl w-full">
+        <div className="mb-6 mt-6 flex w-full flex-col items-center text-2xl">
           <h2>All Good! Press next to continue!</h2>
-          <input type="submit" value="Next" className="text-black my-2 btn px-6 text-lg w-32 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:scale-95" />
+          <input
+            type="submit"
+            value="Next"
+            className="btn my-2 w-32 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95"
+          />
         </div>
-
       </fetcher.Form>
     </div>
   );

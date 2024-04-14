@@ -6,7 +6,7 @@ type ThemeContextType = {
 };
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: "forest",
+  theme: "retro",
   toggleTheme: () => {},
 });
 
@@ -15,12 +15,12 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider = ({children}: ThemeProviderProps) => {
-  const [theme, setTheme] = useState("forest");
+  const [theme, setTheme] = useState("retro");
 
   const toggleTheme = () => {
     setTheme((currentTheme) => {
       console.log("Toggling theme from", currentTheme);
-      return currentTheme === "forest" ? "light" : "forest";
+      return currentTheme === "forest" ? "retro" : "forest";
     });
   };
 

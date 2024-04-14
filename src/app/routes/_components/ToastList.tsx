@@ -28,9 +28,9 @@ export function ToastList({
           className="toast toast-end toast-bottom"
           aria-live="assertive"
           ref={listRef}>
-          {data.map((toast) => (
+          {data.map((toast, index) => (
             <Toast
-              key={toast.id}
+              key={index}
               message={toast.message}
               type={toast.type}
               onClose={() => removeToast(toast.id)}

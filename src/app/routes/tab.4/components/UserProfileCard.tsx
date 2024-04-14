@@ -1,9 +1,9 @@
 // SomeParentComponent.tsx or similar
+import {Link} from "@remix-run/react";
 import {sha256} from "js-sha256";
 import React from "react";
 
 import LeftCard from "../../_components/LeftCard";
-import { Link } from "@remix-run/react";
 
 export interface userData {
   name: string;
@@ -51,7 +51,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
           </div>
         </div>
         <div className="card-actions justify-end">
-          <Link to="/profile/editing"><button className="btn btn-secondary my-2">Edit Profile</button></Link>
+          <Link to="/profile/editing">
+            <button className="btn btn-secondary my-2">Edit Profile</button>
+          </Link>
         </div>
       </LeftCard>
     </>

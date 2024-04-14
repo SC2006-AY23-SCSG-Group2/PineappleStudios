@@ -1,7 +1,7 @@
 import React from "react";
 
-import {SimpleItem} from "../../../../lib/interfaces";
-import {ItemCard} from "../../_components/ItemCard";
+import {SimpleItem} from "../../../lib/interfaces";
+import {ItemSmallCard} from "./ItemSmallCard";
 
 interface ItemsListProps {
   title?: string;
@@ -19,7 +19,7 @@ export const HistoryItemList: React.FC<ItemsListProps> = ({
         <div className="m-6 grid grid-cols-4 gap-1 max-md:m-0 max-md:grid-cols-3 lg:grid-cols-3">
           {items.map((item, index) => (
             <div key={index} className="my-2 lg:my-4">
-              <ItemCard data={item} />
+              <ItemSmallCard data={item} />
             </div>
           ))}
         </div>

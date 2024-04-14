@@ -5,8 +5,8 @@ import {commitSession, getSession} from "src/app/session";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 
 import {User} from "../../../lib/interfaces";
+import {HistoryItemList} from "../_components/HistoryItemList";
 import {TagList} from "../_components/TagList";
-import {HistoryItemList} from "./components/HistoryItemList";
 import {UserProfileCard, userData} from "./components/UserProfileCard";
 
 export async function loader({request}: LoaderFunctionArgs): Promise<
@@ -22,6 +22,7 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
   if (session.data.userId) {
     userData = await getUserInfoByUserId(parseInt(session.data.userId));
   }
+
   if (!userData || !userData.history) {
     return json(
       {
