@@ -260,7 +260,7 @@ export async function getCombinedRecommendations(mediaName: string): Promise<Rec
 
 #### Usage
 
-These functions can be used in any part of your TypeScript application to retrieve recommendations. Here is an example of using these functions in a simple command-line app:
+These functions can be used in any part of the TypeScript application to retrieve recommendations. Here is an example :
 
 ```typescript
 import { getLLMRecommendations, getContentRecommendations, getCombinedRecommendations } from './api';
