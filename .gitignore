@@ -20,3 +20,4 @@ bun.lockb
 *.log
 src/app/routes/test.api.$id/route.tsx
 /src/app/routes/api.test/
+/src/app/routes/api.test/route.tsx
