@@ -117,7 +117,7 @@ export async function getItemIdBySrcId(
   srcId: string,
 ): Promise<number | undefined> {
   try {
-    const movie = await prismaClient.movie.findFirst({
+    const movie = await prismaClient.movie.findUnique({
       where: {
         srcId,
       },
@@ -128,7 +128,7 @@ export async function getItemIdBySrcId(
 
     if (movie) return movie.itemId;
 
-    const book = await prismaClient.book.findFirst({
+    const book = await prismaClient.book.findUnique({
       where: {
         srcId,
       },
@@ -139,7 +139,7 @@ export async function getItemIdBySrcId(
 
     if (book) return book.itemId;
 
-    const song = await prismaClient.song.findFirst({
+    const song = await prismaClient.song.findUnique({
       where: {
         srcId,
       },
@@ -148,7 +148,7 @@ export async function getItemIdBySrcId(
       },
     });
 
-    return song?.itemId;
+    if (song) return song.itemId;
   } catch (error) {
     console.error("Error fetching item id:", error);
     return undefined;
@@ -165,7 +165,7 @@ export async function getItemInfoBySrcId(
   const parts = srcId.split("+");
   const itemType = parts[0];
   const id = parts[1];
-
+  console.log(id);
   let itemId = await getItemIdBySrcId(id);
 
   // Item is not found in DB
@@ -173,14 +173,17 @@ export async function getItemInfoBySrcId(
     let resultItem;
     switch (itemType) {
       case "book":
+        console.log("Creating Book Item");
         const bookData = await getBookDetailsRequestById(srcId);
         resultItem = await createBookItem(bookData);
         break;
       case "movie":
+        console.log("Creating Movie Item LEGELELGELGL");
         const movieData = await getMovieDetailsRequestById(srcId);
         resultItem = await createMovieItem(movieData);
         break;
       case "song":
+        console.log("Creating song Item");
         const songData = await getSongDetailsRequestById(srcId);
         resultItem = await createSongItem(songData);
         break;

@@ -48,7 +48,6 @@ npm run foramt:lint
 ```
 
 ## Folder explanation
-
 ```
 .
 ├── docs            # Docs for development
@@ -61,8 +60,36 @@ npm run foramt:lint
     ├── database    # database
     └── ml          # machine learning
 ```
+## Starting Recommendation engine
+Head over to recommendation_engine file for the server and scripts
 
-### Check out the links
+```
+.
+├── docs            # Docs for development
+├── prisma          # prisma schema and migrations
+... 
+├── recommendation_engine       # directory containing all essential files for recommendation system to function
+    │  
+    ├── Recommendation_System.py
+    ├── Recommendation_System_server.py 
+    ├── .env file
+    ├── requirements.txt
+    ├── .joblib files and .pkl files in google drive link (must be loaded into the same directory where the  Recommendation_System.py, Recommendation_System_server.py and .env files are located)
+```
+ues google drive link for .joblib files and .pkl files 
+
+
+### To run server
+first navigate to the recommendation_engine directory
+```
+pip install -r requirements.txt
+python Recommendation_System_server.py
+```
+
+
+
+
+## Check out the links
 
 - `prisma`: [Prisma with Remix](https://github.com/prisma/prisma-examples/tree/latest/typescript/remix)
   - `schema.prisma`: [Prisma Schema](https://www.prisma.io/docs/getting-started/quickstart#2-model-your-data-in-the-prisma-schema)
@@ -85,6 +112,8 @@ npm run foramt:lint
 - `remix.env.d.ts`
 - `tailwind.config.ts`: [Tailwind Configuration](https://tailwindcss.com/docs/configuration)
 - `tsconfig.json`: [tsconfig](https://www.typescriptlang.org/tsconfig)
+
+
 
 ## Technologies we are using
 
@@ -118,3 +147,140 @@ npm run foramt:lint
     - More info at: [Prima + sqlite](https://www.prisma.io/docs/orm/overview/databases/sqlite)
   - Create a file called `.env`, write `DATABASE_URL="file:./dev.db"`.
   - For now(Feb 2nd), `prisma` is just initialized, but not using in the codebase, because we are not yet implemented our database schema yet.
+ 
+
+
+# Documentation for using Recommendation System
+
+### Overview
+
+This Flask server ( Recommendation_System_server.py ) provides endpoints for generating recommendations based on media content (books, movies, songs). The recommendations can be generated using three methods:
+1. `GET /recommend/llm`: Uses a large language model to suggest similar media based on a given title.
+2. `GET /recommend/content`: Provides content-based recommendations using TF-IDF, cosine-similarity and nearest neighbor techniques.
+3. `GET /recommend/combined`: Combines the results from both the LLM and content-based methods, shuffles them, and provides a diverse set of recommendations.
+
+### Setting up the TypeScript Application
+
+To use these endpoints, your TypeScript application will need to handle HTTP requests and parse JSON responses. Here's how we can set up a simple TypeScript environment that interacts with the Flask server.
+
+#### Prerequisites
+
+- Node.js installed on your system.
+- A TypeScript project setup. You can initialize one using `npm init` and `tsc --init` commands.
+
+#### Dependencies
+
+You'll need to install `axios` for making HTTP requests, and `dotenv` for managing environment variables.
+
+```bash
+npm install axios dotenv
+```
+
+#### Configuration
+
+Create a `.env` file in your project's root directory to store your Flask server's URL:
+
+```plaintext
+# .env file
+SERVER_URL=http://localhost:5000
+```
+
+### TypeScript Implementation
+
+Below is a sample implementation that demonstrates how to interact with the Flask server's endpoints.
+
+#### Setup Axios and Environment Variables
+
+Create a new file `api.ts`:
+
+```typescript
+import axios from 'axios';
+import { config } from 'dotenv';
+
+// Load environment variables
+config();
+
+const serverUrl = process.env.SERVER_URL;
+
+const apiClient = axios.create({
+    baseURL: serverUrl,
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+export default apiClient;
+```
+
+#### Create Functions to Call the Endpoints
+
+In the same or a new file, create functions to interact with each API endpoint:
+
+```typescript
+import apiClient from './api';
+
+// Define types for the recommendation results
+type RecommendationResult = {
+    books: string[],
+    movies: string[],
+    songs: string[]
+};
+
+// Function to get LLM recommendations
+export async function getLLMRecommendations(mediaName: string): Promise<RecommendationResult> {
+    try {
+        const response = await apiClient.post('/recommend/llm', { media_name: mediaName });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching LLM recommendations:', error);
+        throw error;
+    }
+}
+
+// Function to get content-based recommendations
+export async function getContentRecommendations(mediaName: string): Promise<RecommendationResult> {
+    try {
+        const response = await apiClient.post('/recommend/content', { media_name: mediaName });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching content recommendations:', error);
+        throw error;
+    }
+}
+
+// Function to get combined recommendations
+export async function getCombinedRecommendations(mediaName: string): Promise<RecommendationResult> {
+    try {
+        const response = await apiClient.post('/recommend/combined', { media_name: mediaName });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching combined recommendations:', error);
+        throw error;
+    }
+}
+```
+
+#### Usage
+
+These functions can be used in any part of the TypeScript application to retrieve recommendations. Here is an example :
+
+```typescript
+import { getLLMRecommendations, getContentRecommendations, getCombinedRecommendations } from './api';
+
+async function displayRecommendations() {
+    const mediaName = 'The Matrix';
+    console.log(`Fetching recommendations for: ${mediaName}`);
+
+    const llmRecommendations = await getLLMRecommendations(mediaName);
+    console.log('LLM Recommendations:', llmRecommendations);
+
+    const contentRecommendations = await getContentRecommendations(mediaName);
+    console.log('Content-Based Recommendations:', contentRecommendations);
+
+    const combinedRecommendations = await getCombinedRecommendations(mediaName);
+    console.log('Combined Recommendations:', combinedRecommendations);
+}
+
+displayRecommendations();
+```
+

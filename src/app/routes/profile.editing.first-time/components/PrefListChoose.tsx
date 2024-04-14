@@ -45,7 +45,7 @@ export const PrefListChoose: React.FC<PrefListChooseProps> = ({
   onPreferenceClick,
 }) => {
   return (
-    <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
+    <div className="flex flex-row flex-wrap justify-around">
       {preference.map((pref, i) => (
         <Preference
           key={"tag-" + i}
