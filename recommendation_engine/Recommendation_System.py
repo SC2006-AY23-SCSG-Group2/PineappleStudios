@@ -9,45 +9,45 @@ from fuzzywuzzy import fuzz, process
 from joblib import Memory
 from sklearn.metrics.pairwise import linear_kernel
 
-movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory = False)
-songs = pd.read_csv('Datasets_for_content_recommendation/spotify_millsongdata.csv')
-books = pd.read_csv('Datasets_for_content_recommendation/GoogleBookAPIDataset.csv')
+# movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory = False)
+# songs = pd.read_csv('Datasets_for_content_recommendation/spotify_millsongdata.csv')
+# books = pd.read_csv('Datasets_for_content_recommendation/GoogleBookAPIDataset.csv')
 
 
 
-books_df = books.drop(columns = ['id', 'averageRating', 'maturityRating', 'pageCount','Unnamed: 0.1', 'Unnamed: 0'])
-movies_df = movies.drop(columns=['id', 'rating', 'certificate', 'duration', 'votes', 'gross_income', 'directors_id', 'year'])
-songs_df = songs.drop(columns = ['link'])
+# books_df = books.drop(columns = ['id', 'averageRating', 'maturityRating', 'pageCount','Unnamed: 0.1', 'Unnamed: 0'])
+# movies_df = movies.drop(columns=['id', 'rating', 'certificate', 'duration', 'votes', 'gross_income', 'directors_id', 'year'])
+# songs_df = songs.drop(columns = ['link'])
 
 
 
 
-def preprocess_text(text_series):
-    # Convert to lowercase
-    text_series = text_series.str.lower()
-    # Remove punctuation
-    text_series = text_series.str.replace(r'[^\w\s]', '', regex=True)
-    # Remove numbers
-    text_series = text_series.str.replace(r'\d+', '', regex=True)
-    return text_series
+# def preprocess_text(text_series):
+#     # Convert to lowercase
+#     text_series = text_series.str.lower()
+#     # Remove punctuation
+#     text_series = text_series.str.replace(r'[^\w\s]', '', regex=True)
+#     # Remove numbers
+#     text_series = text_series.str.replace(r'\d+', '', regex=True)
+#     return text_series
 
-# Preprocess the movie names and tags
-movies_df['name'] = preprocess_text(movies_df['name'])
-movies_df['genre'] = preprocess_text(movies_df['genre'])
-movies_df['directors_name'] = preprocess_text(movies_df['directors_name'])
-movies_df['stars_name'] = preprocess_text(movies_df['stars_name'])
-movies_df['description'] = preprocess_text(movies_df['description'])
+# # Preprocess the movie names and tags
+# movies_df['name'] = preprocess_text(movies_df['name'])
+# movies_df['genre'] = preprocess_text(movies_df['genre'])
+# movies_df['directors_name'] = preprocess_text(movies_df['directors_name'])
+# movies_df['stars_name'] = preprocess_text(movies_df['stars_name'])
+# movies_df['description'] = preprocess_text(movies_df['description'])
 
-# Preprocess the book title, desc, authors, categories and publishedDate
-books_df['title'] = preprocess_text(books_df['title'])
-books_df['desc'] = preprocess_text(books_df['desc'])
-books_df['authors'] = preprocess_text(books_df['authors'])
-books_df['categories'] = preprocess_text(books_df['categories'])
-books_df['publishedDate'] = preprocess_text(books_df['publishedDate'])
+# # Preprocess the book title, desc, authors, categories and publishedDate
+# books_df['title'] = preprocess_text(books_df['title'])
+# books_df['desc'] = preprocess_text(books_df['desc'])
+# books_df['authors'] = preprocess_text(books_df['authors'])
+# books_df['categories'] = preprocess_text(books_df['categories'])
+# books_df['publishedDate'] = preprocess_text(books_df['publishedDate'])
 
-songs_df['song'] = preprocess_text(songs_df['song'])
-songs_df['artist'] = preprocess_text(songs_df['artist'])
-songs_df['text'] = preprocess_text(songs_df['text'])
+# songs_df['song'] = preprocess_text(songs_df['song'])
+# songs_df['artist'] = preprocess_text(songs_df['artist'])
+# songs_df['text'] = preprocess_text(songs_df['text'])
 
 
 # In[4]:
