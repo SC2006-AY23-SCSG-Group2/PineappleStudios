@@ -1,8 +1,17 @@
 import {getFolderByName} from "../database/folder";
 import {prismaClient} from "../database/prisma";
+import {getUserById} from "../database/user";
 
-export const createFolder = async (name: string, libraryId: number) => {
+export const createFolder = async (name: string, userId: number) => {
   try {
+    const user = await getUserById(userId);
+    if (!user) {
+      console.log("User for userId: ", userId, " is invalid!");
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
+    const libraryId = user.libraryId;
+
     // Check if a folder with the same name already exists in the library
     const existingFolder = await getFolderByName(name, libraryId);
     if (existingFolder) {
