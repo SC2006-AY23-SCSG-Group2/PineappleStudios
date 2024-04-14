@@ -23,8 +23,12 @@ export const SmallPeopleList: React.FC<ItemsListProps> = ({
                 "grid min-w-24 grid-cols-1 content-center justify-items-center rounded-full bg-accent"
               }>
               <div className={"mx-4 my-2"}>
-                <h3 className={"block text-center font-bold text-black"}>{item.name}</h3>
-                <p className={"block text-center text-sm text-black"}>{item.role}</p>
+                <h3 className={"block text-center font-bold text-black"}>
+                  {item.name}
+                </h3>
+                <p className={"block text-center text-sm text-black"}>
+                  {item.role}
+                </p>
               </div>
             </div>
           ))}

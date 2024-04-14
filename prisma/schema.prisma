@@ -55,7 +55,7 @@ model UserClickedData {
 model Profile {
   id             Int                   @id @default(autoincrement())
   user           User?
-  registeredDate DateTime //handle in createProfile()
+  registeredDate DateTime // handle in createProfile()
   timeUsedInApp  Int                   @default(0) // Total time used in minute
   likedItem      Int                   @default(0)
   preferences    preferenceInProfile[]
@@ -67,7 +67,7 @@ model Item {
   id                Int                @id @default(autoincrement())
   itemType          String // This field specifies the type of item (e.g., "movie", "book", "song")
   image             String
-  //rateFromApi       Int
+  // rateFromApi       Int
   movie             Movie?
   book              Book?
   song              Song?
@@ -89,19 +89,19 @@ model Item {
 
 // Define specific models for movies, books, and songs.
 model Movie {
-  srcId       String @unique // id from datasource
+  srcId       String  @unique // id from datasource
   duration    Int?
-  description String
-  itemId      Int    @unique
-  item        Item   @relation(fields: [itemId], references: [id])
+  description String?
+  itemId      Int     @unique
+  item        Item    @relation(fields: [itemId], references: [id])
 }
 
 model Book {
-  srcId       String @unique // id from datasource
+  srcId       String  @unique // id from datasource
   pages       Int?
-  description String
-  itemId      Int    @unique
-  item        Item   @relation(fields: [itemId], references: [id])
+  description String?
+  itemId      Int     @unique
+  item        Item    @relation(fields: [itemId], references: [id])
 }
 
 model Song {
