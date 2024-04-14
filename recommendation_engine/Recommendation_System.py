@@ -9,45 +9,45 @@ from fuzzywuzzy import fuzz, process
 from joblib import Memory
 from sklearn.metrics.pairwise import linear_kernel
 
-# movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory = False)
-# songs = pd.read_csv('Datasets_for_content_recommendation/spotify_millsongdata.csv')
-# books = pd.read_csv('Datasets_for_content_recommendation/GoogleBookAPIDataset.csv')
+movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory = False)
+songs = pd.read_csv('Datasets_for_content_recommendation/spotify_millsongdata.csv')
+books = pd.read_csv('Datasets_for_content_recommendation/GoogleBookAPIDataset.csv')
 
 
 
-# books_df = books.drop(columns = ['id', 'averageRating', 'maturityRating', 'pageCount','Unnamed: 0.1', 'Unnamed: 0'])
-# movies_df = movies.drop(columns=['id', 'rating', 'certificate', 'duration', 'votes', 'gross_income', 'directors_id', 'year'])
-# songs_df = songs.drop(columns = ['link'])
+books_df = books.drop(columns = ['id', 'averageRating', 'maturityRating', 'pageCount','Unnamed: 0.1', 'Unnamed: 0'])
+movies_df = movies.drop(columns=['id', 'rating', 'certificate', 'duration', 'votes', 'gross_income', 'directors_id', 'year'])
+songs_df = songs.drop(columns = ['link'])
 
 
 
 
-# def preprocess_text(text_series):
-#     # Convert to lowercase
-#     text_series = text_series.str.lower()
-#     # Remove punctuation
-#     text_series = text_series.str.replace(r'[^\w\s]', '', regex=True)
-#     # Remove numbers
-#     text_series = text_series.str.replace(r'\d+', '', regex=True)
-#     return text_series
+def preprocess_text(text_series):
+    # Convert to lowercase
+    text_series = text_series.str.lower()
+    # Remove punctuation
+    text_series = text_series.str.replace(r'[^\w\s]', '', regex=True)
+    # Remove numbers
+    text_series = text_series.str.replace(r'\d+', '', regex=True)
+    return text_series
 
-# # Preprocess the movie names and tags
-# movies_df['name'] = preprocess_text(movies_df['name'])
-# movies_df['genre'] = preprocess_text(movies_df['genre'])
-# movies_df['directors_name'] = preprocess_text(movies_df['directors_name'])
-# movies_df['stars_name'] = preprocess_text(movies_df['stars_name'])
-# movies_df['description'] = preprocess_text(movies_df['description'])
+# Preprocess the movie names and tags
+movies_df['name'] = preprocess_text(movies_df['name'])
+movies_df['genre'] = preprocess_text(movies_df['genre'])
+movies_df['directors_name'] = preprocess_text(movies_df['directors_name'])
+movies_df['stars_name'] = preprocess_text(movies_df['stars_name'])
+movies_df['description'] = preprocess_text(movies_df['description'])
 
-# # Preprocess the book title, desc, authors, categories and publishedDate
-# books_df['title'] = preprocess_text(books_df['title'])
-# books_df['desc'] = preprocess_text(books_df['desc'])
-# books_df['authors'] = preprocess_text(books_df['authors'])
-# books_df['categories'] = preprocess_text(books_df['categories'])
-# books_df['publishedDate'] = preprocess_text(books_df['publishedDate'])
+# Preprocess the book title, desc, authors, categories and publishedDate
+books_df['title'] = preprocess_text(books_df['title'])
+books_df['desc'] = preprocess_text(books_df['desc'])
+books_df['authors'] = preprocess_text(books_df['authors'])
+books_df['categories'] = preprocess_text(books_df['categories'])
+books_df['publishedDate'] = preprocess_text(books_df['publishedDate'])
 
-# songs_df['song'] = preprocess_text(songs_df['song'])
-# songs_df['artist'] = preprocess_text(songs_df['artist'])
-# songs_df['text'] = preprocess_text(songs_df['text'])
+songs_df['song'] = preprocess_text(songs_df['song'])
+songs_df['artist'] = preprocess_text(songs_df['artist'])
+songs_df['text'] = preprocess_text(songs_df['text'])
 
 
 # In[4]:
@@ -88,8 +88,7 @@ def load_data_structures():
     tfidf_matrix_books = joblib.load('tfidf_matrix_books.joblib')
     cosine_sim_books = joblib.load('cosine_sim_books.joblib')
     book_indices = joblib.load('book_indices.joblib')
-
-    # Load song structures
+        # Load song structures
     tfidf_vectorizer_songs = joblib.load('tfidf_vectorizer_songs.joblib')
     tfidf_matrix_songs = joblib.load('tfidf_matrix_songs.joblib')
     model_nn_songs = joblib.load('model_nn_songs.joblib')
@@ -171,7 +170,7 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
         sim_scores = linear_kernel(tfidf_input, tfidf_matrix).flatten()
         top_indices = sim_scores.argsort()[::-1]
         for i in top_indices:
-            if len(recommendations) >= 5:
+            if len(recommendations) >= 2:
                 break
             rec = data_frame.iloc[i][column_name]
             if rec not in seen:
@@ -180,7 +179,7 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
     else:
         distances, nn_indices = get_nn_results(tfidf_input, model_nn)
         for i in nn_indices.flatten()[1:]:
-            if len(recommendations) >= 5:
+            if len(recommendations) >= 2:
                 break
             rec = data_frame.iloc[i][column_name]
             if rec not in seen:
@@ -188,9 +187,6 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
                 recommendations.append(rec)
 
     return recommendations
-
-
-
 def get_all_recommendations(media_title):
     # Get recommendations for books
     book_recommendations = get_recommendations(None, media_title, books_df, data_structures['book_indices'], "title", data_structures['tfidf_vectorizer_books'], tfidf_matrix=data_structures['tfidf_matrix_books'], is_book = True)
@@ -207,17 +203,25 @@ def get_all_recommendations(media_title):
 import os
 import re  # Import the re module
 
-import openai
+# import openai
 from dotenv import load_dotenv
+from openai import OpenAI
+
+
+
 
 # Load environment variables from .env file
 load_dotenv()
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key= os.environ.get("OPENAI_API_KEY"),
+)
 # Retrieve the API key
-openai_api_key = os.getenv('OPENAI_API_KEY')
+# openai_api_key = os.getenv('OPENAI_API_KEY')
 
 # with open('api_key.txt', 'r') as file:
 #     openai.api_key = file.readline().strip().strip("'")
-openai.api_key = openai_api_key
+# openai.api_key = openai_api_key
     
 @mem.cache    
 def generate_LLM_recommendation(media_name):
@@ -225,13 +229,16 @@ def generate_LLM_recommendation(media_name):
     prompt = f"recommend me books, movies and songs similar to '{media_name}'"
 
     # Get the response from the OpenAI API.
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
     )
 
+    # Access the message content directly, instead of treating the response as a dictionary.
+    content = response.choices[0].message.content.strip()
+
     # Extract the content from the response.
-    content = response['choices'][0]['message']['content'].strip()
+    #content = response['choices'][0]['message']['content'].strip()
     
     def clean_item(item):
         # Remove leading numbers and periods like "1. ".
@@ -296,8 +303,7 @@ def combined_recommendations(media_title):
         combined.extend(list1[len(list2):])
         combined.extend(list2[len(list1):])
         return combined
-
-    # Interleave LLM recommendations with content-based recommendations
+        # Interleave LLM recommendations with content-based recommendations
     combined_books = interleave_lists(llm_books, content_books)
     combined_movies = interleave_lists(llm_movies, content_movies)
     combined_songs = interleave_lists(llm_songs, content_songs)
@@ -307,10 +313,4 @@ def combined_recommendations(media_title):
     random.shuffle(combined_movies)
     random.shuffle(combined_songs)
 
-    return combined_books[:5], combined_movies[:5], combined_songs[:5]
-
-
-
-
-
-
+    return combined_books[:2], combined_movies[:2], combined_songs[:2]

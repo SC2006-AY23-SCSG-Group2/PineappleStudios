@@ -6,13 +6,22 @@ import {
   redirect,
 } from "@remix-run/node";
 import {Link, useFetcher, useLoaderData} from "@remix-run/react";
+import {sha256} from "js-sha256";
 import React, {useState} from "react";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   updateUserEmail,
   updateUserName,
 } from "src/lib/dataRetrieve/handleUserInfo";
+import {
+  addPreferenceForUser,
+  checkIsUserPreference,
+  getPreferencesOfUser,
+  removePreferenceForUser,
+} from "src/lib/dataRetrieve/handleUserPreferences";
+import {getPreferenceByName} from "src/lib/database/preference";
 
+import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
 import {getUserById} from "../../../lib/database/user";
 import {User} from "../../../lib/interfaces";
 import {
@@ -21,6 +30,7 @@ import {
   commitSession,
   getSession,
 } from "../../session";
+import {TagList} from "../_components/TagList";
 import {PrefListChoose} from "../profile.editing.first-time/components/PrefListChoose";
 
 export async function action({request}: LoaderFunctionArgs) {
@@ -37,6 +47,12 @@ export async function action({request}: LoaderFunctionArgs) {
   const newUserName = formData.get("name")?.toString() || user?.userName; // Notice we're using 'userName' here
   const newEmail = formData.get("email")?.toString() || user?.email;
 
+  const preferences = formData.get("preferences");
+  let preferencesArray: string[] = [];
+  if (typeof preferences === "string") {
+    preferencesArray = preferences.split(",");
+  }
+
   // Update userName and email if they have changed.
   if (user) {
     if (newUserName && user.userName !== newUserName) {
@@ -44,6 +60,24 @@ export async function action({request}: LoaderFunctionArgs) {
     }
     if (newEmail && user.email !== newEmail) {
       await updateUserEmail(user.id, newEmail);
+    }
+    const userOldPreferences = await getPreferencesOfUser(user.id);
+    if (!userOldPreferences) {
+      console.log("User preferences is empty.");
+      return redirect("/tab/4");
+    }
+
+    // If oldPreference is not found in preferencesArray, remove it for the user
+    for (const oldPreference of userOldPreferences) {
+      if (!preferencesArray.includes(oldPreference)) {
+        await removePreferenceForUser(user.id, oldPreference);
+      }
+    }
+    // If preference is not found in userOldPreferences, add it for the user
+    for (const preference of preferencesArray) {
+      if (!userOldPreferences.includes(preference)) {
+        await addPreferenceForUser(user.id, preference);
+      }
     }
   }
 
@@ -169,10 +203,7 @@ export default function tab_index(): React.JSX.Element {
         ? prevData.preferences.filter((p) => p !== clickedPreference)
         : [...prevData.preferences, clickedPreference];
 
-      return {
-        ...prevData,
-        preferences: newPreferences,
-      };
+      return {...prevData, preferences: newPreferences};
     });
   };
 

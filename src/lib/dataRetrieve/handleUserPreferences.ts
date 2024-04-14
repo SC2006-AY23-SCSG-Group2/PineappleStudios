@@ -50,8 +50,8 @@ export async function removePreferenceForUser(
     console.log("User for userId: ", userId, " is not created.");
     return;
   }
-  const tag = await getPreferenceByName(preferenceName);
-  if (!tag) {
+  const preference = await getPreferenceByName(preferenceName);
+  if (!preference) {
     console.log(
       "There is no preference : ",
       preferenceName,
@@ -61,13 +61,44 @@ export async function removePreferenceForUser(
   }
   const preferenceCheck = await getPreferenceInProfileAssignment(
     user.profileId,
-    tag.id,
+    preference.id,
   );
   if (preferenceCheck) {
-    await deletePreferenceInProfileAssignment(user.profileId, tag.id);
+    await deletePreferenceInProfileAssignment(user.profileId, preference.id);
     console.log("The preference : ", preferenceName, "is removed");
   } else {
     console.log("The preference : ", preferenceName, "is already removed");
+  }
+}
+
+export async function checkIsUserPreference(
+  userId: number,
+  preferenceName: string,
+) {
+  const user = await getUserById(userId);
+  if (!user) {
+    console.log("User for userId: ", userId, " is not created.");
+    return;
+  }
+
+  const preference = await getPreferenceByName(preferenceName);
+  if (!preference) {
+    console.log(
+      "There is no preference : ",
+      preferenceName,
+      " existed for user",
+    );
+    return;
+  }
+
+  const assignment = await getPreferenceInProfileAssignment(
+    user.profileId,
+    preference.id,
+  );
+  if (assignment) {
+    return true;
+  } else {
+    return false;
   }
 }
 
