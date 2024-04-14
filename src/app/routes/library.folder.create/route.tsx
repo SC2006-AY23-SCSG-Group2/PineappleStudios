@@ -12,7 +12,6 @@ import {
 } from "@remix-run/react";
 import React, {useEffect, useState} from "react";
 
-import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
 import {Folder} from "../../../lib/interfaces";
 import {
   SessionData,
@@ -23,7 +22,7 @@ import {
 } from "../../session";
 import {ToastList} from "../_components/ToastList";
 
-export async function loader({params, request}: LoaderFunctionArgs): Promise<
+export async function loader({request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
     success: boolean;
     data: Folder | undefined;
@@ -54,56 +53,22 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  const id: string | undefined = params.id;
-  if (!id) {
-    return json(
-      {
-        success: false,
-        data: undefined,
-        error: {msg: "unknown url requested"},
-      },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      },
-    );
-  }
-
-  const folderInfo: Folder | undefined =
-    (await getFolderInfo(+id, +session.data.userId)) ?? undefined;
-
-  let jsonData: {
-    success: boolean;
-    data: Folder | undefined;
-    error: {msg: string} | undefined;
-  } = {
-    success: true,
-    data: folderInfo,
-    error: undefined,
-  };
-
-  if (!folderInfo) {
-    jsonData = {
-      success: false,
+  return json(
+    {
+      success: true,
       data: undefined,
-      error: {msg: "Folder " + id + " not found."},
-    };
-    return json(jsonData, {
+      error: undefined,
+    },
+    {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
-    });
-  }
-
-  return json(jsonData, {
-    headers: {
-      "Set-Cookie": await commitSession(session),
     },
-  });
+  );
 }
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
 
   if (!loaderData.success) {
@@ -114,21 +79,13 @@ export default function tab_index(): React.JSX.Element {
     );
   }
 
-  if (!loaderData.data) {
-    return (
-      <>
-        <h1 className={"text-error"}>Error Data Not Found</h1>
-      </>
-    );
-  }
-
   const fetcher: FetcherWithComponents<{
     success: false;
     error: {msg: string}; // eslint-disable-next-line react-hooks/rules-of-hooks
   }> = useFetcher<{
     success: false;
     error: {msg: string};
-  }>({key: "add-to-library"});
+  }>({key: "folder-create"});
   fetcher.formAction = "post";
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -192,7 +149,7 @@ export default function tab_index(): React.JSX.Element {
     }
   }, [fetcher, showToast]);
 
-  const data: Folder = loaderData.data;
+  // const data: Folder = loaderData.data;
 
   return (
     <>
@@ -200,29 +157,22 @@ export default function tab_index(): React.JSX.Element {
         <div className="hero-content max-lg:m-2 lg:m-0">
           <div className="card items-center bg-base-200 shadow-xl">
             <div className="card-title mb-10 mt-12">
-              <h1 className="block text-4xl">Editing: {data.name}</h1>
+              <h1 className="block text-4xl">Create New Folder</h1>
             </div>
             <div className="card-body">
               <fetcher.Form
                 className={"min-w-full"}
                 method={"POST"}
-                action={"/api/folder/update"}>
-                <input
-                  type="hidden"
-                  id="folder"
-                  name="folder"
-                  value={data.id}
-                />
+                action={"/api/folder/create-no-item"}>
                 <div className="form-control my-4">
-                  <label className="input input-bordered flex items-center">
+                  <label className="input input-bordered flex items-center gap-2">
                     Name
                     <input
                       type="text"
                       className="grow"
                       id="name"
                       name="name"
-                      placeholder={data.name}
-                      defaultValue={data.name}
+                      placeholder="Folder Name"
                     />
                   </label>
                 </div>
@@ -234,14 +184,14 @@ export default function tab_index(): React.JSX.Element {
                       className="toggle"
                       id="isSeries"
                       name="isSeries"
-                      defaultChecked={data.isSeries}
+                      defaultChecked={false}
                     />
                   </label>
                 </div>
                 <button
                   type="submit"
                   className="btn btn-neutral btn-wide my-1 min-w-full">
-                  Update Folder Info
+                  Create Folder
                 </button>
               </fetcher.Form>
             </div>
