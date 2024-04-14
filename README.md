@@ -154,7 +154,7 @@ python Recommendation_Server.py
 
 This Flask server ( Recommendation_System_server.py ) provides endpoints for generating recommendations based on media content (books, movies, songs). The recommendations can be generated using three methods:
 1. `GET /recommend/llm`: Uses a large language model to suggest similar media based on a given title.
-2. `GET /recommend/content`: Provides content-based recommendations using TF-IDF and nearest neighbor techniques.
+2. `GET /recommend/content`: Provides content-based recommendations using TF-IDF, cosine-similarity and nearest neighbor techniques.
 3. `GET /recommend/combined`: Combines the results from both the LLM and content-based methods, shuffles them, and provides a diverse set of recommendations.
 
 ### Setting up the TypeScript Application
