@@ -1,9 +1,100 @@
-import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {
+  LoaderFunctionArgs,
+  Session,
+  TypedResponse,
+  json,
+  redirect,
+} from "@remix-run/node";
 import React from "react";
 
-export function loader({params}: LoaderFunctionArgs) {
+import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
+import {Folder} from "../../../lib/interfaces";
+import {
+  SessionData,
+  SessionFlashData,
+  commitSession,
+  destroySession,
+  getSession,
+} from "../../session";
+
+export async function loader({params, request}: LoaderFunctionArgs): Promise<
+  TypedResponse<{
+    success: boolean;
+    data: Folder | undefined;
+    error: {msg: string} | undefined;
+  }>
+> {
+  const session: Session<SessionData, SessionFlashData> = await getSession(
+    request.headers.get("cookie"),
+  );
+
+  if (!session.has("userId") || !session.data.userId) {
+    session.flash("error", "User not login");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  if (isNaN(+session.data.userId)) {
+    session.flash("error", "User id is not a number");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
   const id = params.id;
-  return json({id: id});
+  if (!id) {
+    return json(
+      {
+        success: false,
+        data: undefined,
+        error: {msg: "unknown url requested"},
+      },
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      },
+    );
+  }
+
+  const folderInfo: Folder | undefined =
+    (await getFolderInfo(+id, +session.data.userId)) ?? undefined;
+
+  let jsonData: {
+    success: boolean;
+    data: Folder | undefined;
+    error: {msg: string} | undefined;
+  } = {
+    success: true,
+    data: folderInfo,
+    error: undefined,
+  };
+
+  if (!folderInfo) {
+    jsonData = {
+      success: false,
+      data: undefined,
+      error: {msg: "Folder " + id + " not found."},
+    };
+    return json(jsonData, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  return json(jsonData, {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
 
 export default function tab_index(): React.JSX.Element {

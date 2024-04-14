@@ -15,29 +15,28 @@ interface PrefListChooseProps {
 }
 
 const colors = [
-    "bg-gradient-to-r from-blue-500 to-green-500",
-    "bg-gradient-to-r from-red-500 to-yellow-500",
-    "bg-gradient-to-r from-purple-500 to-indigo-500",
-    "bg-gradient-to-r from-pink-500 to-blue-500",
-    "bg-gradient-to-r from-cyan-500 to-blue-500",
-    "bg-gradient-to-r from-teal-500 to-green-500",
-    "bg-gradient-to-r from-yellow-500 to-pink-500",
-    "bg-gradient-to-r from-green-500 to-teal-500",
-    "bg-gradient-to-r from-blue-500 to-indigo-500",
-    "bg-gradient-to-r from-yellow-500 to-green-500",
-    "bg-gradient-to-r from-red-500 to-pink-500",
-    "bg-gradient-to-r from-indigo-500 to-purple-500",
-    "bg-gradient-to-r from-blue-500 to-purple-500",
-    "bg-gradient-to-r from-red-500 to-indigo-500",
-    "bg-gradient-to-r from-green-500 to-yellow-500",
-    "bg-gradient-to-r from-yellow-500 to-orange-500",
-    "bg-gradient-to-r from-yellow-500 to-gray-500",
-    "bg-gradient-to-r from-blue-500 to-cyan-500",
-    "bg-gradient-to-r from-indigo-500 to-pink-500",
-    "bg-gradient-to-r from-teal-500 to-blue-500",
-    "bg-gradient-to-r from-blue-500 to-orange-500"
+  "bg-gradient-to-r from-blue-500 to-green-500",
+  "bg-gradient-to-r from-red-500 to-yellow-500",
+  "bg-gradient-to-r from-purple-500 to-indigo-500",
+  "bg-gradient-to-r from-pink-500 to-blue-500",
+  "bg-gradient-to-r from-cyan-500 to-blue-500",
+  "bg-gradient-to-r from-teal-500 to-green-500",
+  "bg-gradient-to-r from-yellow-500 to-pink-500",
+  "bg-gradient-to-r from-green-500 to-teal-500",
+  "bg-gradient-to-r from-blue-500 to-indigo-500",
+  "bg-gradient-to-r from-yellow-500 to-green-500",
+  "bg-gradient-to-r from-red-500 to-pink-500",
+  "bg-gradient-to-r from-indigo-500 to-purple-500",
+  "bg-gradient-to-r from-blue-500 to-purple-500",
+  "bg-gradient-to-r from-red-500 to-indigo-500",
+  "bg-gradient-to-r from-green-500 to-yellow-500",
+  "bg-gradient-to-r from-yellow-500 to-orange-500",
+  "bg-gradient-to-r from-yellow-500 to-gray-500",
+  "bg-gradient-to-r from-blue-500 to-cyan-500",
+  "bg-gradient-to-r from-indigo-500 to-pink-500",
+  "bg-gradient-to-r from-teal-500 to-blue-500",
+  "bg-gradient-to-r from-blue-500 to-orange-500",
 ];
-
 
 export const PrefListChoose: React.FC<PrefListChooseProps> = ({
   preference,
@@ -50,7 +49,7 @@ export const PrefListChoose: React.FC<PrefListChooseProps> = ({
       {preference.map((pref, i) => (
         <Preference
           key={"tag-" + i}
-          color={selected.includes(pref) ? color+" text-black" : "bg-black"}
+          color={selected.includes(pref) ? color + " text-black" : "bg-black"}
           onPreferenceClick={() => onPreferenceClick(pref)}
           value={pref}
         />

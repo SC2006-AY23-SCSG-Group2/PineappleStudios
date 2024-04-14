@@ -2,10 +2,12 @@ import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
 import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
 import React from "react";
 
+import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
 import {
   getItemInfoByItemId,
   getItemInfoBySrcId,
 } from "../../../lib/dataRetrieve/getItemInfo";
+import {Folder} from "../../../lib/interfaces";
 import {destroySession, getSession} from "../../session";
 import LibraryTopNav from "./components/LibraryTopNav";
 
@@ -59,14 +61,23 @@ export async function loader({params, request}: LoaderFunctionArgs) {
     });
   }
 
-  let itemInfo;
-  if (isNaN(+id)) {
-    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
-  } else if (!isNaN(+id)) {
-    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
-  }
+  let title: string | undefined = undefined;
 
-  let title: string | undefined = itemInfo?.title;
+  if (type === "folder") {
+    const folderInfo: Folder | null = await getFolderInfo(
+      +id,
+      +session.data.userId,
+    );
+    title = folderInfo?.name;
+  } else if (type === "item") {
+    let itemInfo;
+    if (isNaN(+id)) {
+      itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+    } else if (!isNaN(+id)) {
+      itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
+    }
+    title = itemInfo?.title;
+  }
 
   if (!title) {
     if (type === "folder") {
