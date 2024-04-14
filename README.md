@@ -48,7 +48,6 @@ npm run foramt:lint
 ```
 
 ## Folder explanation
-
 ```
 .
 ├── docs            # Docs for development
@@ -61,8 +60,33 @@ npm run foramt:lint
     ├── database    # database
     └── ml          # machine learning
 ```
+## Starting Recommendation engine
+Head over to recommendation_engine file for the server and scripts
 
-### Check out the links
+```
+.
+├── docs            # Docs for development
+├── prisma          # prisma schema and migrations
+... 
+├── recommendation_engine       # directory containing all essential files for recommendation system to function
+    │  
+    ├── Recommendation_System.py
+    ├── Recommendation_System_server.py 
+    ├── .env file
+    ├── .joblib files and .pkl files in google drive link (must be loaded into the same directory where the  Recommendation_System.py, Recommendation_System_server.py and .env files are located)
+```  
+
+
+### To run server
+```
+pip install flask
+python Recommendation_Server.py
+```
+
+
+
+
+## Check out the links
 
 - `prisma`: [Prisma with Remix](https://github.com/prisma/prisma-examples/tree/latest/typescript/remix)
   - `schema.prisma`: [Prisma Schema](https://www.prisma.io/docs/getting-started/quickstart#2-model-your-data-in-the-prisma-schema)
@@ -85,6 +109,8 @@ npm run foramt:lint
 - `remix.env.d.ts`
 - `tailwind.config.ts`: [Tailwind Configuration](https://tailwindcss.com/docs/configuration)
 - `tsconfig.json`: [tsconfig](https://www.typescriptlang.org/tsconfig)
+
+
 
 ## Technologies we are using
 
