@@ -73,15 +73,17 @@ Head over to recommendation_engine file for the server and scripts
     ├── Recommendation_System.py
     ├── Recommendation_System_server.py 
     ├── .env file
+    ├── requirements.txt
     ├── .joblib files and .pkl files in google drive link (must be loaded into the same directory where the  Recommendation_System.py, Recommendation_System_server.py and .env files are located)
 ```
 ues google drive link for .joblib files and .pkl files 
 
 
 ### To run server
+first navigate to the recommendation_engine directory
 ```
-pip install flask
-python Recommendation_Server.py
+pip install -r requirements.txt
+python Recommendation_System_server.py
 ```
 
 
