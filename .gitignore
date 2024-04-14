@@ -19,3 +19,4 @@ package-lock.json
 bun.lockb
 *.log
 src/app/routes/test.api.$id/route.tsx
+/src/app/routes/api.test/
