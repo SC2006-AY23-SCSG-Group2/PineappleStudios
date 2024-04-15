@@ -6,11 +6,15 @@ import {ItemCard} from "./ItemCard";
 interface ItemsListProps {
   title?: string;
   items: SimpleItem[];
+  func: (id: string) => void;
+  btnContent?: React.ReactNode;
 }
 
 export const ItemList: React.FC<ItemsListProps> = ({
   title = "",
   items,
+  func,
+  btnContent = null,
 }: ItemsListProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
@@ -29,7 +33,9 @@ export const ItemList: React.FC<ItemsListProps> = ({
 
   return (
     <div className="card w-full overflow-visible">
-      <h2 className="card-title mx-6 my-4 text-2xl lg:text-3xl">{title}</h2>
+      <h2 className="card-title -z-50 mx-6 my-4 text-2xl lg:text-3xl">
+        {title}
+      </h2>
       <div className="relative">
         {currentPage > 0 && (
           <button
@@ -65,9 +71,13 @@ export const ItemList: React.FC<ItemsListProps> = ({
             {items.map((item, index) => (
               <div
                 key={index}
-                className="flex-shrink-0"
+                className=" flex-shrink-0"
                 style={{width: `${itemWidth}%`}}>
-                <ItemCard data={item} />
+                <ItemCard
+                  data={item}
+                  func={() => func(item.id.toString())}
+                  btnContent={btnContent}
+                />
               </div>
             ))}
           </div>
