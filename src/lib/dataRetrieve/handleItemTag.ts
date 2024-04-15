@@ -9,6 +9,10 @@ import {
 } from "../database/tag";
 import {getUserById} from "../database/user";
 
+// export async function
+// addItemToFavourtie(userId:
+// number, itemId: number) {
+
 // export async function addItemToFavourtie(userId: number, itemId: number) {
 //   const tag = await addTagForItem(userId, "favourite", itemId);
 //   if (!tag) {
@@ -22,7 +26,7 @@ export async function addItemToFavourite(userId: number, itemId: number) {
   try {
     const user = await getUserById(userId);
     if (!user) {
-      return { error: "User with ID " + userId + " is invalid." };
+      return {error: "User with ID " + userId + " is invalid."};
     }
 
     // Check if the item is in the library, if not, add it to the library first
@@ -34,14 +38,14 @@ export async function addItemToFavourite(userId: number, itemId: number) {
     // Add the item to favorites
     const tag = await addTagForItem(userId, "favourite", itemId);
     if (!tag) {
-      return { error: "Error occurred when adding item to favorites" };
+      return {error: "Error occurred when adding item to favorites"};
     }
 
     // Create recent item assignment
     await createRecentItemAssignments(itemId, userId);
   } catch (error) {
     console.error("Error adding item to favorite:", error);
-    return { error: "Error occurred when adding item to favorites" };
+    return {error: "Error occurred when adding item to favorites"};
   }
 }
 
