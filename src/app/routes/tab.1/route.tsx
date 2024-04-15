@@ -82,7 +82,7 @@ export default function tab_index(): React.JSX.Element {
   return (
     <>
       {loaderData?.data && (
-        <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent">
+        <h1 className="pb-1 mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold text-transparent">
           Today&apos;s Hits
         </h1>
       )}
