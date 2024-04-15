@@ -53,7 +53,7 @@ export async function action({request}: LoaderFunctionArgs) {
     numID = +id;
   }
 
-  let result: boolean = false;
+  let result: boolean = true;
   for (const i of tags) {
     if (!i) {
       return json({
