@@ -1,4 +1,5 @@
 // Import necessary interfaces
+import {getPicsumURL} from "../constants";
 import {prismaClient} from "../database/prisma";
 import {Folder, ItemType, Library} from "../interfaces";
 
@@ -105,11 +106,6 @@ export async function getLibraryInfoByUserId(
     }
 
     //image for folder
-    // eslint-disable-next-line no-inner-declarations
-    function randomInteger(min: number, max: number) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    const fakeImg = `https://picsum.photos/id/${randomInteger(0, 1084)}/400/600.webp`;
 
     // Process folders
     for (const folder of user.library.folders) {
@@ -117,7 +113,10 @@ export async function getLibraryInfoByUserId(
         id: folder.id,
         name: folder.name,
         isSeries: folder.isSeries, // Assuming regular folder by default
-        img: folder.items.length >= 1 ? folder.items[0].item.image : fakeImg,
+        img:
+          folder.items.length >= 1
+            ? folder.items[0].item.image
+            : getPicsumURL(folder.id),
         items: [],
       };
 
