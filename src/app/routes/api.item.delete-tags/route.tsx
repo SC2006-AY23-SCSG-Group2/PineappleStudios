@@ -1,7 +1,7 @@
 import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
 
 import {getItemIdBySrcId} from "../../../lib/dataRetrieve/getItemInfo";
-import {removeItemFromFolderOrSeries} from "../../../lib/dataRetrieve/handleFolder";
+import {removeTagForItem} from "../../../lib/dataRetrieve/handleItemTag";
 import {
   SessionData,
   SessionFlashData,
@@ -36,7 +36,7 @@ export async function action({request}: LoaderFunctionArgs) {
   const formData = await request.formData();
 
   const id = formData.get("item") as string;
-  const folders = formData.getAll("folder") as string[];
+  const tags = formData.getAll("tag") as string[];
 
   if (!id) {
     return json({
@@ -54,7 +54,7 @@ export async function action({request}: LoaderFunctionArgs) {
   }
 
   let result: boolean = false;
-  for (const i of folders) {
+  for (const i of tags) {
     if (!i) {
       return json({
         success: false,
@@ -63,18 +63,21 @@ export async function action({request}: LoaderFunctionArgs) {
       });
     }
 
-    let numFolderID: number = -1;
-    if (!isNaN(+i)) {
-      numFolderID = +i;
-    }
+    const returnResult:
+      | {id: number; name: string; userId: number; itemId: number}
+      | {error: string}
+      | null
+      | undefined = await removeTagForItem(+session.data.userId, i, numID);
 
-    result =
-      result &&
-      (await removeItemFromFolderOrSeries(
-        +session.data.userId,
-        numFolderID,
-        numID,
-      ));
+    if (!returnResult) {
+      result = false;
+    } else if ("error" in returnResult) {
+      return json({
+        success: false,
+        data: undefined,
+        error: {msg: returnResult.error},
+      });
+    }
   }
 
   if (!result) {
@@ -82,7 +85,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
     return json({
       success: false,
-      error: {msg: "Unable to remove item from some libraries"},
+      error: {msg: "Unable to add item to some libraries"},
     });
   }
 

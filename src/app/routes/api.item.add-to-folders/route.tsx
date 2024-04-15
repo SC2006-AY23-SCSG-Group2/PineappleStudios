@@ -54,7 +54,7 @@ export async function action({request}: LoaderFunctionArgs) {
   }
 
   let result: boolean = false;
-  for (const i in folders) {
+  for (const i of folders) {
     if (!i) {
       return json({
         success: false,

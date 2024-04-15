@@ -52,7 +52,7 @@ export async function action({request}: LoaderFunctionArgs) {
   }
 
   let result: boolean = false;
-  for (const i in items) {
+  for (const i of items) {
     if (!i) {
       return json({
         success: false,
