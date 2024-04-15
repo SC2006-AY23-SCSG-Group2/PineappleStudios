@@ -9,13 +9,40 @@ import {
 } from "../database/tag";
 import {getUserById} from "../database/user";
 
-export async function addItemToFavourtie(userId: number, itemId: number) {
-  const tag = await addTagForItem(userId, "favourite", itemId);
-  if (!tag) {
-    return {error: "Error occured when adding item to favourite"};
-  }
+// export async function addItemToFavourtie(userId: number, itemId: number) {
+//   const tag = await addTagForItem(userId, "favourite", itemId);
+//   if (!tag) {
+//     return {error: "Error occured when adding item to favourite"};
+//   }
 
-  await createRecentItemAssignments(itemId, userId);
+//   await createRecentItemAssignments(itemId, userId);
+// }
+
+export async function addItemToFavourite(userId: number, itemId: number) {
+  try {
+    const user = await getUserById(userId);
+    if (!user) {
+      return { error: "User with ID " + userId + " is invalid." };
+    }
+
+    // Check if the item is in the library, if not, add it to the library first
+    const itemInLibrary = await isItemInLibrary(userId, itemId);
+    if (!itemInLibrary) {
+      await addItemToLibrary(userId, itemId);
+    }
+
+    // Add the item to favorites
+    const tag = await addTagForItem(userId, "favourite", itemId);
+    if (!tag) {
+      return { error: "Error occurred when adding item to favorites" };
+    }
+
+    // Create recent item assignment
+    await createRecentItemAssignments(itemId, userId);
+  } catch (error) {
+    console.error("Error adding item to favorite:", error);
+    return { error: "Error occurred when adding item to favorites" };
+  }
 }
 
 export async function removeItemFromFavourite(userId: number, itemId: number) {
