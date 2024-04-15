@@ -158,6 +158,26 @@ export default function tab_index(): React.JSX.Element {
   }>({key: "add-to-library"});
   fetcherAddToLibrary.formAction = "post";
 
+  const fetcherAddToFavourite: FetcherWithComponents<{
+    success: false;
+    error: {msg: string};
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  }> = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "add-tags"});
+  fetcherAddToFavourite.formAction = "post";
+
+  const fetcherDeleteFavourite: FetcherWithComponents<{
+    success: false;
+    error: {msg: string};
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  }> = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "delete-tags"});
+  fetcherAddToFavourite.formAction = "post";
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [toasts, setToasts] = useState<
     {
@@ -206,6 +226,24 @@ export default function tab_index(): React.JSX.Element {
       fetcherAddToLibrary.data = undefined;
     }
   }, [fetcherAddToLibrary, showToast]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect((): void => {
+    if (fetcherAddToFavourite.data && !fetcherAddToFavourite.data.success) {
+      console.log(fetcherAddToFavourite.data.error.msg);
+      showToast(fetcherAddToFavourite.data.error.msg, "error");
+      fetcherAddToFavourite.data = undefined;
+    }
+  }, [fetcherAddToFavourite, showToast]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect((): void => {
+    if (fetcherDeleteFavourite.data && !fetcherDeleteFavourite.data.success) {
+      console.log(fetcherDeleteFavourite.data.error.msg);
+      showToast(fetcherDeleteFavourite.data.error.msg, "error");
+      fetcherDeleteFavourite.data = undefined;
+    }
+  }, [fetcherDeleteFavourite, showToast]);
 
   const data: ItemInfo = loaderData.data;
   const content: MovieContent | SongContent | BookContent = data.otherContent;
@@ -328,6 +366,37 @@ export default function tab_index(): React.JSX.Element {
                   Delete from Library
                 </button>
               </fetcherAddToLibrary.Form>
+              {data.tag.filter(
+                (e: string) =>
+                  e.toLowerCase() === "favourite" ||
+                  e.toLowerCase() === "favorite",
+              ).length >= 1 ? (
+                <fetcherDeleteFavourite.Form
+                  className={"min-w-full"}
+                  method={"POST"}
+                  action={"/api/item/delete-tags"}>
+                  <input type="hidden" id="item" name="item" value={data.id} />
+                  <input type="hidden" id="tag" name="tag" value="favourite" />
+                  <button
+                    type="submit"
+                    className="btn btn-neutral btn-wide my-1 min-w-full">
+                    Delete from Favourite
+                  </button>
+                </fetcherDeleteFavourite.Form>
+              ) : (
+                <fetcherAddToFavourite.Form
+                  className="min-w-full"
+                  method="POST"
+                  action="/api/item/add-tags">
+                  <input type="hidden" id="item" name="item" value={data.id} />
+                  <input type="hidden" id="tag" name="tag" value="favourite" />
+                  <button
+                    type="submit"
+                    className="btn btn-neutral btn-wide my-1 min-w-full">
+                    Add to Favourite
+                  </button>
+                </fetcherAddToFavourite.Form>
+              )}
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
             <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">
@@ -337,7 +406,11 @@ export default function tab_index(): React.JSX.Element {
               </div>
               <div className="card-body">
                 <h2 className="card-title mx-2 text-2xl lg:text-3xl">Tags</h2>
-                <TagList tag={data.tag} />
+                {data.tag.length === 0 ? (
+                  <p className="text-center">No tags</p>
+                ) : (
+                  <TagList tag={data.tag} />
+                )}
               </div>
               <SmallPeopleList items={data.people} />
               {/*used as an item list */}

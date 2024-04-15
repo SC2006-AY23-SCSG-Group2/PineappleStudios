@@ -53,8 +53,8 @@ export async function action({request}: LoaderFunctionArgs) {
     numID = +id;
   }
 
-  let result: boolean = false;
-  for (const i in folders) {
+  let result: boolean = true;
+  for (const i of folders) {
     if (!i) {
       return json({
         success: false,
