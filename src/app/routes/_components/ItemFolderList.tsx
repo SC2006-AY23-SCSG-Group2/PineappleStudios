@@ -28,8 +28,10 @@ export const ItemFolderList: React.FC<ItemsListProps> = ({
   const itemWidth = 100 / nMinusOne; // as a percentage
 
   return (
-    <div className="card w-full overflow-visible">
-      <h2 className="card-title mx-6 my-4 text-2xl lg:text-3xl">{title}</h2>
+    <div className="card  w-full overflow-visible">
+      <h2 className="card-title -z-50 mx-6 my-4 text-2xl lg:text-3xl">
+        {title}
+      </h2>
       <div className="relative">
         {currentPage > 0 && (
           <button
