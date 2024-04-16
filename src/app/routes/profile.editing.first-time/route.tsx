@@ -2,6 +2,7 @@ import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
 import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
+import {getPreferencesOfUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 
 import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
@@ -73,8 +74,17 @@ export async function loader({request}: LoaderFunctionArgs) {
     preferenceData.push("PLACEHOLDER" + i.toString());
   }
 
+  let userCurrentPreferences = await getPreferencesOfUser(
+    parseInt(session.data.userId),
+  );
+
+  if (!userCurrentPreferences) {
+    userCurrentPreferences = [];
+  }
+
   let userName = "";
   const user = await getUserById(parseInt(session.data.userId));
+
   if (user !== null) {
     userName = user.userName;
   }
@@ -82,13 +92,16 @@ export async function loader({request}: LoaderFunctionArgs) {
   return {
     preferenceData,
     userName,
+    userCurrentPreferences,
   };
 }
 
 export default function TabIndex({}): React.JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
 
-  const [formData, setFormData] = useState<string[]>([]);
+  const [formData, setFormData] = useState<string[]>(
+    loaderData.userCurrentPreferences,
+  );
 
   const addPreference = (message: string) => {
     setFormData([...formData, message]);
