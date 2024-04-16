@@ -79,21 +79,6 @@ export async function loader({request}: LoaderFunctionArgs) {
   const additionalPreferences = Array.from(
     new Set([
       "Action",
-      "Comedy",
-      "Drama",
-      "Horror",
-      "Science Fiction",
-      "Fiction",
-      "Non-fiction",
-      "Mystery",
-      "Fantasy",
-      "Biography",
-      "Rock",
-      "Pop",
-      "Hip Hop",
-      "Jazz",
-      "Classical",
-      "Action",
       "Animation",
       "Comedy",
       "Crime",
@@ -117,7 +102,6 @@ export async function loader({request}: LoaderFunctionArgs) {
       "Reggaeton",
       "Indie Folk",
       "K-Pop",
-      // Add more preferences as needed
     ]),
   );
   if (preferences.length < additionalPreferences.length) {
