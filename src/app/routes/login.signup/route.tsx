@@ -1,9 +1,10 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
-import React from "react";
+import {ActionFunctionArgs, json, redirect, Session, SessionData} from "@remix-run/node";
+import {Form, Link, NavLink, useActionData, useNavigation} from "@remix-run/react";
+import React, { useState } from "react";
 import {createNewUser} from "src/lib/dataRetrieve/createUser";
 
 import {TextField} from "../_components/TextField";
+import { commitSession, getSession, SessionFlashData } from "src/app/session";
 
 //import {action} from "../../../lib/connection/signup"
 
@@ -11,6 +12,7 @@ type FormData = {
   userName: string;
   email: string;
   password: string;
+  confirmPassword: string; 
 };
 
 export async function action({request}: ActionFunctionArgs) {
@@ -19,6 +21,7 @@ export async function action({request}: ActionFunctionArgs) {
     email: formData.get("email") as string,
     userName: formData.get("username") as string,
     password: formData.get("password") as string,
+    confirmPassword: formData.get("confirmPassword") as string,
   };
 
   const errors: {[key: string]: string} = {};
@@ -31,8 +34,14 @@ export async function action({request}: ActionFunctionArgs) {
     errors.email = "Invalid Email";
   }
 
-  if (!data.password) {
-    errors.password = "Invalid Password";
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
+  if (!data.password || !passwordRegex.test(data.password)) {
+    errors.password = "Password must be at least 8 characters long, include a number, an uppercase letter, and a symbol.";
+  }
+
+  if (data.password !== data.confirmPassword) {
+    errors.confirmPassword = "Passwords must match";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -48,8 +57,8 @@ export async function action({request}: ActionFunctionArgs) {
     data.password,
   );
 
-  if (userResult && "error" in userResult) {
-    errors.email = userResult.error;
+  if (!userResult || (userResult && "error" in userResult)) {
+    errors.email = userResult ? userResult.error : "";
     return json({
       errors,
       value: data,
@@ -57,12 +66,32 @@ export async function action({request}: ActionFunctionArgs) {
   }
 
   // User creation was successful
-  return redirect("/login");
+
+  const session: Session<SessionData, SessionFlashData> = await getSession();
+  session.set("userId", userResult.id.toString());
+  session.set("startTime", new Date());
+
+  return redirect("/profile/editing/first-time", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
 
 export default function tab_index(): React.JSX.Element {
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <>
@@ -94,12 +123,22 @@ export default function tab_index(): React.JSX.Element {
               </p>
             ) : null}
 
-            <TextField id={"password"} label={"Password"} type={"password"} />
+            <TextField id="password" label="Password" type="password" showToggle={true} />
 
             {actionData ? (
-              <p className="form-control">
+              <p className="form-control max-sm:max-w-64 max-xs:max-w-48 sm:w-80">
                 <label htmlFor={"wrong-password"} className="label text-error">
                   {actionData?.errors.password}
+                </label>
+              </p>
+            ) : null}
+
+            <TextField id="confirmPassword" label="Confirm Password" type="password" showToggle={true} />
+
+            {actionData && actionData.errors.confirmPassword ? (
+              <p className="form-control">
+                <label htmlFor={"wrong-confirm-password"} className="label text-error">
+                  {actionData.errors.confirmPassword}
                 </label>
               </p>
             ) : null}
@@ -115,9 +154,9 @@ export default function tab_index(): React.JSX.Element {
             </p>
             <p className="text-center">
               Already have an account?{" "}
-              <Link className="underline" to="/login">
+              <NavLink className="underline" to="/login">
                 Login
-              </Link>
+              </NavLink>
             </p>
           </fieldset>
         </Form>
