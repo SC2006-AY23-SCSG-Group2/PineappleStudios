@@ -164,36 +164,46 @@ export default function tab_index(): React.JSX.Element {
       {loaderData?.data &&
         loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Song)
           .length > 0 && (
-          <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Song,
-            )}
-            title="Top Music"
-            func={onItemAdd}
-          />
+          <>
+            <ItemList
+              items={loaderData?.data.filter(
+                (x: SimpleItem) => x.type === ItemType.Song,
+              )}
+              title="Top Music"
+              func={onItemAdd}
+            />
+            <div className="divider"></div>
+          </>
         )}
       {loaderData?.data &&
         loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Movie)
           .length > 0 && (
-          <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Movie,
-            )}
-            title="Top Movies"
-            func={onItemAdd}
-          />
+          <>
+            <ItemList
+              items={loaderData?.data.filter(
+                (x: SimpleItem) => x.type === ItemType.Movie,
+              )}
+              title="Top Movies"
+              func={onItemAdd}
+            />
+            <div className="divider"></div>
+          </>
         )}
       {loaderData?.data &&
         loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Book)
           .length > 0 && (
-          <ItemList
-            items={loaderData?.data.filter(
-              (x: SimpleItem) => x.type === ItemType.Book,
-            )}
-            title="Top Books"
-            func={onItemAdd}
-          />
+          <>
+            <ItemList
+              items={loaderData?.data.filter(
+                (x: SimpleItem) => x.type === ItemType.Book,
+              )}
+              title="Top Books"
+              func={onItemAdd}
+            />
+            <div className="divider"></div>
+          </>
         )}
+
       {(!loaderData.data ||
         loaderData.data.length +
           loaderData.data.length +
