@@ -1,11 +1,15 @@
 import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
+import {getAllPreferencesInTheSystem} from "src/lib/dataRetrieve/getPreferences";
 import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferencesOfUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 
-import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
+import {
+  createNewPreference,
+  deletePreference,
+} from "../../../lib/dataRetrieve/createPreference";
 import {getUserById} from "../../../lib/database/user";
 import {
   SessionData,
@@ -67,38 +71,64 @@ export async function loader({request}: LoaderFunctionArgs) {
       },
     });
   }
-
-const pref =  [
-    "Action",
-    "Animation",
-    "Comedy",
-    "Crime",
-    "Documentary",
-    "Drama",
-    "Family",
-    "Fantasy",
-    "Horror",
-    "Romance",
-    "Sci-Fi",
-    "Thriller",
-    "Western",
-    "Biography",
-    "Self-help",
-    "Travel",
-    "Science",
-    "Poetry",
-    "Pop",
-    "Jazz",
-    "Ambient",
-    "Reggaeton",
-    "Indie Folk",
-    "K-Pop",
-];
-
+  // for (let i = 0; i < 20; i++) {
+  //   await deletePreference("PLACEHOLDER" + i.toString());
+  // }
+  const preferences = await getAllPreferencesInTheSystem();
   let preferenceData: string[] = [];
-  for (let i = 0; i < pref.length; i++) {
-    await createNewPreference(pref[i]);
-    preferenceData.push(pref[i]);
+  const additionalPreferences = Array.from(
+    new Set([
+      "Action",
+      "Comedy",
+      "Drama",
+      "Horror",
+      "Science Fiction",
+      "Fiction",
+      "Non-fiction",
+      "Mystery",
+      "Fantasy",
+      "Biography",
+      "Rock",
+      "Pop",
+      "Hip Hop",
+      "Jazz",
+      "Classical",
+      "Action",
+      "Animation",
+      "Comedy",
+      "Crime",
+      "Documentary",
+      "Drama",
+      "Family",
+      "Fantasy",
+      "Horror",
+      "Romance",
+      "Sci-Fi",
+      "Thriller",
+      "Western",
+      "Biography",
+      "Self-help",
+      "Travel",
+      "Science",
+      "Poetry",
+      "Pop",
+      "Jazz",
+      "Ambient",
+      "Reggaeton",
+      "Indie Folk",
+      "K-Pop",
+      // Add more preferences as needed
+    ]),
+  );
+  if (preferences.length < additionalPreferences.length) {
+    // If there are less than 20 preferences, create new ones
+
+    for (const preference of additionalPreferences) {
+      await createNewPreference(preference);
+      preferenceData.push(preference);
+    }
+  } else {
+    preferenceData = preferences;
   }
 
   let userCurrentPreferences = await getPreferencesOfUser(
@@ -185,7 +215,7 @@ export default function TabIndex({}): React.JSX.Element {
             value={preference}
           />
         ))}
-        <div className="mb-6 flex w-full flex-col items-center text-2xl lg:mt-60 lg:pt-0 md:mt-96 md:pt-24 xl:mt-16">
+        <div className="mb-6 flex w-full flex-col items-center text-2xl md:mt-96 md:pt-24 lg:mt-60 lg:pt-0 xl:mt-16">
           <h2>All Good! Press next to continue!</h2>
           <input
             type="submit"
