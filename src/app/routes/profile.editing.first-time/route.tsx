@@ -67,10 +67,37 @@ export async function loader({request}: LoaderFunctionArgs) {
     });
   }
 
+const pref =  [
+    "Action",
+    "Animation",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "Horror",
+    "Romance",
+    "Sci-Fi",
+    "Thriller",
+    "Western",
+    "Biography",
+    "Self-help",
+    "Travel",
+    "Science",
+    "Poetry",
+    "Pop",
+    "Jazz",
+    "Ambient",
+    "Reggaeton",
+    "Indie Folk",
+    "K-Pop",
+];
+
   let preferenceData: string[] = [];
-  for (let i = 0; i < 20; i++) {
-    await createNewPreference("PLACEHOLDER" + i.toString());
-    preferenceData.push("PLACEHOLDER" + i.toString());
+  for (let i = 0; i < pref.length; i++) {
+    await createNewPreference(pref[i]);
+    preferenceData.push(pref[i]);
   }
 
   let userName = "";
@@ -145,7 +172,7 @@ export default function TabIndex({}): React.JSX.Element {
             value={preference}
           />
         ))}
-        <div className="mb-6 mt-6 flex w-full flex-col items-center text-2xl">
+        <div className="mb-6 flex w-full flex-col items-center text-2xl lg:mt-60 lg:pt-0 md:mt-96 md:pt-24 xl:mt-16">
           <h2>All Good! Press next to continue!</h2>
           <input
             type="submit"
