@@ -6,6 +6,7 @@ import {
   deleteRecentItemAssignments,
   getRecentItemAddedByUser,
 } from "../database/recentItems";
+import {removeItemFromFavourite} from "./handleItemTag";
 
 const prisma = prismaClient;
 
@@ -104,6 +105,8 @@ export async function removeItemFromLibrary(userId: number, itemId: number) {
         },
       },
     });
+
+    await removeItemFromFavourite(userId, itemId);
     await deleteRecentItemAssignments(itemId, userId);
     return true; // Return true to indicate success
   } catch (error) {

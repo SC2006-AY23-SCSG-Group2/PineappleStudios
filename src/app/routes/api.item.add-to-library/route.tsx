@@ -1,7 +1,17 @@
-import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
+import {
+  LoaderFunctionArgs,
+  Session,
+  TypedResponse,
+  json,
+  redirect,
+} from "@remix-run/node";
 
-import {getItemIdBySrcId} from "../../../lib/dataRetrieve/getItemInfo";
+import {
+  getItemInfoByItemId,
+  getItemInfoBySrcId,
+} from "../../../lib/dataRetrieve/getItemInfo";
 import {addItemToLibrary} from "../../../lib/dataRetrieve/handleLibraryItems";
+import {ItemInfo} from "../../../lib/interfaces";
 import {
   SessionData,
   SessionFlashData,
@@ -9,7 +19,11 @@ import {
   getSession,
 } from "../../session";
 
-export async function action({request}: LoaderFunctionArgs) {
+export async function action({
+  request,
+}: LoaderFunctionArgs): Promise<
+  TypedResponse<{success: boolean; error: {msg: string}}> | TypedResponse<never>
+> {
   const session: Session<SessionData, SessionFlashData> = await getSession(
     request.headers.get("cookie"),
   );
@@ -33,9 +47,9 @@ export async function action({request}: LoaderFunctionArgs) {
     });
   }
 
-  const formData = await request.formData();
+  const formData: FormData = await request.formData();
 
-  const id = formData.get("id") as string;
+  const id: string = formData.get("id") as string;
 
   if (!id) {
     return json({
@@ -47,18 +61,25 @@ export async function action({request}: LoaderFunctionArgs) {
 
   let numID: number = -1;
   if (isNaN(+id)) {
-    numID = (await getItemIdBySrcId(id)) ?? -1;
+    numID =
+      ((await getItemInfoBySrcId(id, +session.data.userId)) ?? {id: -1}).id ??
+      -1;
   } else if (!isNaN(+id)) {
     numID = +id;
   }
 
-  // console.log(">>>> User" + +session.data.userId + ", Item: " + numID);
+  const itemInfo: ItemInfo | undefined = await getItemInfoByItemId(
+    numID,
+    +session.data.userId,
+  );
 
-  const result = await addItemToLibrary(+session.data.userId, numID);
+  if (itemInfo?.isInLibrary) {
+    return redirect("/library/item/" + id);
+  }
+
+  const result: boolean = await addItemToLibrary(+session.data.userId, numID);
 
   if (!result) {
-    console.log(result);
-
     return json({
       success: false,
       error: {msg: "Unable to add item to library"},

@@ -97,7 +97,7 @@ export async function action({request}: LoaderFunctionArgs) {
     });
   }
 
-  let result: boolean = false;
+  let result: boolean = true;
 
   await updateFolderWithNewName(folderResult.id, name);
 

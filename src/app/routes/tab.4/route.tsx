@@ -87,11 +87,11 @@ export default function tab_index(): React.JSX.Element {
     <>
       <div className="hero min-h-screen">
         <div className="hero-content max-lg:m-0 max-lg:flex-col max-md:w-96 lg:m-0 lg:flex-row lg:items-end lg:justify-between">
-          <div className="w-full">
+          <div className="self-center">
             <UserProfileCard user={userData} />
           </div>
 
-          <div className="card self-start bg-base-200 shadow-xl">
+          <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
             <div className="card-body">
               {loaderData && loaderData.user.preference && (
                 <>
