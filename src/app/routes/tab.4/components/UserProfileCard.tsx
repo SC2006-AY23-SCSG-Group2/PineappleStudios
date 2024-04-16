@@ -30,11 +30,11 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
         <div>
           <div className="stat">
             <div className="stat-title">Date Joined</div>
-            <div className="stat-value max-lg:text-xl">{user.date}</div>
+            <div className="stat-value max-xl:text-xl">{user.date}</div>
           </div>
           <div className="stat">
             <div className="stat-title">Time Used</div>
-            <div className="stat-value max-lg:text-xl">
+            <div className="stat-value max-xl:text-xl">
               {user.time >= 60
                 ? `${Math.floor(user.time / 60)} hours ${user.time % 60} minutes`
                 : `${user.time} minutes`}
@@ -43,11 +43,11 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
 
           <div className="stat">
             <div className="stat-title">Liked items</div>
-            <div className="stat-value max-lg:text-xl">{user.numOfLikes}</div>
+            <div className="stat-value max-xl:text-xl">{user.numOfLikes}</div>
           </div>
           <div className="stat">
             <div className="stat-title">Ratings Given</div>
-            <div className="stat-value max-lg:text-xl">{user.numOfRatings}</div>
+            <div className="stat-value max-xl:text-xl">{user.numOfRatings}</div>
           </div>
         </div>
         <div className="card-actions justify-end">

@@ -9,8 +9,11 @@ export function getPicsumURL(id?: number): string {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  if (!id || id > 1084) {
+  if (id === undefined || id === null || id > 1084 - 100) {
     id = randomInteger(0, 1084);
+  } else {
+    id = id + 100;
   }
+
   return `https://picsum.photos/id/${id}/400/600.webp`;
 }

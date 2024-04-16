@@ -1,7 +1,7 @@
 import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
 
 import {getItemIdBySrcId} from "../../../lib/dataRetrieve/getItemInfo";
-import {addItemToFolderOrSeries} from "../../../lib/dataRetrieve/handleFolder";
+import {addTagForItem} from "../../../lib/dataRetrieve/handleItemTag";
 import {
   SessionData,
   SessionFlashData,
@@ -35,9 +35,9 @@ export async function action({request}: LoaderFunctionArgs) {
 
   const formData = await request.formData();
 
-  const id = formData.get("folder") as string;
-  const items = formData.getAll("items") as string[];
-
+  const id = formData.get("item") as string;
+  const tags = formData.getAll("tag") as string[];
+  console.log(tags);
   if (!id) {
     return json({
       success: false,
@@ -47,12 +47,15 @@ export async function action({request}: LoaderFunctionArgs) {
   }
 
   let numID: number = -1;
-  if (!isNaN(+id)) {
+  if (isNaN(+id)) {
+    numID = (await getItemIdBySrcId(id)) ?? -1;
+  } else if (!isNaN(+id)) {
     numID = +id;
   }
 
   let result: boolean = true;
-  for (const i of items) {
+  for (const i of tags) {
+    console.log(i);
     if (!i) {
       return json({
         success: false,
@@ -61,17 +64,20 @@ export async function action({request}: LoaderFunctionArgs) {
       });
     }
 
-    let numItemID: number = -1;
+    const returnResult:
+      | {id: number; name: string; userId: number; itemId: number}
+      | {error: string}
+      | undefined = await addTagForItem(+session.data.userId, i, numID);
 
-    if (isNaN(+i)) {
-      numItemID = (await getItemIdBySrcId(i)) ?? -1;
-    } else if (!isNaN(+i)) {
-      numItemID = +i;
+    if (!returnResult) {
+      result = false;
+    } else if ("error" in returnResult) {
+      return json({
+        success: false,
+        data: undefined,
+        error: {msg: returnResult.error},
+      });
     }
-
-    result =
-      result &&
-      (await addItemToFolderOrSeries(+session.data.userId, numID, numItemID));
   }
 
   if (!result) {
@@ -79,9 +85,9 @@ export async function action({request}: LoaderFunctionArgs) {
 
     return json({
       success: false,
-      error: {msg: "Unable to add some items to libraries"},
+      error: {msg: "Unable to add item to tags: " + tags.toString()},
     });
   }
 
-  return redirect("/library/folder/" + id);
+  return redirect("/library/item/" + id);
 }

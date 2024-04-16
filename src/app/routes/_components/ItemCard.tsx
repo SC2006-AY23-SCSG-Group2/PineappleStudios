@@ -6,9 +6,26 @@ import {HeartButton} from "./HeartButton";
 
 interface ItemCardProps {
   data: SimpleItem;
+  func: () => void;
+  btnContent?: React.ReactNode;
 }
 
-export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
+export const ItemCard: React.FC<ItemCardProps> = ({
+  data,
+  func,
+  btnContent = (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24">
+        <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" fill="#ffffff" />
+      </svg>
+      Add to Library
+    </>
+  ),
+}: ItemCardProps) => {
   const [fav, setFav] = useState(false);
 
   const type = ["Book", "Song", "Movie"];
@@ -40,21 +57,9 @@ export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
           />
         </NavLink>
         <div className="absolute z-50 w-full rounded-b-md bg-zinc-800 p-2 shadow-md transition lg:p-4">
-          <div className="flex flex-row items-center gap-3">
-            <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border-2 border-white transition hover:border-neutral-300 lg:h-10 lg:w-10">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24">
-                <path
-                  d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z"
-                  fill="#ffffff"
-                />
-              </svg>
-            </div>
-            Add to favourites
-          </div>
+          <button onClick={func} className="btn bg-zinc-500 text-white">
+            {btnContent}
+          </button>
           <p className="ml-1 mt-4 font-semibold text-green-400">
             <span className="text-white">{data.title}</span>
           </p>
