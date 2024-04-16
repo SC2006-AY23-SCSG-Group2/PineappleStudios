@@ -76,9 +76,8 @@ export async function loader({request}: LoaderFunctionArgs) {
   // }
   const preferences = await getAllPreferencesInTheSystem();
   let preferenceData: string[] = [];
-  if (preferences.length < 15) {
-    // If there are less than 20 preferences, create new ones
-    const additionalPreferences = [
+  const additionalPreferences = Array.from(
+    new Set([
       "Action",
       "Comedy",
       "Drama",
@@ -94,8 +93,35 @@ export async function loader({request}: LoaderFunctionArgs) {
       "Hip Hop",
       "Jazz",
       "Classical",
+      "Action",
+      "Animation",
+      "Comedy",
+      "Crime",
+      "Documentary",
+      "Drama",
+      "Family",
+      "Fantasy",
+      "Horror",
+      "Romance",
+      "Sci-Fi",
+      "Thriller",
+      "Western",
+      "Biography",
+      "Self-help",
+      "Travel",
+      "Science",
+      "Poetry",
+      "Pop",
+      "Jazz",
+      "Ambient",
+      "Reggaeton",
+      "Indie Folk",
+      "K-Pop",
       // Add more preferences as needed
-    ];
+    ]),
+  );
+  if (preferences.length < additionalPreferences.length) {
+    // If there are less than 20 preferences, create new ones
 
     for (const preference of additionalPreferences) {
       await createNewPreference(preference);
@@ -189,7 +215,7 @@ export default function TabIndex({}): React.JSX.Element {
             value={preference}
           />
         ))}
-        <div className="mb-6 mt-6 flex w-full flex-col items-center text-2xl">
+        <div className="mb-6 flex w-full flex-col items-center text-2xl md:mt-96 md:pt-24 lg:mt-60 lg:pt-0 xl:mt-16">
           <h2>All Good! Press next to continue!</h2>
           <input
             type="submit"
