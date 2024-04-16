@@ -1,12 +1,13 @@
 import {NavLink} from "@remix-run/react";
 import React, {useState} from "react";
-
 import {SimpleItem} from "../../../lib/interfaces";
 import {HeartButton} from "./HeartButton";
+import { getSession } from "src/app/session";
 
 interface ItemCardProps {
   data: SimpleItem;
 }
+
 
 export const ItemCard: React.FC<ItemCardProps> = ({data}: ItemCardProps) => {
   const [fav, setFav] = useState(false);

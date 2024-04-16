@@ -1,9 +1,10 @@
-import {ActionFunctionArgs, json, redirect} from "@remix-run/node";
-import {Form, Link, useActionData, useNavigation} from "@remix-run/react";
+import {ActionFunctionArgs, json, redirect, Session, SessionData} from "@remix-run/node";
+import {Form, Link, NavLink, useActionData, useNavigation} from "@remix-run/react";
 import React from "react";
 import {createNewUser} from "src/lib/dataRetrieve/createUser";
 
 import {TextField} from "../_components/TextField";
+import { commitSession, getSession, SessionFlashData } from "src/app/session";
 
 //import {action} from "../../../lib/connection/signup"
 
@@ -48,8 +49,8 @@ export async function action({request}: ActionFunctionArgs) {
     data.password,
   );
 
-  if (userResult && "error" in userResult) {
-    errors.email = userResult.error;
+  if (!userResult || (userResult && "error" in userResult)) {
+    errors.email = userResult ? userResult.error : "";
     return json({
       errors,
       value: data,
@@ -57,7 +58,16 @@ export async function action({request}: ActionFunctionArgs) {
   }
 
   // User creation was successful
-  return redirect("/login");
+
+  const session: Session<SessionData, SessionFlashData> = await getSession();
+  session.set("userId", userResult.id.toString());
+  session.set("startTime", new Date());
+
+  return redirect("/profile/editing/first-time", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
 }
 
 export default function tab_index(): React.JSX.Element {
@@ -115,9 +125,9 @@ export default function tab_index(): React.JSX.Element {
             </p>
             <p className="text-center">
               Already have an account?{" "}
-              <Link className="underline" to="/login">
+              <NavLink className="underline" to="/login">
                 Login
-              </Link>
+              </NavLink>
             </p>
           </fieldset>
         </Form>
