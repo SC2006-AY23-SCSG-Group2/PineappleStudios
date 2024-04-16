@@ -24,7 +24,7 @@ const LeftCard: React.FC<LeftCardProps> = ({
         </div>
         <h2 className="block pt-7 max-lg:text-xl lg:text-2xl">
           {title}
-          <span className="mt-2 block max-lg:text-sm lg:text-xl truncate text-eclipse">
+          <span className="text-eclipse mt-2 block truncate max-lg:text-sm lg:text-xl">
             {subtitle}
           </span>
         </h2>

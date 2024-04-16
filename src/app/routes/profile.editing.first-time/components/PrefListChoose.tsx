@@ -49,7 +49,11 @@ export const PrefListChoose: React.FC<PrefListChooseProps> = ({
       {preference.map((pref, i) => (
         <Preference
           key={"tag-" + i}
-          color={selected.includes(pref) ? color + " text-black" : "bg-black text-white"}
+          color={
+            selected.includes(pref)
+              ? color + " text-black"
+              : "bg-black text-white"
+          }
           onPreferenceClick={() => onPreferenceClick(pref)}
           value={pref}
         />

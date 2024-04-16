@@ -26,6 +26,7 @@ import {
   commitSession,
   getSession,
 } from "../../session";
+import InfoHover from "../_components/InfoHover";
 import {PrefListChoose} from "../profile.editing.first-time/components/PrefListChoose";
 
 interface EditData {
@@ -224,7 +225,7 @@ export default function tab_index(): React.JSX.Element {
     <>
       <div className="hero min-h-screen">
         <div className="hero-content flex-col justify-between lg:flex-row">
-          <div className="card w-full bg-base-200 shadow-xl">
+          <div className="card w-full bg-base-200 shadow-xl lg:w-1/3">
             <div className="card-body">
               <div>
                 <div className="form-control">
@@ -267,7 +268,7 @@ export default function tab_index(): React.JSX.Element {
                   </div>
                   <div className="card-actions join-item">
                     <button className="btn btn-primary" onClick={submitForm}>
-                      Save Changes
+                      Save All Changes
                     </button>
                   </div>
                 </div>
@@ -277,7 +278,10 @@ export default function tab_index(): React.JSX.Element {
           </div>
           <div className="card w-full overflow-x-auto bg-base-200 shadow-xl lg:w-2/3">
             <div className="card-body">
-              <h2 className="card-title">Preferences</h2>
+              <h2 className="card-title">
+                Preferences
+                <InfoHover info={"Click to remove preferences"} />
+              </h2>
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {loaderData.user.preference.map((preference, index) => (
                   <PrefListChoose
@@ -292,7 +296,7 @@ export default function tab_index(): React.JSX.Element {
                 className="btn btn-primary"
                 to={"/profile/editing/first-time"}>
                 {" "}
-                Add more Preference
+                Click to add more preferences
               </NavLink>
             </div>
           </div>

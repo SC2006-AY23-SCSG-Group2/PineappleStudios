@@ -1,8 +1,9 @@
 import {NavLink} from "@remix-run/react";
 import React, {useState} from "react";
+import {getSession} from "src/app/session";
+
 import {SimpleItem} from "../../../lib/interfaces";
 import {HeartButton} from "./HeartButton";
-import { getSession } from "src/app/session";
 
 interface ItemCardProps {
   data: SimpleItem;
