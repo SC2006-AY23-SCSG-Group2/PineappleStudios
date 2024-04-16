@@ -1,11 +1,15 @@
 import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
+import {getAllPreferencesInTheSystem} from "src/lib/dataRetrieve/getPreferences";
 import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferencesOfUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 
-import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
+import {
+  createNewPreference,
+  deletePreference,
+} from "../../../lib/dataRetrieve/createPreference";
 import {getUserById} from "../../../lib/database/user";
 import {
   SessionData,
@@ -67,11 +71,38 @@ export async function loader({request}: LoaderFunctionArgs) {
       },
     });
   }
-
+  // for (let i = 0; i < 20; i++) {
+  //   await deletePreference("PLACEHOLDER" + i.toString());
+  // }
+  const preferences = await getAllPreferencesInTheSystem();
   let preferenceData: string[] = [];
-  for (let i = 0; i < 20; i++) {
-    await createNewPreference("PLACEHOLDER" + i.toString());
-    preferenceData.push("PLACEHOLDER" + i.toString());
+  if (preferences.length < 15) {
+    // If there are less than 20 preferences, create new ones
+    const additionalPreferences = [
+      "Action",
+      "Comedy",
+      "Drama",
+      "Horror",
+      "Science Fiction",
+      "Fiction",
+      "Non-fiction",
+      "Mystery",
+      "Fantasy",
+      "Biography",
+      "Rock",
+      "Pop",
+      "Hip Hop",
+      "Jazz",
+      "Classical",
+      // Add more preferences as needed
+    ];
+
+    for (const preference of additionalPreferences) {
+      await createNewPreference(preference);
+      preferenceData.push(preference);
+    }
+  } else {
+    preferenceData = preferences;
   }
 
   let userCurrentPreferences = await getPreferencesOfUser(

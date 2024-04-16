@@ -77,7 +77,7 @@ export const updatePreferenceName = async (
 //delete preference
 export const deletePreferenceById = async (preferenceId: number) => {
   try {
-    await prismaClient.tag.delete({
+    await prismaClient.preference.delete({
       where: {
         id: preferenceId,
       },
