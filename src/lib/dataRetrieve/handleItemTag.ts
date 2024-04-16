@@ -1,3 +1,4 @@
+import {isItemInLibrary} from "../database/itemsInLibraries";
 import {
   createRecentItemAssignments,
   deleteRecentItemAssignments,
@@ -8,6 +9,7 @@ import {
   getTagByNameAndUserIdAndItemId,
 } from "../database/tag";
 import {getUserById} from "../database/user";
+import {addItemToLibrary} from "./handleLibraryItems";
 
 // export async function
 // addItemToFavourtie(userId:

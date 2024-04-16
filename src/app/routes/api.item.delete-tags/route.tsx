@@ -85,7 +85,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
     return json({
       success: false,
-      error: {msg: "Unable to add item to some libraries"},
+      error: {msg: "Unable to delete item tag"},
     });
   }
 
