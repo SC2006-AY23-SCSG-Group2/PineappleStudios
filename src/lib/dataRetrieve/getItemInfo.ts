@@ -49,6 +49,7 @@ export async function getItemInfoByItemId(
       const book = await getBookByItemId(itemId);
       content = {
         pageCount: book?.pages ?? undefined,
+        description: book?.description ?? undefined,
       };
       itemType = ItemType.Book;
       break;
@@ -58,6 +59,7 @@ export async function getItemInfoByItemId(
       content = {
         duration: movie?.duration ?? undefined,
         country: item?.country ?? undefined,
+        description: movie?.description ?? undefined,
       };
       itemType = ItemType.Movie;
       break;
