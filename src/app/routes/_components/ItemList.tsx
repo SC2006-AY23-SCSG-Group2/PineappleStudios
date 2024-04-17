@@ -73,11 +73,15 @@ export const ItemList: React.FC<ItemsListProps> = ({
                 key={index}
                 className=" flex-shrink-0"
                 style={{width: `${itemWidth}%`}}>
-                <ItemCard
-                  data={item}
-                  func={() => func(item.id.toString())}
-                  btnContent={btnContent}
-                />
+                {btnContent ? (
+                  <ItemCard
+                    data={item}
+                    func={() => func(item.id.toString())}
+                    btnContent={btnContent}
+                  />
+                ) : (
+                  <ItemCard data={item} func={() => func(item.id.toString())} />
+                )}
               </div>
             ))}
           </div>
