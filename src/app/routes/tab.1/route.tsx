@@ -15,6 +15,7 @@ import React, {useEffect, useState} from "react";
 import {getMultipleSimpleItems} from "../../../lib/dataRetrieve/getItems";
 import {ItemType, SimpleItem} from "../../../lib/interfaces";
 import {commitSession, destroySession, getSession} from "../../session";
+import InfoHover from "../_components/InfoHover";
 import {ItemList} from "../_components/ItemList";
 import {ToastList} from "../_components/ToastList";
 
@@ -85,6 +86,31 @@ export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcherRecommendation = useFetcher<{
+    success: boolean;
+    data: {data: SimpleItem[]} | null;
+    error: {msg: string} | null;
+  }>({
+    key: "recommendation",
+  });
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [getRecommendation, setGetRecommendation] = useState(false);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (!getRecommendation) {
+      fetcherRecommendation.load("/api/recommendation/user");
+      setGetRecommendation(true);
+    }
+  }, [fetcherRecommendation, getRecommendation, setGetRecommendation]);
+
+  const recommendation = fetcherRecommendation.data;
+  const isSubmitting = fetcherRecommendation.state === "submitting";
+  const isLoading = fetcherRecommendation.state === "loading";
+  const isIdle = fetcherRecommendation.state === "idle";
+
   const fetcherAddToLibrary: FetcherWithComponents<{
     success: false;
     error: {msg: string};
@@ -145,6 +171,51 @@ export default function tab_index(): React.JSX.Element {
     );
   }
 
+  function funcContent(data: SimpleItem[] | null | undefined) {
+    return (
+      <>
+        {data &&
+          data.filter((x: SimpleItem) => x.type === ItemType.Song).length >
+            0 && (
+            <>
+              <div className="divider"></div>
+              <ItemList
+                items={data.filter((x: SimpleItem) => x.type === ItemType.Song)}
+                title="Top Music"
+                func={onItemAdd}
+              />
+            </>
+          )}
+        {data &&
+          data.filter((x: SimpleItem) => x.type === ItemType.Movie).length >
+            0 && (
+            <>
+              <div className="divider"></div>
+              <ItemList
+                items={data.filter(
+                  (x: SimpleItem) => x.type === ItemType.Movie,
+                )}
+                title="Top Movies"
+                func={onItemAdd}
+              />
+            </>
+          )}
+        {data &&
+          data.filter((x: SimpleItem) => x.type === ItemType.Book).length >
+            0 && (
+            <>
+              <div className="divider"></div>
+              <ItemList
+                items={data.filter((x: SimpleItem) => x.type === ItemType.Book)}
+                title="Top Books"
+                func={onItemAdd}
+              />
+            </>
+          )}
+      </>
+    );
+  }
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect((): void => {
     if (fetcherAddToLibrary.data && !fetcherAddToLibrary.data.success) {
@@ -156,74 +227,88 @@ export default function tab_index(): React.JSX.Element {
 
   return (
     <>
-      {loaderData?.data && (
-        <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-4xl font-extrabold text-transparent">
-          Today&apos;s Hits
-        </h1>
-      )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Song)
-          .length > 0 && (
-          <>
-            <ItemList
-              items={loaderData?.data.filter(
-                (x: SimpleItem) => x.type === ItemType.Song,
-              )}
-              title="Top Music"
-              func={onItemAdd}
-            />
-            <div className="divider"></div>
-          </>
-        )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Movie)
-          .length > 0 && (
-          <>
-            <ItemList
-              items={loaderData?.data.filter(
-                (x: SimpleItem) => x.type === ItemType.Movie,
-              )}
-              title="Top Movies"
-              func={onItemAdd}
-            />
-            <div className="divider"></div>
-          </>
-        )}
-      {loaderData?.data &&
-        loaderData?.data.filter((x: SimpleItem) => x.type === ItemType.Book)
-          .length > 0 && (
-          <>
-            <ItemList
-              items={loaderData?.data.filter(
-                (x: SimpleItem) => x.type === ItemType.Book,
-              )}
-              title="Top Books"
-              func={onItemAdd}
-            />
-            <div className="divider"></div>
-          </>
-        )}
+      <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-5xl font-extrabold text-transparent">
+        Today&apos;s Hits
+      </h1>
 
-      {(!loaderData.data ||
-        loaderData.data.length +
-          loaderData.data.length +
-          loaderData.data.length ===
-          0) && (
+      <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-4xl font-extrabold text-transparent">
+        For you
+        <span className="pl-2 text-neutral">
+          <InfoHover info="This is based on your recent viewing history." />
+        </span>
+      </h1>
+
+      {(!getRecommendation || isLoading || isSubmitting) && (
         <>
-          <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content text-center">
-              <div className="max-w-md">
-                <h1 className="text-3xl font-bold text-error">
-                  There is recommendations, you may search what you like.
-                </h1>
-                <NavLink className="btn btn-primary" to="/tab/3">
-                  Go to Search Page
-                </NavLink>
-              </div>
-            </div>
+          <div className="flex w-52 flex-col gap-4">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
           </div>
         </>
       )}
+
+      {getRecommendation &&
+        isIdle &&
+        (!recommendation || !recommendation.success) && (
+          <>
+            <div className="hero">
+              <div className="hero-content text-center">
+                <div className="max-w-md">
+                  <h1 className="text-xl font-bold text-error">
+                    {!recommendation
+                      ? "There is no recommendation result for this user, " +
+                        "you can browser more and add more items to your " +
+                        "library first."
+                      : recommendation.error
+                        ? recommendation.error?.msg.toString()
+                        : "There is no recommendation result for this user, " +
+                          "you can browser more and add more items to your " +
+                          "library first."}
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+      {getRecommendation &&
+        isIdle &&
+        recommendation &&
+        recommendation.success && <>{funcContent(recommendation.data?.data)}</>}
+      <div className="divider"></div>
+      <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-4xl font-extrabold text-transparent">
+        What others viewing
+        <span className="pl-2 text-neutral">
+          <InfoHover info="This is based on all our users' viewing history." />
+        </span>
+      </h1>
+
+      {getRecommendation &&
+        isIdle &&
+        (!loaderData.data ||
+          loaderData.data.length +
+            loaderData.data.length +
+            loaderData.data.length ===
+            0) &&
+        !recommendation?.success && (
+          <>
+            <div className="hero">
+              <div className="hero-content text-center">
+                <div className="max-w-md">
+                  <h1 className="text-xl font-bold text-error">
+                    There is recommendations, you may search what you like.
+                  </h1>
+                  <NavLink className="btn btn-primary" to="/tab/3">
+                    Go to Search Page
+                  </NavLink>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
       <ToastList data={toasts} removeToast={removeToast} />
     </>
   );
