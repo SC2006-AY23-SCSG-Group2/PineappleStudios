@@ -1,146 +1,94 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Content Based Recommendation System
+import os
+import random
+import re
+
+import async_lru
 import joblib
 import numpy as np
 import pandas as pd
+from async_lru import alru_cache
+from dotenv import load_dotenv
 from fuzzywuzzy import fuzz, process
 from joblib import Memory
+from openai import OpenAI
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from sklearn.neighbors import NearestNeighbors
 
-movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory = False)
+# print('Start1')
+
+# Load data
+movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory=False)
 songs = pd.read_csv('Datasets_for_content_recommendation/spotify_millsongdata.csv')
 books = pd.read_csv('Datasets_for_content_recommendation/GoogleBookAPIDataset.csv')
 
-
-
-books_df = books.drop(columns = ['id', 'averageRating', 'maturityRating', 'pageCount','Unnamed: 0.1', 'Unnamed: 0'])
+# Drop unnecessary columns
+books_df = books.drop(columns=['id', 'averageRating', 'maturityRating', 'pageCount', 'Unnamed: 0.1', 'Unnamed: 0'])
 movies_df = movies.drop(columns=['id', 'rating', 'certificate', 'duration', 'votes', 'gross_income', 'directors_id', 'year'])
-songs_df = songs.drop(columns = ['link'])
+songs_df = songs.drop(columns=['link'])
 
-
-
-
+# Text preprocessing function
 def preprocess_text(text_series):
-    # Convert to lowercase
-    text_series = text_series.str.lower()
-    # Remove punctuation
-    text_series = text_series.str.replace(r'[^\w\s]', '', regex=True)
-    # Remove numbers
-    text_series = text_series.str.replace(r'\d+', '', regex=True)
-    return text_series
+    return text_series.str.lower().replace(r'[^\w\s]|_\d+', '', regex=True)
 
-# Preprocess the movie names and tags
+# Apply preprocessing
 movies_df['name'] = preprocess_text(movies_df['name'])
 movies_df['genre'] = preprocess_text(movies_df['genre'])
 movies_df['directors_name'] = preprocess_text(movies_df['directors_name'])
 movies_df['stars_name'] = preprocess_text(movies_df['stars_name'])
 movies_df['description'] = preprocess_text(movies_df['description'])
-
-# Preprocess the book title, desc, authors, categories and publishedDate
 books_df['title'] = preprocess_text(books_df['title'])
 books_df['desc'] = preprocess_text(books_df['desc'])
 books_df['authors'] = preprocess_text(books_df['authors'])
 books_df['categories'] = preprocess_text(books_df['categories'])
 books_df['publishedDate'] = preprocess_text(books_df['publishedDate'])
-
 songs_df['song'] = preprocess_text(songs_df['song'])
 songs_df['artist'] = preprocess_text(songs_df['artist'])
 songs_df['text'] = preprocess_text(songs_df['text'])
 
-
-# In[4]:
-
-
-# def save_data_structures():
-#     # TF-IDF and Cosine Similarity for Books
-#     tfidf_vectorizer_books = TfidfVectorizer(stop_words='english')
-#     tfidf_matrix_books = tfidf_vectorizer_books.fit_transform(books_df['desc'])
-#     cosine_sim_books = linear_kernel(tfidf_matrix_books, tfidf_matrix_books)
-#     book_indices = pd.Series(books_df.index, index=books_df['title']).drop_duplicates()
-
-#     # TF-IDF and Nearest Neighbors for Songs
-#     tfidf_vectorizer_songs = TfidfVectorizer(stop_words='english')
-#     tfidf_matrix_songs = tfidf_vectorizer_songs.fit_transform(songs_df['text'] + ' ' + songs_df['artist'])
-#     model_nn_songs = NearestNeighbors(n_neighbors=10, metric='cosine')
-#     model_nn_songs.fit(tfidf_matrix_songs)
-#     song_indices = pd.Series(songs_df.index, index=songs_df['song']).drop_duplicates()
-
-#     # TF-IDF and Nearest Neighbors for Movies
-#     tfidf_vectorizer_movies = TfidfVectorizer(stop_words='english')
-#     tfidf_matrix_movies = tfidf_vectorizer_movies.fit_transform(movies_df['genre'] + ' ' + movies_df['directors_name'] + ' ' + movies_df['stars_name'] + ' ' + movies_df['description'])
-#     model_nn_movies = NearestNeighbors(n_neighbors=10, metric='cosine')
-#     model_nn_movies.fit(tfidf_matrix_movies)
-#     movie_indices = pd.Series(movies_df.index, index=movies_df['name'].str.lower()).drop_duplicates()
-
-#     # Save everything using pickle
-#     with open('data_structures.pkl', 'wb') as f:
-#         pickle.dump((tfidf_matrix_books, cosine_sim_books, book_indices,
-#                      tfidf_matrix_songs, model_nn_songs, song_indices,
-#                      tfidf_matrix_movies, model_nn_movies, movie_indices), f)
-
-# save_data_structures()
-
-def load_data_structures():
-    # Load book structures
-    tfidf_vectorizer_books = joblib.load('tfidf_vectorizer_books.joblib')
-    tfidf_matrix_books = joblib.load('tfidf_matrix_books.joblib')
-    cosine_sim_books = joblib.load('cosine_sim_books.joblib')
-    book_indices = joblib.load('book_indices.joblib')
-        # Load song structures
-    tfidf_vectorizer_songs = joblib.load('tfidf_vectorizer_songs.joblib')
-    tfidf_matrix_songs = joblib.load('tfidf_matrix_songs.joblib')
-    model_nn_songs = joblib.load('model_nn_songs.joblib')
-    song_indices = joblib.load('song_indices.joblib')
-
-    # Load movie structures
-    tfidf_vectorizer_movies = joblib.load('tfidf_vectorizer_movies.joblib')
-    tfidf_matrix_movies = joblib.load('tfidf_matrix_movies.joblib')
-    model_nn_movies = joblib.load('model_nn_movies.joblib')
-    movie_indices = joblib.load('movie_indices.joblib')
-
-    return {
-        'tfidf_vectorizer_books': tfidf_vectorizer_books, 
-        'tfidf_matrix_books': tfidf_matrix_books,
-        'cosine_sim_books': cosine_sim_books, 
-        'book_indices': book_indices,
-        'tfidf_vectorizer_songs': tfidf_vectorizer_songs, 
-        'tfidf_matrix_songs': tfidf_matrix_songs,
-        'model_nn_songs': model_nn_songs, 
-        'song_indices': song_indices,
-        'tfidf_vectorizer_movies': tfidf_vectorizer_movies, 
-        'tfidf_matrix_movies': tfidf_matrix_movies,
-        'model_nn_movies': model_nn_movies, 
-        'movie_indices': movie_indices
-    }
-
-data_structures = load_data_structures()
-
-
-
-
-# In[6]:
-
-
+# print('Start2')
 # Initialize joblib Memory to cache results
 mem = Memory(location='./joblib_cache', verbose=0)
 
+# Define function to load precomputed data structures
+def load_data_structures():
+    structures = ['tfidf_vectorizer_books', 'tfidf_matrix_books', 'cosine_sim_books', 'book_indices',
+                  'tfidf_vectorizer_songs', 'tfidf_matrix_songs', 'model_nn_songs', 'song_indices',
+                  'tfidf_vectorizer_movies', 'tfidf_matrix_movies', 'model_nn_movies', 'movie_indices']
+    return {s: joblib.load(f'{s}.joblib') for s in structures}
+
+data_structures = load_data_structures()
+# print('LOADED DATA STRUCTURES')
+# Define function to get cached best match
+#@alru_cache(maxsize=32)
 @mem.cache
 def get_cached_best_match(title, choice_keys):
-    # Simulate process.extractOne (to be replaced with your actual fuzzy matching logic)
     return process.extractOne(title, choice_keys, scorer=fuzz.WRatio)
 
-@mem.cache
+# Define function to get recommendations
+
+# @alru_cache(maxsize=32)
+# @mem.cache
 def get_recommendations(model_nn, media_title, data_frame, indices, column_name, vectorizer, tfidf_matrix=None, is_book=False):
+    # title = media_title.lower().strip()
+    # choice_keys = indices.index.tolist()
+    # print("ENTERED getRecommendation")
     title = media_title.lower().strip()
     choice_keys = indices.index.tolist()
+    
+    # print("Type of choice_keys:", type(choice_keys))  # Debugging line
+    # print("Contents of choice_keys:", choice_keys[:5])  # Print first 5 to check
+
 
     # Transform the new input using the saved TF-IDF vectorizer
     @mem.cache
     def get_tfidf_input(media_title, vectorizer):
         return vectorizer.transform([media_title])
 
+    # print("Calling get_tfidf_input with:", media_title, "[Type:", type(media_title), "]")
     tfidf_input = get_tfidf_input(media_title, vectorizer)
 
     @mem.cache
@@ -153,11 +101,12 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
     if title in choice_keys:
         idx = indices[title]
     else:
+        # print("Calling get_cached_best_match with:", title, "[Type:", type(title), "] and choice_keys")
         closest_match, _ = get_cached_best_match(title, choice_keys)
         idx = indices.get(closest_match, None)
 
     if idx is None:
-        print(f"No close match found for '{media_title}'.")
+        # print(f"No close match found for '{media_title}'.")
         return []
 
     if isinstance(idx, (pd.Series, np.ndarray)):
@@ -172,11 +121,14 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
         for i in top_indices:
             if len(recommendations) >= 2:
                 break
+            # print("HELLO DATAFRAME")
             rec = data_frame.iloc[i][column_name]
+            # print("Type of rec before adding to set:", type(rec))  # This will clarify what type is being added.
             if rec not in seen:
                 seen.add(rec)
                 recommendations.append(rec)
     else:
+        # print("Calling get_nn_results with tfidf_input shape:", tfidf_input.shape)
         distances, nn_indices = get_nn_results(tfidf_input, model_nn)
         for i in nn_indices.flatten()[1:]:
             if len(recommendations) >= 2:
@@ -187,130 +139,92 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
                 recommendations.append(rec)
 
     return recommendations
-def get_all_recommendations(media_title):
-    # Get recommendations for books
-    book_recommendations = get_recommendations(None, media_title, books_df, data_structures['book_indices'], "title", data_structures['tfidf_vectorizer_books'], tfidf_matrix=data_structures['tfidf_matrix_books'], is_book = True)
-    
-    # Get recommendations for songs
-    song_recommendations = get_recommendations(data_structures['model_nn_songs'], media_title, songs_df, data_structures['song_indices'], "song", data_structures['tfidf_vectorizer_songs'])
-    
-    # Get recommendations for movies
-    movie_recommendations = get_recommendations(data_structures['model_nn_movies'], media_title, movies_df, data_structures['movie_indices'], "name", data_structures['tfidf_vectorizer_movies'])
-    
-    return book_recommendations, song_recommendations, movie_recommendations
+@alru_cache(maxsize=32)
+async def get_all_recommendations(media_title):
+    try:
+        # print("Starting book recommendations.")
+        book_recommendations = get_recommendations(None, media_title, books_df, data_structures['book_indices'], "title", data_structures['tfidf_vectorizer_books'], tfidf_matrix=data_structures['tfidf_matrix_books'], is_book=True)
+        # print("Books recommended:", book_recommendations)
 
+        # print("Starting song recommendations.")
+        song_recommendations = get_recommendations(data_structures['model_nn_songs'], media_title, songs_df, data_structures['song_indices'], "song", data_structures['tfidf_vectorizer_songs'])
+        # print("Songs recommended:", song_recommendations)
 
-import os
-import re  # Import the re module
+        # print("Starting movie recommendations.")
+        movie_recommendations = get_recommendations(data_structures['model_nn_movies'], media_title, movies_df, data_structures['movie_indices'], "name", data_structures['tfidf_vectorizer_movies'])
+        # print("Movies recommended:", movie_recommendations)
 
-# import openai
-from dotenv import load_dotenv
-from openai import OpenAI
+        return book_recommendations, song_recommendations, movie_recommendations
+    except Exception as e:
+        print(f"Error in get_all_recommendations: {e}")
+        raise e
+# Compile the regular expressions once
+cleaning_patterns = [
+    re.compile(r'^\d+\.\s*'),  # Leading numbers like "1. "
+    re.compile(r'"'),  # Double quotes
+    re.compile(r'\s-\s.*'),  # Text after " - "
+    re.compile(r'\sby\s.*'),  # Text after " by "
+    re.compile(r'\sfrom\s.*'),  # Text after " from "
+    re.compile(r'\(.*?\)'),  # Text in parentheses
+    re.compile(r'\s?directed.*'),  # Text after " directed", even if it starts at the beginning
+    re.compile(r'\s?starring.*'),  # Text after " starring"
+    # Add more patterns here if there are other similar patterns to clean
+]
 
-
-
-
-# Load environment variables from .env file
-load_dotenv()
-client = OpenAI(
-    # This is the default and can be omitted
-    api_key= os.environ.get("OPENAI_API_KEY"),
-)
-# Retrieve the API key
-# openai_api_key = os.getenv('OPENAI_API_KEY')
-
-# with open('api_key.txt', 'r') as file:
-#     openai.api_key = file.readline().strip().strip("'")
-# openai.api_key = openai_api_key
-    
-@mem.cache    
-def generate_LLM_recommendation(media_name):
-    # Construct the prompt using the media name.
+# Define function to generate LLM recommendation
+# @mem.cache    
+@alru_cache(maxsize=32)
+async def generate_LLM_recommendation(media_name):
+    load_dotenv()
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     prompt = f"recommend me books, movies and songs similar to '{media_name}'"
-
-    # Get the response from the OpenAI API.
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    # Access the message content directly, instead of treating the response as a dictionary.
+    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
     content = response.choices[0].message.content.strip()
-
-    # Extract the content from the response.
-    #content = response['choices'][0]['message']['content'].strip()
-    
+    # def clean_item(item):
+    #     return re.sub(r'^\d+\.\s*|".*?"|\(.*?\)|\sby\s.*|-.*', '', item).strip()
     def clean_item(item):
-        # Remove leading numbers and periods like "1. ".
-        item = re.sub(r'^\d+\.\s*', '', item)
-        # Remove double quotes.
-        item = item.replace('"', '')
-        # Remove any text after a dash which usually contains the author's name or year.
-        item = re.sub(r' -.*', '', item)
-        # Remove anything in parentheses, often used for additional info like years.
-        item = re.sub(r'\(.*\)', '', item).strip()
-        # Remove any following "by" and any text after it, which usually contains the author's name or artist.
-        item = re.sub(r'\sby\s.*', '', item).strip()
-        return item
+        for pattern in cleaning_patterns:
+            item = pattern.sub('', item)
+        return item.strip()
 
-    # Split the response into sections and then into individual items.
-    sections = content.split('\n\n')  # Assuming each section is separated by two newlines.
-    recommendations = {}
-    
-    # Process each section to extract and clean items.
-    for section in sections:
-        # Split the section into a title and items.
-        title, *items = section.split('\n')
-        # Remove any leading or trailing characters like ':' from the title.
-        title = title.replace(':', '').strip()
-        
-        # Clean each item and store them.
-        recommendations[title] = [clean_item(item) for item in items if item]
+  
+    sections = content.split('\n\n')
+    recommendations = {section.split('\n')[0].replace(':', '').strip(): [clean_item(item) for item in section.split('\n')[1:]] for section in sections}
+    return recommendations.get('Books', []), recommendations.get('Movies', []), recommendations.get('Songs', [])
 
-    # Accessing the lists and assigning them to variables.
-    books = recommendations.get('Books', [])
-    movies = recommendations.get('Movies', [])
-    songs = recommendations.get('Songs', [])
-
-    # Return the cleaned lists.
-    return books, movies, songs
-
-
-
-
-
-
-# # Combined Recommendation System
-
-# ### Now we shall combine both recommendation systems and shuffle them so as to not over rely on either one  when making recommendations
-
-
-
-import random
-
-
-@mem.cache
-def combined_recommendations(media_title):
+# Define function to combine recommendations
+# @mem.cache
+@alru_cache(maxsize=32)
+async def combined_recommendations(media_title):
     # Fetch LLM recommendations
-    llm_books, llm_movies, llm_songs = generate_LLM_recommendation(media_title)
-
+    llm_books, llm_movies, llm_songs = await generate_LLM_recommendation(media_title)
+    print("LLM BOOKS:")
+    print(llm_books)
     # Fetch content-based recommendations
-    content_books, content_songs, content_movies = get_all_recommendations(media_title)
+    content_books, content_songs, content_movies = await get_all_recommendations(media_title)
 
-    # Function to interleave recommendations
-    def interleave_lists(list1, list2):
-        combined = [val for pair in zip(list1, list2) for val in pair]
-        combined.extend(list1[len(list2):])
-        combined.extend(list2[len(list1):])
+    # Function to pick one recommendation from each source, if available
+    def pick_one_from_each(llm_list, content_list):
+        combined = []
+        # Pick the first available from the LLM list
+        for item in llm_list:
+            if item:  # Ensure the item is not empty
+                combined.append(item)
+                break
+        # Pick the first available from the content list that is not already in combined
+        for item in content_list:
+            if item and item not in combined:  # Ensure the item is not empty and not a duplicate
+                combined.append(item)
+                break
         return combined
-        # Interleave LLM recommendations with content-based recommendations
-    combined_books = interleave_lists(llm_books, content_books)
-    combined_movies = interleave_lists(llm_movies, content_movies)
-    combined_songs = interleave_lists(llm_songs, content_songs)
 
-    # Shuffle the combined lists to avoid over-relying on one source
-    random.shuffle(combined_books)
-    random.shuffle(combined_movies)
-    random.shuffle(combined_songs)
+    # Pick one from each list for books, movies, and songs
+    combined_books = pick_one_from_each(llm_books, content_books)
+    combined_movies = pick_one_from_each(llm_movies, content_movies)
+    combined_songs = pick_one_from_each(llm_songs, content_songs)
 
-    return combined_books[:2], combined_movies[:2], combined_songs[:2]
+    return combined_books, combined_movies, combined_songs
+
+
+
+
