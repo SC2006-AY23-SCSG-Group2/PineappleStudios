@@ -7,6 +7,7 @@ import {
   getItemInfoBySrcId,
 } from "../../../lib/dataRetrieve/getItemInfo";
 import {destroySession, getSession} from "../../session";
+import {ItemInfoMutex} from "./MUTEX";
 import {BrowserTopNav} from "./components/BrowserTopNav";
 
 export async function loader({params, request}: LoaderFunctionArgs) {
@@ -33,6 +34,8 @@ export async function loader({params, request}: LoaderFunctionArgs) {
   }
 
   const id = params.id;
+  const user = +session.data.userId;
+
   if (!id) {
     return json({
       success: false,
@@ -43,9 +46,11 @@ export async function loader({params, request}: LoaderFunctionArgs) {
 
   let itemInfo;
   if (isNaN(+id)) {
-    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+    await ItemInfoMutex.runExclusive(async () => {
+      itemInfo = await getItemInfoBySrcId(id, user);
+    });
   } else if (!isNaN(+id)) {
-    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
+    itemInfo = await getItemInfoByItemId(+id, user);
   }
 
   const title: string = itemInfo?.title ?? "Browser Item";
@@ -71,7 +76,7 @@ export default function tab(): React.JSX.Element {
               key={"btn-sm"}
               className="btn btn-circle lg:hidden"
               onClick={() => {
-                navigate("/tab/2");
+                navigate("/tab/1");
               }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
