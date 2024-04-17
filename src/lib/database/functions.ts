@@ -98,10 +98,7 @@ export function getItemInfoExample(id: string): ItemInfo | undefined {
     id: +id,
     title: `title ${id}`,
     isInLibrary: !isNaN(+id),
-    img: `https://picsum.photos/id/${randomInteger(0, 1084)}/200.webp`, // string
-    // of
-    // the
-    // url
+    img: `https://picsum.photos/id/${randomInteger(0, 1084)}/200.webp`,
     genre: ["genre1", "genre2"],
     tag: ["genre1", "genre2"],
     country: "Singapore",
