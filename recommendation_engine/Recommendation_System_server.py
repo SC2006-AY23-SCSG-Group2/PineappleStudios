@@ -1,25 +1,23 @@
-
-
 import random
 
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-
+from quart import Quart, jsonify, request
+from quart_cors import cors
 from Recommendation_System import (combined_recommendations,
                                    generate_LLM_recommendation,
                                    get_all_recommendations,
                                    load_data_structures)
 
-app = Flask(__name__)
-CORS(app)
+app = Quart(__name__)
+cors(app)
 
 data_structures = load_data_structures()
 
 @app.route('/recommend/llm', methods=['POST'])
-def recommend_llm():
+async def recommend_llm():
     try:
-        media_name = request.json['media_name']
-        books, movies, songs = generate_LLM_recommendation(media_name)
+        request_data = await request.get_json()
+        media_name = request_data['media_name']
+        books, movies, songs = await generate_LLM_recommendation(media_name)
         response = {
             'books': books,
             'movies': movies,
@@ -30,10 +28,15 @@ def recommend_llm():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/recommend/content', methods=['POST'])
-def recommend_content():
+async def recommend_content():
     try:
-        media_name = request.json['media_name']
-        books, movies, songs = get_all_recommendations(media_name)
+        request_data = await request.get_json()
+        # print('REQUEST SUCCESSFUL')
+        media_name = request_data['media_name']
+        # print("PRINTING MEDIA NAME..... (request sucessful)")
+        # print(media_name)
+        books, movies, songs = await get_all_recommendations(media_name)
+        # print('GOT RESPONSE')
         response = {
             'books': books,
             'movies': movies,
@@ -44,10 +47,11 @@ def recommend_content():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/recommend/combined', methods=['POST'])
-def recommend_combined():
+async def recommend_combined():
     try:
-        media_name = request.json['media_name']
-        combined_books, combined_movies, combined_songs = combined_recommendations(media_name)
+        request_data = await request.get_json()
+        media_name = request_data['media_name']
+        combined_books, combined_movies, combined_songs = await combined_recommendations(media_name)
         response = {
             'books': combined_books,
             'movies': combined_movies,
@@ -59,10 +63,3 @@ def recommend_combined():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-# In[ ]:
-
-
-
-
