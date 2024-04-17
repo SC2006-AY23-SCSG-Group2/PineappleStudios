@@ -8,6 +8,7 @@ import {
   deleteTag,
   getTagByNameAndUserIdAndItemId,
 } from "../database/tag";
+import {getNumOfFavTag} from "../database/tag";
 import {getUserById} from "../database/user";
 import {addItemToLibrary} from "./handleLibraryItems";
 
@@ -98,4 +99,14 @@ export async function removeTagForItem(
     console.log("Tag : ", tagName, " is ALREADY removed for userId : ", userId);
   }
   return tag;
+}
+
+export async function getNumOfFavItem(userId: number) {
+  const user = await getUserById(userId);
+  if (!user) {
+    console.log("User for userId " + userId + " is invalid.");
+    return 0;
+  }
+
+  return await getNumOfFavTag(userId);
 }

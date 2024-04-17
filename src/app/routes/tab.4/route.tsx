@@ -79,8 +79,8 @@ export default function tab_index(): React.JSX.Element {
     email: loaderData?.user.email ?? "Email",
     date: loaderData?.user.dateJoined ?? "Date",
     time: loaderData?.user.timeUsedAppInMins ?? 0,
-    numOfLikes: loaderData?.user.numberOfLikedItem ?? 0,
-    numOfRatings: loaderData?.user.numberOfRating ?? 0,
+    numOfItemInLibrary: loaderData?.user.countItemsInLibrary ?? 0,
+    numOfavoriteItem: loaderData?.user.numberOfFavItem ?? 0,
   };
 
   return (

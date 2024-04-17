@@ -4,6 +4,7 @@ import {getAllPreferencesInProfile} from "../database/preferenceInProfile";
 import {getUserById} from "../database/user";
 import {SimpleItem, User} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
+import {getNumOfFavItem} from "./handleItemTag";
 
 export async function getUserInfoByUserId(userId: number): Promise<User> {
   const user = await getUserById(userId);
@@ -40,11 +41,15 @@ export async function getUserInfoByUserId(userId: number): Promise<User> {
 
   const count = await countItemsInLibrary(user.libraryId);
   const Name = user.userName ? user.userName : "";
+
+  const numberOfFavouriteItem = await getNumOfFavItem(userId);
+
   return {
     id: user.id,
     email: user.email,
     name: Name,
     //dateJoined: user.profile.registeredDate,
+    numberOfFavItem: numberOfFavouriteItem,
     dateJoined: formattedDateJoined,
     numberOfLikedItem: user.profile.likedItem,
     numberOfRating: user.rate.length,

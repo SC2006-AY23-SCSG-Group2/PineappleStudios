@@ -10,8 +10,8 @@ export interface userData {
   email: string;
   date: string;
   time: number;
-  numOfLikes: number;
-  numOfRatings: number;
+  numOfItemInLibrary: number;
+  numOfavoriteItem: number;
 }
 
 interface UserProfileCardProps {
@@ -42,12 +42,16 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
           </div>
 
           <div className="stat">
-            <div className="stat-title">Liked items</div>
-            <div className="stat-value max-xl:text-xl">{user.numOfLikes}</div>
+            <div className="stat-title">Items in Library</div>
+            <div className="stat-value max-xl:text-xl">
+              {user.numOfItemInLibrary}
+            </div>
           </div>
           <div className="stat">
-            <div className="stat-title">Ratings Given</div>
-            <div className="stat-value max-xl:text-xl">{user.numOfRatings}</div>
+            <div className="stat-title">Favourites</div>
+            <div className="stat-value max-xl:text-xl">
+              {user.numOfavoriteItem}
+            </div>
           </div>
         </div>
         <div className="card-actions justify-end">
