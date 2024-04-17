@@ -76,37 +76,35 @@ export async function loader({request}: LoaderFunctionArgs) {
   // }
   const preferences = await getAllPreferencesInTheSystem();
   let preferenceData: string[] = [];
-  const additionalPreferences = Array.from(
-    new Set([
-      "Action",
-      "Animation",
-      "Comedy",
-      "Crime",
-      "Documentary",
-      "Drama",
-      "Family",
-      "Fantasy",
-      "Horror",
-      "Romance",
-      "Sci-Fi",
-      "Thriller",
-      "Western",
-      "Biography",
-      "Self-help",
-      "Travel",
-      "Science",
-      "Poetry",
-      "Pop",
-      "Jazz",
-      "Ambient",
-      "Reggaeton",
-      "Indie Folk",
-      "K-Pop",
-    ]),
-  );
-  if (preferences.length < additionalPreferences.length) {
-    // If there are less than 20 preferences, create new ones
+  const additionalPreferences = [
+    "Action",
+    "Animation",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "Horror",
+    "Romance",
+    "Sci-Fi",
+    "Thriller",
+    "Western",
+    "Biography",
+    "Self-help",
+    "Travel",
+    "Science",
+    "Poetry",
+    "Pop",
+    "Jazz",
+    "Ambient",
+    "Reggaeton",
+    "Indie Folk",
+    "K-Pop",
+  ];
 
+  if (preferences.length < additionalPreferences.length) {
+    // If there are less than 24 preferences, create new ones
     for (const preference of additionalPreferences) {
       await createNewPreference(preference);
       preferenceData.push(preference);
