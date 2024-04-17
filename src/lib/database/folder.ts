@@ -1,11 +1,9 @@
 import {prismaClient} from "./prisma";
 
-const prisma = prismaClient;
-
 // Create a new folder
 export const createFolder = async (name: string, libraryId: number) => {
   try {
-    const newFolder = await prisma.folder.create({
+    const newFolder = await prismaClient.folder.create({
       data: {
         name: name,
         Library: {
@@ -25,7 +23,7 @@ export const createFolder = async (name: string, libraryId: number) => {
 // Get folder by ID
 export const getFolderById = async (folderId: number) => {
   try {
-    const folder = await prisma.folder.findUnique({
+    const folder = await prismaClient.folder.findUnique({
       where: {
         id: folderId,
       },
@@ -40,7 +38,7 @@ export const getFolderById = async (folderId: number) => {
 // Update folder name
 export const updateFolderName = async (folderId: number, name: string) => {
   try {
-    const updatedFolder = await prisma.folder.update({
+    const updatedFolder = await prismaClient.folder.update({
       where: {
         id: folderId,
       },
@@ -61,7 +59,7 @@ export const toggleIsSeries = async (folderId: number) => {
     let newValue;
     if (folder?.isSeries == false) newValue = true;
     else newValue = false;
-    const updatedFolder = await prisma.folder.update({
+    const updatedFolder = await prismaClient.folder.update({
       where: {
         id: folderId,
       },
@@ -78,7 +76,7 @@ export const toggleIsSeries = async (folderId: number) => {
 // Delete folder by ID
 export const deleteFolderById = async (folderId: number) => {
   try {
-    await prisma.folder.delete({
+    await prismaClient.folder.delete({
       where: {
         id: folderId,
       },
