@@ -123,7 +123,12 @@ export default function Login(): React.JSX.Element {
               </p>
             ) : null}
 
-            <TextField id={"password"} label={"Password"} type={"password"} showToggle={true}/>
+            <TextField
+              id={"password"}
+              label={"Password"}
+              type={"password"}
+              showToggle={true}
+            />
 
             {actionData ? (
               <p className="form-control">

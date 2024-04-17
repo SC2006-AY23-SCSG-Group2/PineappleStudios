@@ -311,14 +311,14 @@ export default function tab_index(): React.JSX.Element {
 
       {(isSubmitting || isLoading) && (
         <>
-          {/*<div className="hero flex w-full bg-base-200">*/}
-          <div className="hero-content grow text-center">
-            <div className="max-w-md">
-              <h1 className="text-5xl font-bold">Loading...</h1>
-              <span className="loading loading-spinner loading-lg"></span>
+          <div className="hero">
+            <div className="hero-content text-center">
+              <div className="max-w-md">
+                <h1 className="text-5xl font-bold">Loading...</h1>
+                <span className="loading loading-spinner loading-lg"></span>
+              </div>
             </div>
           </div>
-          {/*</div>*/}
         </>
       )}
 

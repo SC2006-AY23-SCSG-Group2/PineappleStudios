@@ -14,21 +14,23 @@ type FormData = {
   confirm_password: string;
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
   const formData = await request.formData();
   const data: FormData = {
     password: formData.get("password") as string,
     confirm_password: formData.get("confirm_password") as string,
   };
 
-  const errors: { [key: string]: string } = {};
+  const errors: {[key: string]: string} = {};
 
   if (!data.password) {
     errors.password = "Invalid Password: Password cannot be empty";
   } else {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
     if (!passwordRegex.test(data.password)) {
-      errors.password = "Password must be at least 8 characters long, include a number, an uppercase letter, and a symbol.";
+      errors.password =
+        "Password must be at least 8 characters long, include a number, an uppercase letter, and a symbol.";
     }
   }
 
@@ -37,7 +39,10 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return json({ errors, value: data });
+    return json({
+      errors,
+      value: data,
+    });
   }
 
   // Assume that email is the identifier for the user and is available in the session or from another source.
@@ -49,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return redirect("/login");
   } else {
     // If the user is not found, send an error message.
-    return json({ error: "User not found." });
+    return json({error: "User not found."});
   }
 }
 
@@ -63,7 +68,7 @@ type ActionData = {
 export default function tab_index(): React.JSX.Element {
   const navigation = useNavigation();
   const actionData = useActionData<ActionData>();
-  
+
   return (
     <>
       <div id={"login-form"}>
@@ -80,13 +85,13 @@ export default function tab_index(): React.JSX.Element {
               type={"password"}
             />
 
-{actionData?.errors?.password && (
-  <p className="form-control">
-    <label htmlFor="wrong-password" className="label text-error">
-      {actionData.errors.password}
-    </label>
-  </p>
-)}
+            {actionData?.errors?.password && (
+              <p className="form-control">
+                <label htmlFor="wrong-password" className="label text-error">
+                  {actionData.errors.password}
+                </label>
+              </p>
+            )}
 
             <TextField
               id={"confirm_password"}
@@ -94,13 +99,15 @@ export default function tab_index(): React.JSX.Element {
               type={"password"}
             />
 
-{actionData?.errors?.confirm_password && (
-  <p className="form-control">
-    <label htmlFor="wrong-confirm_password" className="label text-error">
-      {actionData.errors.confirm_password}
-    </label>
-  </p>
-)}
+            {actionData?.errors?.confirm_password && (
+              <p className="form-control">
+                <label
+                  htmlFor="wrong-confirm_password"
+                  className="label text-error">
+                  {actionData.errors.confirm_password}
+                </label>
+              </p>
+            )}
 
             <p className="form-control mb-3 mt-6">
               <button

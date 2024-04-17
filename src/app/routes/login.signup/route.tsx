@@ -1,10 +1,16 @@
-import {ActionFunctionArgs, json, redirect, Session, SessionData} from "@remix-run/node";
-import {Form, Link, NavLink, useActionData, useNavigation} from "@remix-run/react";
-import React, { useState } from "react";
+import {
+  ActionFunctionArgs,
+  Session,
+  SessionData,
+  json,
+  redirect,
+} from "@remix-run/node";
+import {Form, NavLink, useActionData, useNavigation} from "@remix-run/react";
+import React, {useState} from "react";
+import {SessionFlashData, commitSession, getSession} from "src/app/session";
 import {createNewUser} from "src/lib/dataRetrieve/createUser";
 
 import {TextField} from "../_components/TextField";
-import { commitSession, getSession, SessionFlashData } from "src/app/session";
 
 //import {action} from "../../../lib/connection/signup"
 
@@ -12,7 +18,7 @@ type FormData = {
   userName: string;
   email: string;
   password: string;
-  confirmPassword: string; 
+  confirmPassword: string;
 };
 
 export async function action({request}: ActionFunctionArgs) {
@@ -34,10 +40,12 @@ export async function action({request}: ActionFunctionArgs) {
     errors.email = "Invalid Email";
   }
 
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
 
   if (!data.password || !passwordRegex.test(data.password)) {
-    errors.password = "Password must be at least 8 characters long, include a number, an uppercase letter, and a symbol.";
+    errors.password =
+      "Password must be at least 8 characters long, include a number, an uppercase letter, and a symbol.";
   }
 
   if (data.password !== data.confirmPassword) {
@@ -123,7 +131,12 @@ export default function tab_index(): React.JSX.Element {
               </p>
             ) : null}
 
-            <TextField id="password" label="Password" type="password" showToggle={true} />
+            <TextField
+              id="password"
+              label="Password"
+              type="password"
+              showToggle={true}
+            />
 
             {actionData ? (
               <p className="form-control max-sm:max-w-64 max-xs:max-w-48 sm:w-80">
@@ -133,11 +146,18 @@ export default function tab_index(): React.JSX.Element {
               </p>
             ) : null}
 
-            <TextField id="confirmPassword" label="Confirm Password" type="password" showToggle={true} />
+            <TextField
+              id="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              showToggle={true}
+            />
 
             {actionData && actionData.errors.confirmPassword ? (
               <p className="form-control">
-                <label htmlFor={"wrong-confirm-password"} className="label text-error">
+                <label
+                  htmlFor={"wrong-confirm-password"}
+                  className="label text-error">
                   {actionData.errors.confirmPassword}
                 </label>
               </p>
