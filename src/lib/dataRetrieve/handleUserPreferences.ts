@@ -106,7 +106,7 @@ export async function getPreferencesOfUser(userId: number) {
   const user = await getUserById(userId);
   if (!user) {
     console.log("User for userId: ", userId, " is not created.");
-    return;
+    return [];
   }
 
   const preferenceAssignments = await getAllPreferencesInProfile(
