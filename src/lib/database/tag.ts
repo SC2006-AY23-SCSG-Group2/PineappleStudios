@@ -114,3 +114,18 @@ export const getTagsFromItem = async (itemId: number, userId: number) => {
     console.error("Error fetching tags:", error);
   }
 };
+
+export const getNumOfFavTag = async (userId: number) => {
+  try {
+    const count = await prismaClient.tag.count({
+      where: {
+        userId: userId,
+        name: "favourite",
+      },
+    });
+    return count;
+  } catch (error) {
+    console.error("Error finding tags:", error);
+    return 0;
+  }
+};

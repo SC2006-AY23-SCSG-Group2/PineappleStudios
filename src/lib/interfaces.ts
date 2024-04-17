@@ -6,6 +6,7 @@ export type User = {
   dateJoined: string;
   numberOfLikedItem: number;
   numberOfRating: number;
+  numberOfFavItem: number;
   timeUsedAppInMins: number;
   history?: SimpleItem[];
   countItemsInLibrary: number;
