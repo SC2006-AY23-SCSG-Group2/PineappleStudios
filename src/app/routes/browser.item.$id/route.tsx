@@ -200,6 +200,11 @@ export default function tab_index(): React.JSX.Element {
                 Page Count: {(content as BookContent).pageCount}
               </p>
             )}
+            {(content as BookContent).description && (
+              <p className="mt-2 block text-lg">
+                Description: {(content as BookContent).description}
+              </p>
+            )}
           </>
         );
       }
@@ -215,6 +220,11 @@ export default function tab_index(): React.JSX.Element {
             {(content as MovieContent).country && (
               <p className="mt-2 block text-lg">
                 Country: {(content as MovieContent).country}
+              </p>
+            )}
+            {(content as MovieContent).description && (
+              <p className="mt-2 block text-lg">
+                Description: {(content as MovieContent).description}
               </p>
             )}
           </>
