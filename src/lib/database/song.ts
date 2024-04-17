@@ -459,11 +459,6 @@ export const getSongDetailsRequestById = async (srcId: string) => {
   const parts = srcId.split("+");
   const id = parts[1];
   const url = `https://api.spotify.com/v1/tracks/${encodeURIComponent(id)}`;
-  const millisToMinutesAndSeconds = (millis: number) => {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = ((millis % 60000) / 1000).toFixed(0);
-    return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
-  };
   const millisToSeconds = (millis: number): number => {
     return Math.floor(millis / 1000);
   };
@@ -479,6 +474,14 @@ export const getSongDetailsRequestById = async (srcId: string) => {
     // console.log("Response status:", response.ok);
 
     const responseData = await response.json();
+    const artist_id = responseData?.artists.map((artist: any) => artist.id);
+    const url2 = `https://api.spotify.com/v1/artists/${encodeURIComponent(artist_id)}`;
+    const response2 = await fetch(url2, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const responseData2 = await response2.json();
     // console.log("Response data:", responseData);
 
     if (response.ok) {
@@ -487,11 +490,12 @@ export const getSongDetailsRequestById = async (srcId: string) => {
         album: responseData?.album?.name || "",
         srcId: id,
         itemTitle: responseData?.name || "",
-        artist:
+        artists:
           responseData?.artists?.map((artist: any) => artist.name).join(", ") ||
           "",
         thumbnailUrl: responseData?.album?.images?.[0]?.url || "",
-        genre: responseData?.album?.genres?.join(", ") || "",
+        genre: responseData2?.genres.join(", "),
+        //genre: responseData?.artists?.map((artist: any) => artist.genres).join(", ")|| responseData, // Check if artists and genres exist
         releaseDate: responseData?.album?.release_date || "",
         language: "English",
         duration: millisToSeconds(responseData.duration_ms),

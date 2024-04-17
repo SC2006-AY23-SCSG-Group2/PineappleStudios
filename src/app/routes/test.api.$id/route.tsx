@@ -303,40 +303,42 @@
 //   }
 // }
 // -----------------------handle api ------------------------------------------
-// import { LoaderFunctionArgs, json } from "@remix-run/node";
-// import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
-// import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
-// import { getSearchAPI, handleBookSearchAPI, handleMovieSearchAPI,handleSongSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
+import { LoaderFunctionArgs, json } from "@remix-run/node";
+import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
+import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
+import { getSearchAPI, handleBookSearchAPI, handleMovieSearchAPI,handleSongSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
+import { getSongDetailsRequest, getSongDetailsRequestById } from "src/lib/database/song";
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-//   try {
-//     // Invoke the handleSearchAPI function
-//     const searchData = await handleMovieSearchAPI("Harry Potter");
+export async function loader({ request }: LoaderFunctionArgs) {
+  try {
+    // Invoke the handleSearchAPI function
+    const id = "song+11dFghVXANMlKmJXsNCbNl";
+    const searchData = await getSongDetailsRequestById(id);
 
-//     // Log the search data
-//     console.log("Search Data:", searchData);
+    // Log the search data
+    console.log("Search Data:", searchData);
 
-//     // Return the search data
-//     return json(
-//       {
-//         success: true,
-//         data: searchData,
-//         error: {},
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Error:", error);
-//     return json(
-//       {
-//         success: false,
-//         data: {},
-//         error: { msg: "An error occurred while fetching search results" },
-//       },
-//       { status: 500 }
-//     );
-//   }
-// }
+    // Return the search data
+    return json(
+      {
+        success: true,
+        data: searchData,
+        error: {},
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return json(
+      {
+        success: false,
+        data: {},
+        error: { msg: "An error occurred while fetching search results" },
+      },
+      { status: 500 }
+    );
+  }
+}
 
 //------------------------------------handle folder---------------------------------------
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
@@ -417,39 +419,39 @@
 //     );
 //   }
 // }
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { getSongDetailsRequest, getSongDetailsRequestById } from "src/lib/database/song";
-import { getMovieDetailsRequestById } from "src/lib/database/movie";
-import { getSpotifyTokens } from "src/lib/database/spotify";
-import { getBookDetailsRequestById } from "src/lib/database/book";
+// import { LoaderFunctionArgs, json } from "@remix-run/node";
+// import { getSongDetailsRequest, getSongDetailsRequestById } from "src/lib/database/song";
+// import { getMovieDetailsRequestById } from "src/lib/database/movie";
+// import { getSpotifyTokens } from "src/lib/database/spotify";
+// import { getBookDetailsRequestById } from "src/lib/database/book";
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const search = "shape of you";
-  const song_id = "song+54SMw8TnDcuieolVRXBmni"
-  const movie_id = "movie+tt1201607"
-  const book_id = "book+XeDzzwEACAAJ"
+// export async function loader({ request }: LoaderFunctionArgs) {
+//   const search = "shape of you";
+//   const song_id = "song+54SMw8TnDcuieolVRXBmni"
+//   const movie_id = "movie+tt1201607"
+//   const book_id = "book+XeDzzwEACAAJ"
 
-  try {
-    // Call the actual function to fetch song details
-    const addedItem = await getSongDetailsRequestById(song_id);
-    //const addedItem = await getSpotifyToken();
-    return json(
-      {
-        success: true,
-        data: addedItem,
-        error: {},
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error:", error);
-    return json(
-      {
-        success: false,
-        data: {},
-        error: { msg: "An error occurred while adding item to folder" },
-      },
-      { status: 500 }
-    );
-  }
-}
+//   try {
+//     // Call the actual function to fetch song details
+//     const addedItem = await getSongDetailsRequestById(song_id);
+//     //const addedItem = await getSpotifyToken();
+//     return json(
+//       {
+//         success: true,
+//         data: addedItem,
+//         error: {},
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return json(
+//       {
+//         success: false,
+//         data: {},
+//         error: { msg: "An error occurred while adding item to folder" },
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
