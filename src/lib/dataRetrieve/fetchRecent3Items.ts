@@ -20,13 +20,13 @@ export async function getRecentItemNames(userId: number): Promise<string[]> {
   return recentItems.map((item) => item.item.title);
 }
 
-interface RecommendationResponse {
+export interface RecommendationResponse {
   books: string[];
   movies: string[];
   songs: string[];
 }
 
-interface ErrorResponse {
+export interface ErrorResponse {
   error: string;
 }
 
