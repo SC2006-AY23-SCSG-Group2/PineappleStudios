@@ -121,14 +121,9 @@ export async function loader({request}: LoaderFunctionArgs) {
     "K-Pop",
   ];
 
-  if (preferences.length < additionalPreferences.length) {
-    // If there are less than 24 preferences, create new ones
-    for (const preference of additionalPreferences) {
-      await createNewPreference(preference);
-      preferenceData.push(preference);
-    }
-  } else {
-    preferenceData = preferences;
+  for (const preference of additionalPreferences) {
+    await createNewPreference(preference);
+    preferenceData.push(preference);
   }
 
   let userCurrentPreferences = await getPreferencesOfUser(
