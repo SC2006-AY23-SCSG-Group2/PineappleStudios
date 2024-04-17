@@ -19,7 +19,7 @@ export function BrowserTopNav({
           {leftSection === undefined ? null : leftSection}
         </div>
         <div className="navbar-center lg:flex">
-          <a href={"/"} className="btn btn-ghost text-xl">
+          <a href={"/tab/1"} className="btn btn-ghost text-xl">
             {title ?? "Pineapple Studio"}
           </a>
         </div>

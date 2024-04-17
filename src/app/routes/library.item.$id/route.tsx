@@ -37,6 +37,7 @@ import InfoHover from "../_components/InfoHover";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
 import {ToastList} from "../_components/ToastList";
+import {ItemInfoMutex} from "../browser/MUTEX";
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -79,9 +80,13 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
+  const userId = +session.data.userId;
+
   let itemInfo;
   if (isNaN(+id)) {
-    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+    await ItemInfoMutex.runExclusive(async () => {
+      itemInfo = await getItemInfoBySrcId(id, userId);
+    });
   } else if (!isNaN(+id)) {
     itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
   }

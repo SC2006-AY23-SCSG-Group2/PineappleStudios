@@ -26,6 +26,7 @@ import InfoHover from "../_components/InfoHover";
 import {SmallPeopleList} from "../_components/SmallPeopleList";
 import {TagList} from "../_components/TagList";
 import {ToastList} from "../_components/ToastList";
+import {ItemInfoMutex} from "../browser/MUTEX";
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
   TypedResponse<{
@@ -57,6 +58,8 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
   }
 
   const id = params.id;
+  const user = +session.data.userId;
+
   if (!id) {
     return json({
       success: false,
@@ -67,9 +70,11 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
 
   let itemInfo;
   if (isNaN(+id)) {
-    itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+    await ItemInfoMutex.runExclusive(async () => {
+      itemInfo = await getItemInfoBySrcId(id, user);
+    });
   } else if (!isNaN(+id)) {
-    itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
+    itemInfo = await getItemInfoByItemId(+id, user);
   }
 
   let jsonData: {
@@ -107,7 +112,7 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  await addHistoryItemForUser(+session.data.userId, +id);
+  await addHistoryItemForUser(user, +id);
 
   return json(jsonData, {
     headers: {

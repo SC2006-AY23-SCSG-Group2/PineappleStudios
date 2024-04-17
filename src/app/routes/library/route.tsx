@@ -9,6 +9,7 @@ import {
 } from "../../../lib/dataRetrieve/getItemInfo";
 import {Folder} from "../../../lib/interfaces";
 import {destroySession, getSession} from "../../session";
+import {ItemInfoMutex} from "../browser/MUTEX";
 import LibraryTopNav from "./components/LibraryTopNav";
 
 export async function loader({params, request}: LoaderFunctionArgs) {
@@ -63,6 +64,8 @@ export async function loader({params, request}: LoaderFunctionArgs) {
 
   let title: string | undefined = undefined;
 
+  const userId = +session.data.userId;
+
   if (type === "folder") {
     const folderInfo: Folder | null = await getFolderInfo(
       +id,
@@ -72,7 +75,9 @@ export async function loader({params, request}: LoaderFunctionArgs) {
   } else if (type === "item") {
     let itemInfo;
     if (isNaN(+id)) {
-      itemInfo = await getItemInfoBySrcId(id, +session.data.userId);
+      await ItemInfoMutex.runExclusive(async () => {
+        itemInfo = await getItemInfoBySrcId(id, userId);
+      });
     } else if (!isNaN(+id)) {
       itemInfo = await getItemInfoByItemId(+id, +session.data.userId);
     }
