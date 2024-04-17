@@ -2,7 +2,10 @@ import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
 import {getAllPreferencesInTheSystem} from "src/lib/dataRetrieve/getPreferences";
-import {addPreferenceForUser} from "src/lib/dataRetrieve/handleUserPreferences";
+import {
+  addPreferenceForUser,
+  removePreferenceForUser,
+} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferencesOfUser} from "src/lib/dataRetrieve/handleUserPreferences";
 import {getPreferenceByName} from "src/lib/database/preference";
 
@@ -37,11 +40,26 @@ export async function action({request}: LoaderFunctionArgs) {
       }
     },
   );
+  let currentUserPreferences: string[] = [];
 
-  for (const temp of preferences) {
-    const preference = await getPreferenceByName(temp);
-    if (user && preference)
-      await addPreferenceForUser(user.id, preference.name);
+  if (user) {
+    currentUserPreferences = await getPreferencesOfUser(user.id);
+  }
+
+  if (user) {
+    for (const temp of preferences) {
+      // If the preference is not already included in currentUserPreferences, add it
+      if (!currentUserPreferences.includes(temp)) {
+        await addPreferenceForUser(user.id, temp);
+      }
+    }
+
+    for (const temp of currentUserPreferences) {
+      // If a preference from currentUserPreferences is not in preferences, remove it
+      if (!preferences.includes(temp)) {
+        await removePreferenceForUser(user.id, temp);
+      }
+    }
   }
 
   return redirect("/tab/4");
