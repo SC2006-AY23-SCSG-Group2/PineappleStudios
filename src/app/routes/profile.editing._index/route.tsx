@@ -81,12 +81,6 @@ export async function action({request}: LoaderFunctionArgs) {
         await removePreferenceForUser(user.id, oldPreference);
       }
     }
-    // If preference is not found in userOldPreferences, add it for the user
-    for (const preference of preferencesArray) {
-      if (!userOldPreferences.includes(preference)) {
-        await addPreferenceForUser(user.id, preference);
-      }
-    }
   }
 
   return redirect("/tab/4");
@@ -225,7 +219,7 @@ export default function tab_index(): React.JSX.Element {
     <>
       <div className="hero min-h-screen">
         <div className="hero-content flex-col justify-between lg:flex-row">
-          <div className="card min-w-96 w-full bg-base-200 shadow-xl lg:w-1/3">
+          <div className="card w-full min-w-96 bg-base-200 shadow-xl lg:w-1/3">
             <div className="card-body">
               <div>
                 <div className="form-control">
