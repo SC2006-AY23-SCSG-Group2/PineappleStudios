@@ -104,6 +104,7 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
 }
 
 export default function tab_index(): React.JSX.Element {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
 
   if (!loaderData.success) {
