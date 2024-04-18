@@ -17,6 +17,8 @@ from openai import OpenAI
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.neighbors import NearestNeighbors
+from openai import AsyncOpenAI
+import asyncio
 
 # print('Start1')
 
@@ -172,25 +174,38 @@ cleaning_patterns = [
 ]
 
 # Define function to generate LLM recommendation
-# @mem.cache    
+# @mem.cache   
+
+
+
+
+# Define the clean_item function outside so it's not redefined every call
+def clean_item(item, cleaning_patterns):
+    for pattern in cleaning_patterns:
+        item = pattern.sub('', item)
+    return item.strip()
+
 @alru_cache(maxsize=32)
 async def generate_LLM_recommendation(media_name):
     load_dotenv()
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    
     prompt = f"recommend me books, movies and songs similar to '{media_name}'"
-    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+    
+    # Asynchronous call to OpenAI API
+    response = await client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+    
     content = response.choices[0].message.content.strip()
-    # def clean_item(item):
-    #     return re.sub(r'^\d+\.\s*|".*?"|\(.*?\)|\sby\s.*|-.*', '', item).strip()
-    def clean_item(item):
-        for pattern in cleaning_patterns:
-            item = pattern.sub('', item)
-        return item.strip()
-
-  
+    
     sections = content.split('\n\n')
-    recommendations = {section.split('\n')[0].replace(':', '').strip(): [clean_item(item) for item in section.split('\n')[1:]] for section in sections}
+    recommendations = {
+        section.split('\n')[0].replace(':', '').strip(): [clean_item(item, cleaning_patterns) for item in section.split('\n')[1:]]
+        for section in sections
+    }
+    
     return recommendations.get('Books', []), recommendations.get('Movies', []), recommendations.get('Songs', [])
+
+
 
 # Define function to combine recommendations
 # @mem.cache
