@@ -2,29 +2,55 @@ import {countItems, getItemById} from "../database/item";
 import {SimpleItem} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
 
+function shuffleArray<T>(array: T[]): T[] {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+}
+
 async function getRandomItemsByType(
   type: string,
-  count: number,
+  numberOfItem: number,
   userId: number,
 ): Promise<SimpleItem[]> {
   const Items: SimpleItem[] = [];
-  let fetchedItems: number = 0;
-  let itemId: number = 1; // Start from the first item id
+  const allItems: SimpleItem[] = [];
   const totalItemCount: number | undefined = await countItems();
+
   if (!totalItemCount) {
     return Items;
   }
-  // Fetch items until we have enough of the specified type or we reach the end of items in the database
-  while (fetchedItems < count && itemId <= totalItemCount) {
+
+  // Get all items of the specified type
+  for (let itemId = 1; itemId <= totalItemCount; itemId++) {
     const item = await getItemById(itemId);
     if (item && item.itemType === type) {
       const simpleItemData = await getSimpleItemInfoByItemId(itemId, userId);
-      if (simpleItemData) Items.push(simpleItemData);
-      fetchedItems++;
+      if (simpleItemData) allItems.push(simpleItemData);
     }
-    itemId++;
   }
-  return Items;
+
+  // If the total number of items is less than the required number, return all items
+  if (allItems.length <= numberOfItem) {
+    return allItems;
+  }
+
+  // Shuffle the array of all items
+  const shuffledItems = shuffleArray(allItems);
+  return shuffledItems.slice(0, numberOfItem);
 }
 
 export async function getMultipleSimpleItems(
