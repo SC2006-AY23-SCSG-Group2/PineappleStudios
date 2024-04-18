@@ -7,6 +7,7 @@ import {
 } from "@remix-run/node";
 import {
   FetcherWithComponents,
+  NavLink,
   useFetcher,
   useLoaderData,
 } from "@remix-run/react";
@@ -437,6 +438,13 @@ export default function tab_index(): React.JSX.Element {
                   </button>
                 </fetcherAddToFavourite.Form>
               )}
+              <div className="min-w-full">
+                <NavLink
+                  to={"/library/item/tag-editing/" + data.id}
+                  className="btn btn-neutral btn-wide my-1 min-w-full">
+                  Edit Tags
+                </NavLink>
+              </div>
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
             <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">

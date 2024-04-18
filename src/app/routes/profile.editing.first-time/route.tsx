@@ -1,18 +1,14 @@
 import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
-import {getAllPreferencesInTheSystem} from "src/lib/dataRetrieve/getPreferences";
+
+import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
+import {getAllPreferencesInTheSystem} from "../../../lib/dataRetrieve/getPreferences";
 import {
   addPreferenceForUser,
+  getPreferencesOfUser,
   removePreferenceForUser,
-} from "src/lib/dataRetrieve/handleUserPreferences";
-import {getPreferencesOfUser} from "src/lib/dataRetrieve/handleUserPreferences";
-import {getPreferenceByName} from "src/lib/database/preference";
-
-import {
-  createNewPreference,
-  deletePreference,
-} from "../../../lib/dataRetrieve/createPreference";
+} from "../../../lib/dataRetrieve/handleUserPreferences";
 import {getUserById} from "../../../lib/database/user";
 import {
   SessionData,
@@ -27,8 +23,9 @@ export async function action({request}: LoaderFunctionArgs) {
     request.headers.get("cookie"),
   );
   let user;
-  if (session.data.userId !== undefined)
+  if (session.data.userId !== undefined) {
     user = await getUserById(parseInt(session.data.userId));
+  }
 
   const formData: FormData = await request.formData();
   const preferences: string[] = Array.from(formData.getAll("preference")).map(
@@ -48,14 +45,16 @@ export async function action({request}: LoaderFunctionArgs) {
 
   if (user) {
     for (const temp of preferences) {
-      // If the preference is not already included in currentUserPreferences, add it
+      // If the preference is not already included in currentUserPreferences,
+      // add it
       if (!currentUserPreferences.includes(temp)) {
         await addPreferenceForUser(user.id, temp);
       }
     }
 
     for (const temp of currentUserPreferences) {
-      // If a preference from currentUserPreferences is not in preferences, remove it
+      // If a preference from currentUserPreferences is not in preferences,
+      // remove it
       if (!preferences.includes(temp)) {
         await removePreferenceForUser(user.id, temp);
       }
@@ -89,11 +88,9 @@ export async function loader({request}: LoaderFunctionArgs) {
       },
     });
   }
-  // for (let i = 0; i < 20; i++) {
-  //   await deletePreference("PLACEHOLDER" + i.toString());
-  // }
-  const preferences = await getAllPreferencesInTheSystem();
-  let preferenceData: string[] = [];
+
+  await getAllPreferencesInTheSystem();
+  const preferenceData: string[] = [];
   const additionalPreferences = [
     "Action",
     "Animation",
@@ -148,7 +145,7 @@ export async function loader({request}: LoaderFunctionArgs) {
   };
 }
 
-export default function TabIndex({}): React.JSX.Element {
+export default function TabIndex(): React.JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
 
   const [formData, setFormData] = useState<string[]>(
@@ -165,8 +162,11 @@ export default function TabIndex({}): React.JSX.Element {
 
   const handlePreferenceClick = (clickedPreference: string) => {
     console.log("Clicked Preference: ", clickedPreference);
-    if (!formData.includes(clickedPreference)) addPreference(clickedPreference);
-    else removePreference(clickedPreference);
+    if (!formData.includes(clickedPreference)) {
+      addPreference(clickedPreference);
+    } else {
+      removePreference(clickedPreference);
+    }
   };
 
   //handle formData, pass it to action
