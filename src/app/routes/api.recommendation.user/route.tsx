@@ -103,13 +103,26 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
   }
 
   // Combine the recommendations from both responses
+  // Combine the recommendations from both responses while eliminating duplicates
   const combinedRecommendationResult: RecommendationResponse = {
-    books: [...resultForRecentItems.books, ...resultBasedOnPreferences.books],
-    movies: [
-      ...resultForRecentItems.movies,
-      ...resultBasedOnPreferences.movies,
+    books: [
+      ...new Set([
+        ...resultForRecentItems.books,
+        ...resultBasedOnPreferences.books,
+      ]),
     ],
-    songs: [...resultForRecentItems.songs, ...resultBasedOnPreferences.songs],
+    movies: [
+      ...new Set([
+        ...resultForRecentItems.movies,
+        ...resultBasedOnPreferences.movies,
+      ]),
+    ],
+    songs: [
+      ...new Set([
+        ...resultForRecentItems.songs,
+        ...resultBasedOnPreferences.songs,
+      ]),
+    ],
   };
 
   const returnResult: SimpleItem[] = [];
