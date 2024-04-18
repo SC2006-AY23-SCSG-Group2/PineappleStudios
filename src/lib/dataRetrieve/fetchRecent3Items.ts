@@ -1,7 +1,9 @@
-import {PrismaClient} from "@prisma/client";
 import axios, {AxiosError, AxiosResponse} from "axios";
 
-const prisma = new PrismaClient();
+import {prismaClient} from "../database/prisma";
+import {ErrorResponse, RecommendationResponse} from "../interfaces";
+
+const prisma = prismaClient;
 
 export async function getRecentItemNames(userId: number): Promise<string[]> {
   const recentItems = await prisma.recentItems.findMany({
@@ -12,16 +14,6 @@ export async function getRecentItemNames(userId: number): Promise<string[]> {
   });
 
   return recentItems.map((item) => item.item.title);
-}
-
-interface RecommendationResponse {
-  books: string[];
-  movies: string[];
-  songs: string[];
-}
-
-interface ErrorResponse {
-  error: string;
 }
 
 export async function fetchRecommendations(
@@ -152,8 +144,6 @@ export async function fetchRecommendationsForRecentItems(
       movies: [],
       songs: [],
     };
-  } finally {
-    await prisma.$disconnect(); // Disconnect from the Prisma client
   }
 }
 
