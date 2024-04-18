@@ -81,9 +81,11 @@ export default function tab_index(): React.JSX.Element {
 
   const fetcher: FetcherWithComponents<{
     success: false;
+    data: number;
     error: {msg: string}; // eslint-disable-next-line react-hooks/rules-of-hooks
   }> = useFetcher<{
     success: false;
+    data: number;
     error: {msg: string};
   }>({key: "folder-create"});
   fetcher.formAction = "post";
@@ -140,6 +142,12 @@ export default function tab_index(): React.JSX.Element {
     );
   }
 
+  const [submitted, setSubmitted]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  ] = useState(false);
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect((): void => {
     if (fetcher.data && !fetcher.data.success) {
@@ -147,9 +155,24 @@ export default function tab_index(): React.JSX.Element {
       showToast(fetcher.data.error.msg, "error");
       fetcher.data = undefined;
     }
-  }, [fetcher, showToast]);
 
-  // const data: Folder = loaderData.data;
+    if (
+      !submitted &&
+      (fetcher.state === "submitting" || fetcher.state === "loading")
+    ) {
+      setSubmitted(true);
+    }
+
+    if (
+      submitted &&
+      fetcher.state === "idle" &&
+      fetcher.data &&
+      fetcher.data.success
+    ) {
+      window.location.href =
+        "/library/folder/item-editing/" + fetcher.data.data;
+    }
+  }, [fetcher, showToast, submitted]);
 
   return (
     <>

@@ -109,5 +109,9 @@ export async function action({request}: LoaderFunctionArgs) {
     }
   }
 
-  return redirect("/library/folder/" + numID);
+  // return redirect("/library/folder/" + numID);
+  return json({
+    success: true,
+    error: {msg: "able to update the folder"},
+  });
 }

@@ -191,7 +191,11 @@ export default function tab_index(): React.JSX.Element {
       showToast(fetcher.data.error.msg, "error");
       fetcher.data = undefined;
     }
-  }, [fetcher, showToast]);
+    if (fetcher.state === "idle" && fetcher.data && fetcher.data.success) {
+      console.log("go back");
+      window.location.href = "/library/folder/" + loaderData.data?.id;
+    }
+  }, [fetcher, loaderData.data?.id, showToast]);
 
   const data: Folder = loaderData.data;
 
@@ -215,8 +219,8 @@ export default function tab_index(): React.JSX.Element {
                   value={data.id}
                 />
                 <div className="form-control my-4">
-                  <label className="input input-bordered flex items-center">
-                    Name
+                  <label className="input input-bordered flex items-center gap-2">
+                    Name:
                     <input
                       type="text"
                       className="grow"

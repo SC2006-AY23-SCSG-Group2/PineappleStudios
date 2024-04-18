@@ -89,5 +89,8 @@ export async function action({request}: LoaderFunctionArgs) {
     });
   }
 
-  return redirect("/library/item/" + id);
+  return json({
+    success: true,
+    error: {msg: "able to add item to tags: " + tags.toString()},
+  });
 }

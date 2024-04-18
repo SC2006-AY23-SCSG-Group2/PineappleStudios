@@ -5,12 +5,7 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import {
-  NavigateFunction,
-  useFetcher,
-  useLoaderData,
-  useNavigate,
-} from "@remix-run/react";
+import {useFetcher, useLoaderData} from "@remix-run/react";
 import React, {useEffect, useState} from "react";
 
 import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
@@ -172,11 +167,11 @@ export default function TabIndex(): React.JSX.Element {
   };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const fetcherAddToLibrary = useFetcher<{
+  const fetcher = useFetcher<{
     success: false;
     error: {msg: string};
   }>({key: "add-to-library"});
-  fetcherAddToLibrary.formAction = "post";
+  fetcher.formAction = "post";
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [toasts, setToasts] = useState<
@@ -218,29 +213,17 @@ export default function TabIndex(): React.JSX.Element {
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const navigate: NavigateFunction = useNavigate();
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    if (
-      fetcherAddToLibrary.state === "idle" &&
-      fetcherAddToLibrary.data &&
-      !fetcherAddToLibrary.data.success
-    ) {
-      console.log(fetcherAddToLibrary.data.error.msg);
-      showToast(fetcherAddToLibrary.data.error.msg, "error");
-      fetcherAddToLibrary.data = undefined;
+    if (fetcher.state === "idle" && fetcher.data && !fetcher.data.success) {
+      console.log(fetcher.data.error.msg);
+      showToast(fetcher.data.error.msg, "error");
+      fetcher.data = undefined;
     }
-    if (
-      fetcherAddToLibrary.state === "idle" &&
-      fetcherAddToLibrary.data &&
-      fetcherAddToLibrary.data.success
-    ) {
+    if (fetcher.state === "idle" && fetcher.data && fetcher.data.success) {
       console.log("go back");
-      // navigate("/library/folder/" + loaderData.data?.folder?.id);
       window.location.href = "/library/folder/" + loaderData.data?.folder?.id;
     }
-  }, [fetcherAddToLibrary, loaderData.data?.folder?.id, navigate, showToast]);
+  }, [fetcher, loaderData.data?.folder?.id, showToast]);
 
   return (
     <>
@@ -249,19 +232,14 @@ export default function TabIndex(): React.JSX.Element {
           Adding Tags for: {loaderData.data.folder.name}
         </h1>
         <div className="hero">
-          <div className="hero-content">
-            <div className="card">
-              <SelectableItemList
-                title="Book"
-                selected={formData}
-                items={initialItems}
-                clickIt={handleClick}
-              />
-            </div>
-          </div>
+          <SelectableItemList
+            title="Book"
+            selected={formData}
+            items={initialItems}
+            clickIt={handleClick}
+          />
         </div>
-        {/*fetcherAddToLibrary*/}
-        <fetcherAddToLibrary.Form
+        <fetcher.Form
           className="w-full"
           method="POST"
           action={"/api/folder/set-items"}>
@@ -286,7 +264,7 @@ export default function TabIndex(): React.JSX.Element {
             from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95">
             Finish
           </button>
-        </fetcherAddToLibrary.Form>
+        </fetcher.Form>
       </div>
       <ToastList data={toasts} removeToast={removeToast} />
     </>

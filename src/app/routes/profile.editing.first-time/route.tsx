@@ -1,6 +1,6 @@
-import {LoaderFunctionArgs, Session, redirect} from "@remix-run/node";
+import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
 import {useFetcher, useLoaderData} from "@remix-run/react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {createNewPreference} from "../../../lib/dataRetrieve/createPreference";
 import {getAllPreferencesInTheSystem} from "../../../lib/dataRetrieve/getPreferences";
@@ -16,16 +16,35 @@ import {
   destroySession,
   getSession,
 } from "../../session";
+import {ToastList} from "../_components/ToastList";
 import {PrefListChoose} from "./components/PrefListChoose";
 
 export async function action({request}: LoaderFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
     request.headers.get("cookie"),
   );
-  let user;
-  if (session.data.userId !== undefined) {
-    user = await getUserById(parseInt(session.data.userId));
+
+  if (!session.has("userId") || !session.data.userId) {
+    session.flash("error", "User not login");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
   }
+
+  if (isNaN(+session.data.userId)) {
+    session.flash("error", "User id is not a number");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  const user = await getUserById(parseInt(session.data.userId));
 
   const formData: FormData = await request.formData();
   const preferences: string[] = Array.from(formData.getAll("preference")).map(
@@ -61,7 +80,10 @@ export async function action({request}: LoaderFunctionArgs) {
     }
   }
 
-  return redirect("/tab/4");
+  return json({
+    success: true,
+    msg: "User preferences added successfully.",
+  });
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -169,56 +191,113 @@ export default function TabIndex(): React.JSX.Element {
     }
   };
 
-  //handle formData, pass it to action
-  const fetcher = useFetcher(); // Initialize the fetcher function
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcher = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "add-to-library"});
   fetcher.formAction = "post";
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [toasts, setToasts] = useState<
+    {
+      id: number;
+      message: string;
+      type: string;
+    }[]
+  >([]);
+  const autoClose = true;
+  const autoCloseDuration = 5;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const showToast = (message: string, type: string) => {
+    const toast: {id: number; message: string; type: string} = {
+      id: Date.now(),
+      message,
+      type,
+    };
+
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) => [
+      ...prevToasts,
+      toast,
+    ]);
+
+    if (autoClose) {
+      setTimeout(() => {
+        removeToast(toast.id);
+      }, autoCloseDuration * 1000);
+    }
+  };
+
+  function removeToast(id: number) {
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) =>
+      prevToasts.filter(
+        (toast: {id: number; message: string; type: string}) => toast.id !== id,
+      ),
+    );
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data && !fetcher.data.success) {
+      showToast(fetcher.data.error.msg, "error");
+      fetcher.data = undefined;
+    }
+    if (fetcher.state === "idle" && fetcher.data && fetcher.data.success) {
+      console.log("go back");
+      window.location.href = "/tab/4";
+    }
+  }, [fetcher, showToast]);
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-center text-2xl font-bold">
-        Welcome, {loaderData.userName}
-      </h1>
-      <div className="mb-4 text-center">
-        <h2 className="text-lg font-bold">Choose what you like:</h2>
-        <p className="text-md">
-          You have selected <strong>{formData.length}</strong> preferences.
-        </p>
-      </div>
-      <div className="flex h-full items-center justify-center">
-        <div className="artboard artboard-horizontal phone-4">
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {loaderData.preferenceData.map((preference, index) => (
-              <PrefListChoose
-                key={index}
-                preference={[preference]}
-                selected={formData}
-                onPreferenceClick={handlePreferenceClick}
-              />
-            ))}
+    <>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="mb-6 text-center text-2xl font-bold">
+          Welcome, {loaderData.userName}
+        </h1>
+        <div className="mb-4 text-center">
+          <h2 className="text-lg font-bold">Choose what you like:</h2>
+          <p className="text-md">
+            You have selected <strong>{formData.length}</strong> preferences.
+          </p>
+        </div>
+        <div className="flex h-full items-center justify-center">
+          <div className="artboard artboard-horizontal phone-4">
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {loaderData.preferenceData.map((preference, index) => (
+                <PrefListChoose
+                  key={index}
+                  preference={[preference]}
+                  selected={formData}
+                  onPreferenceClick={handlePreferenceClick}
+                />
+              ))}
+            </div>
           </div>
         </div>
+        <fetcher.Form
+          className={"join mt-2 w-full min-w-full"}
+          method={"POST"}
+          action={"/profile/editing/first-time"}>
+          {formData.map((preference, index) => (
+            <input
+              key={index}
+              type="hidden"
+              name="preference"
+              value={preference}
+            />
+          ))}
+          <div className="mb-6 flex w-full flex-col items-center text-2xl md:mt-96 md:pt-24 lg:mt-60 lg:pt-0 xl:mt-16">
+            <h2>All Good! Press next to continue!</h2>
+            <input
+              type="submit"
+              value="Next"
+              className="btn my-2 w-32 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95"
+            />
+          </div>
+        </fetcher.Form>
       </div>
-      <fetcher.Form
-        className={"join mt-2 w-full min-w-full"}
-        method={"POST"}
-        action={"/profile/editing/first-time"}>
-        {formData.map((preference, index) => (
-          <input
-            key={index}
-            type="hidden"
-            name="preference"
-            value={preference}
-          />
-        ))}
-        <div className="mb-6 flex w-full flex-col items-center text-2xl md:mt-96 md:pt-24 lg:mt-60 lg:pt-0 xl:mt-16">
-          <h2>All Good! Press next to continue!</h2>
-          <input
-            type="submit"
-            value="Next"
-            className="btn my-2 w-32 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95"
-          />
-        </div>
-      </fetcher.Form>
-    </div>
+      <ToastList data={toasts} removeToast={removeToast} />
+    </>
   );
 }

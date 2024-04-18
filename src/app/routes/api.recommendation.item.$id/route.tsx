@@ -26,17 +26,6 @@ import {
   getSession,
 } from "../../session";
 
-export async function action(loaderArgs: LoaderFunctionArgs): Promise<
-  | TypedResponse<never>
-  | TypedResponse<{
-      success: boolean;
-      data: {data: SimpleItem[]} | null;
-      error: {msg: string} | null;
-    }>
-> {
-  return loader(loaderArgs);
-}
-
 export async function loader({request, params}: LoaderFunctionArgs): Promise<
   | TypedResponse<never>
   | TypedResponse<{
