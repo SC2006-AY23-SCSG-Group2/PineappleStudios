@@ -72,7 +72,7 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
 
   const paramId = params.id;
   const url = new URL(request.url);
-  const searchId = url.searchParams.get("id")?.replaceAll(' ','+');
+  const searchId = url.searchParams.get("id")?.replaceAll(" ", "+");
 
   if (
     (!searchId && !paramId) ||

@@ -1,6 +1,7 @@
-import {getFolderByName} from "../database/folder";
-import {prismaClient} from "../database/prisma";
-import {getUserById} from "../database/user";
+import { getFolderByName } from "../database/folder";
+import { prismaClient } from "../database/prisma";
+import { getUserById } from "../database/user";
+
 
 export const createFolder = async (name: string, userId: number) => {
   try {
@@ -46,11 +47,12 @@ export const deleteFolder = async (folderId: number, userId: number) => {
   try {
     // Check if the folder exists and belongs to the user
     const folder = await prismaClient.folder.findFirst({
-      where: { 
+      where: {
         AND: [
-          { id: folderId },
-          { Library: { user: { id: userId } } } // Ensure the folder belongs to the user
-        ]
+          {id: folderId},
+          {Library: {user: {id: user,// Ensure the folder belongs to the
+                                           // userhe user
+        ],
       },
     });
 
@@ -61,20 +63,17 @@ export const deleteFolder = async (folderId: number, userId: number) => {
 
     // Delete associated items in the folder
     await prismaClient.itemsInFolders.deleteMany({
-      where: { folderId },
+      where: {folderId},
     });
 
     // Delete the folder
     const deletedFolder = await prismaClient.folder.delete({
-      where: { id: folderId },
+      where: {id: folderId},
     });
 
     return deletedFolder;
   } catch (error) {
-    console.error('Error occurred while deleting folder:', error);
+    console.error("Error occurred while deleting folder:", error);
     return null;
   }
 };
-
-
-
