@@ -1,5 +1,9 @@
-import {TypedResponse, redirect} from "@remix-run/node";
+import {LoaderFunctionArgs, redirect} from "@remix-run/node";
 
-export async function loader(): Promise<TypedResponse<never>> {
-  return redirect("/tab/2");
+export async function loader({params}: LoaderFunctionArgs) {
+  const id = params.id;
+  if (!id) {
+    return redirect("/tab/2");
+  }
+  return null;
 }
