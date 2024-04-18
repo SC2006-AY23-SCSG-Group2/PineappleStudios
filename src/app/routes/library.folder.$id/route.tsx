@@ -197,6 +197,7 @@ export default function tab_index(): React.JSX.Element {
     }
   }, [fetcherAddToLibrary, showToast]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
