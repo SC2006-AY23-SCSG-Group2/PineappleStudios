@@ -42,3 +42,39 @@ export const createFolder = async (name: string, userId: number) => {
     return null;
   }
 };
+export const deleteFolder = async (folderId: number, userId: number) => {
+  try {
+    // Check if the folder exists and belongs to the user
+    const folder = await prismaClient.folder.findFirst({
+      where: { 
+        AND: [
+          { id: folderId },
+          { Library: { user: { id: userId } } } // Ensure the folder belongs to the user
+        ]
+      },
+    });
+
+    if (!folder) {
+      console.error(`Folder with ID ${folderId} not found.`);
+      return null;
+    }
+
+    // Delete associated items in the folder
+    await prismaClient.itemsInFolders.deleteMany({
+      where: { folderId },
+    });
+
+    // Delete the folder
+    const deletedFolder = await prismaClient.folder.delete({
+      where: { id: folderId },
+    });
+
+    return deletedFolder;
+  } catch (error) {
+    console.error('Error occurred while deleting folder:', error);
+    return null;
+  }
+};
+
+
+
