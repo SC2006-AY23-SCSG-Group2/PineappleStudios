@@ -51,29 +51,6 @@ export async function fetchRecommendations(
     }
   }
 }
-// export async function fetchRecommendationsForRecentItems(userId: number): Promise<RecommendationResponse[]> {
-//     try {
-//       // Get the titles of the 3 most recent items for the user
-//       const recentItemNames = await getRecentItemNames(userId);
-
-//       // Fetch recommendations for each recent item
-//       const recommendationsPromises = recentItemNames.map(itemTitle => fetchRecommendations(itemTitle));
-//       const recommendations = await Promise.all(recommendationsPromises);
-
-//       // Filter out any ErrorResponse objects from the array
-//       const validRecommendations = recommendations.filter(
-//         (recommendation): recommendation is RecommendationResponse => 'books' in recommendation
-//       );
-
-//       return validRecommendations;
-//     } catch (error) {
-//       console.error('Error:', error);
-//       // If an error occurs, return an empty array
-//       return [];
-//     } finally {
-//       await prisma.$disconnect(); // Disconnect from the Prisma client
-//     }
-//   }
 
 export async function fetchRecommendationsForRecentItems(
   userId: number,
@@ -146,43 +123,3 @@ export async function fetchRecommendationsForRecentItems(
     };
   }
 }
-
-// export async function fetchRecommendationsForRecentItems(userId: number): Promise<RecommendationResponse> {
-//     try {
-//       // Get the titles of the 3 most recent items for the user
-//       const recentItemNames = await getRecentItemNames(userId);
-
-//       // Fetch recommendations for each recent item
-//       const recommendationsPromises = recentItemNames.map(itemTitle => fetchRecommendations(itemTitle));
-//       const recommendations = await Promise.all(recommendationsPromises);
-
-//       // Merge recommendations for all recent items
-//       const mergedRecommendations: RecommendationResponse = {
-//         books: [],
-//         movies: [],
-//         songs: [],
-//       };
-//       for (const recommendation of recommendations) {
-//         if ('books' in recommendation && 'movies' in recommendation && 'songs' in recommendation) {
-//           mergedRecommendations.books = [...mergedRecommendations.books, ...recommendation.books];
-//           mergedRecommendations.movies = [...mergedRecommendations.movies, ...recommendation.movies];
-//           mergedRecommendations.songs = [...mergedRecommendations.songs, ...recommendation.songs];
-//         } else {
-//           console.error('Error fetching recommendations:', recommendation.error);
-//           // Handle error case
-//         }
-//       }
-
-//       return mergedRecommendations;
-//     } catch (error) {
-//       console.error('Error:', error);
-//       // If an error occurs, return an empty object
-//       return {
-//         books: [],
-//         movies: [],
-//         songs: [],
-//       };
-//     } finally {
-//       await prisma.$disconnect(); // Disconnect from the Prisma client
-//     }
-//   }

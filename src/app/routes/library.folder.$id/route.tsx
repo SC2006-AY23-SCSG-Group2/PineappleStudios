@@ -7,11 +7,12 @@ import {
 } from "@remix-run/node";
 import {
   FetcherWithComponents,
+  Form,
   NavLink,
   useFetcher,
   useLoaderData,
 } from "@remix-run/react";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
 import {Folder, SimpleItem} from "../../../lib/interfaces";
@@ -196,6 +197,16 @@ export default function tab_index(): React.JSX.Element {
     }
   }, [fetcherAddToLibrary, showToast]);
 
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    if (window.confirm("Are you sure you want to log out?")) {
+      formRef.current?.submit();
+    }
+  };
+
   const data: Folder = loaderData.data;
   const items: SimpleItem[] = data.items;
 
@@ -242,6 +253,17 @@ export default function tab_index(): React.JSX.Element {
                 className="btn btn-neutral btn-wide my-1 min-w-full">
                 Edit Items
               </NavLink>
+              <Form ref={formRef} method="post" action="/api/folder/delete">
+                <input type = "hidden" name="folder" value={loaderData.data.id}>
+                
+                </input>
+                <button
+                  className="btn btn-error btn-wide my-1 min-w-full"
+                  type="submit"
+                  onClick={handleLogout}>
+                  Delete Folder
+                </button>
+              </Form>
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
             <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">

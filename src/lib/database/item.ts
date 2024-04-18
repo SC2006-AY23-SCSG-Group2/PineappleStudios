@@ -82,3 +82,24 @@ export async function countItems() {
     console.error("Error counting Items:", error);
   }
 }
+
+export async function getLastItemId() {
+  try {
+    const lastItem = await prismaClient.item.findFirst({
+      orderBy: {
+        id: "desc", // Order by id in descending order
+      },
+      take: 1, // Limit the result to one item
+    });
+
+    if (lastItem) {
+      return lastItem.id;
+    } else {
+      console.error("No items found in the database.");
+      return;
+    }
+  } catch (error) {
+    console.error("Error fetching the last item ID:", error);
+    return;
+  }
+}

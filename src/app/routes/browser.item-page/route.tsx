@@ -56,7 +56,7 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
 
   const paramId = params.id;
   const url = new URL(request.url);
-  const searchId = url.searchParams.get("id");
+  const searchId = url.searchParams.get("id")?.replaceAll(' ','+');
   const user = +session.data.userId;
 
   if (
@@ -115,13 +115,13 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
   }
 
   if (itemInfo.isInLibrary && itemInfo.id) {
-    return redirect("/library/item-page/?id=" + itemInfo.id, {
+    return redirect("/library/item/" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
 
   if (id !== itemInfo.id.toString()) {
-    return redirect("/browser/item-page/?id=" + itemInfo.id, {
+    return redirect("/browser/item/" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
