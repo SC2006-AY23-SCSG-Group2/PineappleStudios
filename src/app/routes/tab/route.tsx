@@ -10,8 +10,8 @@ import React, {useEffect, useState} from "react";
 import {getUserInfoByUserId} from "../../../lib/dataRetrieve/getUserInfo";
 import {commitSession, destroySession, getSession} from "../../session";
 import BtmNav from "../_components/BtmNav";
-import TopNav from "../_components/TopNav";
 import TabTopNav from "./components/TabTopNav";
+import TopNav from "./components/TopNav";
 
 export async function loader({request}: LoaderFunctionArgs): Promise<
   TypedResponse<{

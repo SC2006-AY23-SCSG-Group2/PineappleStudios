@@ -72,12 +72,10 @@ export default function tab(): React.JSX.Element {
       <BrowserTopNav
         leftSection={
           <>
-            <button
+            <a
               key={"btn-sm"}
               className="btn btn-circle lg:hidden"
-              onClick={() => {
-                navigate("/tab/1");
-              }}>
+              href="/tab/1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -91,14 +89,12 @@ export default function tab(): React.JSX.Element {
                   d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
                 />
               </svg>
-            </button>
+            </a>
 
-            <button
+            <a
               key={"btn-lg"}
               className="btn max-lg:hidden lg:visible"
-              onClick={() => {
-                navigate("/tab/1");
-              }}>
+              href="/tab/1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -113,7 +109,7 @@ export default function tab(): React.JSX.Element {
                 />
               </svg>
               Back
-            </button>
+            </a>
           </>
         }
         title={

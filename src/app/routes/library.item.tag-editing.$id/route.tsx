@@ -1,4 +1,10 @@
-import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
+import {
+  LoaderFunctionArgs,
+  Session,
+  TypedResponse,
+  json,
+  redirect,
+} from "@remix-run/node";
 import {Form, useLoaderData} from "@remix-run/react";
 import React, {useState} from "react";
 
@@ -17,7 +23,13 @@ import {
 import {ItemInfoMutex} from "../browser/MUTEX";
 import {PrefListChoose} from "./components/PrefListChoose";
 
-export async function loader({request, params}: LoaderFunctionArgs) {
+export async function loader({request, params}: LoaderFunctionArgs): Promise<
+  TypedResponse<{
+    success: boolean;
+    data: ItemInfo | undefined;
+    error: {msg: string} | undefined;
+  }>
+> {
   const session: Session<SessionData, SessionFlashData> = await getSession(
     request.headers.get("cookie"),
   );
@@ -105,43 +117,6 @@ export async function loader({request, params}: LoaderFunctionArgs) {
   });
 }
 
-// export async function loader({request}: LoaderFunctionArgs) {
-//   const session: Session<SessionData, SessionFlashData> = await getSession(
-//     request.headers.get("cookie"),
-//   );
-//
-//   if (!session.has("userId") || !session.data.userId) {
-//     session.flash("error", "User not login");
-//
-//     return redirect("/login", {
-//       headers: {
-//         "Set-Cookie": await destroySession(session),
-//       },
-//     });
-//   }
-//
-//   if (isNaN(+session.data.userId)) {
-//     session.flash("error", "User id is not a number");
-//
-//     return redirect("/login", {
-//       headers: {
-//         "Set-Cookie": await destroySession(session),
-//       },
-//     });
-//   }
-//
-//   await getAllPreferencesInTheSystem();
-//   const preferenceData: string[] = [];
-//   const [additionalPreferences, setAdditionalPreferences] =
-// useState<string[]>( [], );  for (const preference of additionalPreferences)
-// { await createNewPreference(preference); preferenceData.push(preference); }
-// let userCurrentPreferences = await getPreferencesOfUser(
-// parseInt(session.data.userId), );  if (!userCurrentPreferences) {
-// userCurrentPreferences = []; }  let userName = ""; const user = await
-// getUserById(parseInt(session.data.userId));  if (user !== null) { userName =
-// user.userName; }  return { preferenceData, userName, userCurrentPreferences,
-// }; }
-
 export default function TabIndex(): React.JSX.Element {
   const loaderData = useLoaderData<typeof loader>();
 
@@ -161,21 +136,31 @@ export default function TabIndex(): React.JSX.Element {
     );
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [formData, setFormData] = useState<string[]>(loaderData.data.tag);
+  const [formData, setFormData]: [
+    string[],
+    React.Dispatch<React.SetStateAction<string[]>>,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  ] = useState<string[]>(loaderData.data.tag);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [newTag, setNewTag] = useState<string>("");
+  const [newTag, setNewTag]: [
+    string,
+    React.Dispatch<React.SetStateAction<string>>,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  ] = useState<string>("");
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [preference, setPreferences] = useState<string[]>(loaderData.data.tag);
+  const [preference, setPreferences]: [
+    string[],
+    React.Dispatch<React.SetStateAction<string[]>>,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  ] = useState<string[]>(loaderData.data.tag);
 
   function addPreference(message: string) {
     setFormData([...formData, message]);
   }
 
   function removePreference(message: string) {
-    setFormData(formData.filter((e) => e !== message));
+    setFormData(formData.filter((e: string) => e !== message));
   }
 
   function addNewTag() {
@@ -203,12 +188,10 @@ export default function TabIndex(): React.JSX.Element {
           Adding Tags for: {loaderData.data.title}
         </h1>
         <div className="hero">
-          {/*<div className="flex h-full items-center justify-center">*/}
-          {/*<div className="artboard artboard-horizontal phone-4">*/}
           <div className="hero-content">
             <div className="card">
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {preference.map((preference, index) => (
+                {preference.map((preference: string, index: number) => (
                   <>
                     <PrefListChoose
                       key={index}
@@ -225,9 +208,8 @@ export default function TabIndex(): React.JSX.Element {
         <div className="hero">
           <div className="hero-content">
             <div className="card">
-              {/*  <div className="card-body">*/}
-              <h2 className="card-title">Add tags</h2>
-              <label className="input input-bordered flex items-center gap-1">
+              <h2 className="card-title my-2">Add tags</h2>
+              <label className="input input-bordered my-2 flex items-center gap-1">
                 New Tag
                 <input
                   type="text"
@@ -238,11 +220,9 @@ export default function TabIndex(): React.JSX.Element {
                 />
               </label>
 
-              <button className="btn w-full" onClick={addNewTag}>
+              <button className="btn my-2 w-full" onClick={addNewTag}>
                 Add
               </button>
-
-              {/*</div>*/}
             </div>
           </div>
         </div>
@@ -251,14 +231,14 @@ export default function TabIndex(): React.JSX.Element {
           className={"w-full"}
           method={"POST"}
           action={"/api/item/set-tags"}>
-          {formData.map((e, index) => {
-            console.log(e);
+          {formData.map((e: string, index: number) => {
             return <input key={index} type="hidden" name="tag" value={e} />;
           })}
           <input type="hidden" name="item" value={loaderData.data.id} />
           <button
             type="submit"
-            className="btn my-2 w-full rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95">
+            className="btn my-2 w-full rounded-xl bg-gradient-to-r
+            from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95">
             Finish
           </button>
         </Form>

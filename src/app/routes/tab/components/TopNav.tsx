@@ -1,10 +1,10 @@
-import {Link, NavLink} from "@remix-run/react";
+import {NavLink} from "@remix-run/react";
 import {sha256} from "js-sha256";
 import React, {useState} from "react";
 
-import {useTheme} from "../_utils/theme-provider";
-import Logout from "./Logout";
-import Pineapple from "./Pineapple";
+import Logout from "../../_components/Logout";
+import Pineapple from "../../_components/Pineapple";
+import {useTheme} from "../../_utils/theme-provider";
 
 // function Logout(): React.JSX.Element {
 
@@ -66,18 +66,7 @@ export default function TopNav({
   email = "",
 }: TopNavLinkProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
-
-  // const action = async ({request}: ActionFunctionArgs) => {
-  //   const session = await getSession(
-  //     request.headers.get("Cookie")
-  //   );
-  //   return redirect("/login", {
-  //     headers: {
-  //       "Set-Cookie": await destroySession(session),
-  //     },
-  //   });
-  // };
-  const {toggleTheme} = useTheme();
+  // const {toggleTheme} = useTheme();
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -105,37 +94,41 @@ export default function TopNav({
           <ThemeToggle />
           <div className="dropdown dropdown-end dropdown-hover">
             <div tabIndex={0} role="button" className="m-1">
-              <div
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+              <button
                 className="avatar btn btn-circle btn-ghost mr-2"
                 onMouseEnter={() => setIsOpen(true)}
                 onClick={() => setIsOpen(false)}>
                 <div className="w-11 rounded-full">
-                  <Link to="/tab/4">
+                  <a href="/tab/4">
                     <img
                       src={`https://gravatar.com/avatar/${sha256(
                         email,
                       )}?d=identicon`}
                       alt="Avatar"
                     />
-                  </Link>
+                  </a>
                 </div>
-              </div>
+              </button>
             </div>
 
             {isOpen && (
-              <ul
-                className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
-                tabIndex={0}>
-                <li>
-                  <a href="/tab/4">Account</a>
-                </li>
-                <li>
-                  <a href="/settings/general">Settings</a>
-                </li>
-                <li>
-                  <Logout />
-                </li>
-              </ul>
+              <>
+                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+                <ul
+                  tabIndex={0}
+                  className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
+                  <li>
+                    <a href="/tab/4">Account</a>
+                  </li>
+                  {/*<li>*/}
+                  {/*  <a href="/settings/general">Settings</a>*/}
+                  {/*</li>*/}
+                  <li>
+                    <Logout />
+                  </li>
+                </ul>
+              </>
             )}
           </div>
         </div>

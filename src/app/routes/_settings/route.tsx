@@ -11,7 +11,7 @@ import {
   getSession,
 } from "../../session";
 import BtmNav from "../_components/BtmNav";
-import TopNav from "../_components/TopNav";
+import TopNav from "../tab/components/TopNav";
 
 export async function loader({request}: LoaderFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
