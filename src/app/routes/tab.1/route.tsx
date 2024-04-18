@@ -336,7 +336,7 @@ export default function tab_index(): React.JSX.Element {
             </div>
           </>
         )}
-
+      <div className={"lg:my-32"}></div>
       <ToastList data={toasts} removeToast={removeToast} />
     </>
   );
