@@ -23,6 +23,7 @@ import {
   getSession,
 } from "../../session";
 import {HistoryItemList} from "../_components/HistoryItemList";
+import InfoHover from "../_components/InfoHover";
 import {ToastList} from "../_components/ToastList";
 
 export async function loader({params, request}: LoaderFunctionArgs): Promise<
@@ -124,6 +125,39 @@ export default function tab_index(): React.JSX.Element {
       </>
     );
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcherRecommendation = useFetcher<{
+    success: boolean;
+    data: {data: SimpleItem[]} | null;
+    error: {msg: string} | null;
+  }>({
+    key: "recommendation",
+  });
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [getRecommendation, setGetRecommendation] = useState(false);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (!getRecommendation) {
+      fetcherRecommendation.load(
+        "/api/recommendation/item/" +
+          loaderData.data?.items.at(0)?.title.replaceAll("/", "-"),
+      );
+      setGetRecommendation(true);
+    }
+  }, [
+    fetcherRecommendation,
+    getRecommendation,
+    loaderData.data?.items,
+    setGetRecommendation,
+  ]);
+
+  const recommendation = fetcherRecommendation.data;
+  const isSubmitting = fetcherRecommendation.state === "submitting";
+  const isLoading = fetcherRecommendation.state === "loading";
+  const isIdle = fetcherRecommendation.state === "idle";
 
   const fetcherAddToLibrary: FetcherWithComponents<{
     success: false;
@@ -239,17 +273,87 @@ export default function tab_index(): React.JSX.Element {
                 Edit Folder
               </NavLink>
               <NavLink
-                to={"/library/folder/editing-items/" + data.id}
+                to={"/library/folder/item-editing/" + data.id}
                 className="btn btn-neutral btn-wide my-1 min-w-full">
                 Edit Items
               </NavLink>
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
             <div className="card min-w-[25rem] self-start bg-base-200 shadow-xl max-md:w-96">
-              <HistoryItemList title="Items in Folder" items={items} />
+              {items.length > 0 && (
+                <HistoryItemList
+                  title="Items in Folder"
+                  items={items}
+                  info="These are the items in the folder"
+                />
+              )}
+              {items.length === 0 && (
+                <>
+                  <div className="card w-full shadow-none">
+                    <div className="card-body">
+                      <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+                        Items in Folder
+                        <InfoHover info="These are no items in the folder" />
+                      </h2>
+                      <div className="text-center text-error">
+                        No items in the folder yet.
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/*used as an item list */}
-              <HistoryItemList title="Recommendation" items={[]} />
+              {(!getRecommendation || isLoading || isSubmitting) && (
+                <>
+                  <div className="card w-full shadow-none">
+                    <div className="card-body">
+                      <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+                        Recommendation
+                        <InfoHover info="This is recommendation based on the relevance of the item" />
+                      </h2>
+                      <div className="flex w-52 flex-col gap-4">
+                        <div className="skeleton h-32 w-full"></div>
+                        <div className="skeleton h-4 w-28"></div>
+                        <div className="skeleton h-4 w-full"></div>
+                        <div className="skeleton h-4 w-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+              {getRecommendation &&
+                isIdle &&
+                recommendation &&
+                recommendation.success &&
+                recommendation.data && (
+                  <HistoryItemList
+                    title="Recommendation"
+                    items={recommendation.data.data}
+                    info="This is recommendation based on the relevance of the item"
+                  />
+                )}
+
+              {getRecommendation &&
+                isIdle &&
+                (!recommendation || !recommendation.success) && (
+                  <>
+                    <div className="card w-full shadow-none">
+                      <div className="card-body">
+                        <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+                          Recommendation
+                          <InfoHover info="This is recommendation based on the relevance of the item" />
+                        </h2>
+                        <div className="flex w-52 flex-col gap-4">
+                          <div className="skeleton h-32 w-full"></div>
+                          <div className="skeleton h-4 w-28"></div>
+                          <div className="skeleton h-4 w-full"></div>
+                          <div className="skeleton h-4 w-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
             </div>
           </div>
           {/*Right Card End*/}

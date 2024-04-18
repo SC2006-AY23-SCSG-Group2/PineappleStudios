@@ -1,5 +1,5 @@
 import {
-  LoaderFunctionArgs,
+  ActionFunctionArgs,
   Session,
   TypedResponse,
   json,
@@ -21,7 +21,7 @@ import {
 
 export async function action({
   request,
-}: LoaderFunctionArgs): Promise<
+}: ActionFunctionArgs): Promise<
   TypedResponse<{success: boolean; error: {msg: string}}> | TypedResponse<never>
 > {
   const session: Session<SessionData, SessionFlashData> = await getSession(
