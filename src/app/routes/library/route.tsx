@@ -1,5 +1,5 @@
 import {LoaderFunctionArgs, json, redirect} from "@remix-run/node";
-import {Outlet, useLoaderData, useNavigate} from "@remix-run/react";
+import {Outlet, useLoaderData} from "@remix-run/react";
 import React from "react";
 
 import {getFolderInfo} from "../../../lib/dataRetrieve/getFolderInfo";
@@ -118,19 +118,16 @@ export async function loader({params, request}: LoaderFunctionArgs) {
 export default function tab(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useLoaderData<typeof loader>();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const navigate = useNavigate();
+
   return (
     <>
       <LibraryTopNav
         leftSection={[
-          <>
-            <button
+          <div key={"btn-sm"}>
+            <a
               key={"btn-sm"}
               className="btn btn-circle lg:hidden"
-              onClick={() => {
-                navigate("/tab/2");
-              }}>
+              href="/tab/2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -144,14 +141,12 @@ export default function tab(): React.JSX.Element {
                   d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"
                 />
               </svg>
-            </button>
+            </a>
 
-            <button
+            <a
               key={"btn-lg"}
               className="btn max-lg:hidden lg:visible"
-              onClick={() => {
-                navigate("/tab/2");
-              }}>
+              href="/tab/2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -166,8 +161,8 @@ export default function tab(): React.JSX.Element {
                 />
               </svg>
               Back
-            </button>
-          </>,
+            </a>
+          </div>,
         ]}
         title={
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment

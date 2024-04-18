@@ -21,7 +21,7 @@ export default function LibraryTopNav({
             : leftSection.map((e: React.JSX.Element) => e)}
         </div>
         <div className="navbar-center lg:flex">
-          <a href={"/"} className="btn btn-ghost text-xl">
+          <a href={"/tab/2"} className="btn btn-ghost text-xl">
             {title ?? "Pineapple Studio"}
           </a>
         </div>

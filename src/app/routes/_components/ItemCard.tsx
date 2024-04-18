@@ -1,4 +1,3 @@
-import {NavLink} from "@remix-run/react";
 import React, {useState} from "react";
 
 import {SimpleItem} from "../../../lib/interfaces";
@@ -32,14 +31,14 @@ export const ItemCard: React.FC<ItemCardProps> = ({
 
   return (
     <div className="col-span group relative m-3 h-[12vw]">
-      <NavLink to={`/browser/item/${data.id}`}>
+      <a href={`/browser/item/${data.id}`}>
         <img
           src={data.img}
           alt={data.title || "Item"}
           draggable={false}
           className="h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
         />
-      </NavLink>
+      </a>
       {data.tag.find((str) => str === "favorite") && (
         <div className="absolute right-2 top-2">
           <HeartButton onClick={() => setFav(!fav)} />
@@ -48,14 +47,14 @@ export const ItemCard: React.FC<ItemCardProps> = ({
       <div
         className="duration-400 invisible absolute top-0 z-50 w-full scale-0 opacity-0 transition
           delay-100 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
-        <NavLink to={`/browser/item/${data.id}`}>
+        <a href={`/browser/item/${data.id}`}>
           <img
             src={data.img}
             alt={data.title || "Item"}
             draggable={false}
             className="duration h-[12vw] w-full cursor-pointer rounded-t-md object-cover shadow-xl transition"
           />
-        </NavLink>
+        </a>
         <div className="absolute z-50 w-full rounded-b-md bg-zinc-800 p-2 shadow-md transition lg:p-4">
           <button onClick={func} className="btn bg-zinc-500 text-white">
             {btnContent}
