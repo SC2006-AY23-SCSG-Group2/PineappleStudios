@@ -1,5 +1,4 @@
 import React from "react";
-import {MAX_SLOTS_PER_USER_FOR_HISTORY_ITEM} from "src/lib/constants";
 
 import {SimpleItem} from "../../../lib/interfaces";
 import InfoHover from "./InfoHover";
@@ -14,11 +13,7 @@ interface ItemsListProps {
 export const HistoryItemList: React.FC<ItemsListProps> = ({
   title = "",
   items,
-  info = "This is your " +
-    title.toLowerCase() +
-    " for last " +
-    MAX_SLOTS_PER_USER_FOR_HISTORY_ITEM +
-    " items.",
+  info = "This is your " + title.toLowerCase(),
 }) => {
   return (
     <div className="card w-full shadow-none">

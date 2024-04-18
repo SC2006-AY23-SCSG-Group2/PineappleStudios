@@ -8,12 +8,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import React, {useEffect} from "react";
+import {themeChange} from "theme-change";
 
 import {
   calculateUsageTimeInMinutes,
   updateUserTimeUsedInApp,
 } from "../lib/dataRetrieve/handleUserInfo";
-import {ThemeProvider, useTheme} from "./routes/_utils/theme-provider";
 import {commitSession, getSession} from "./session";
 import styles from "./tailwind.css";
 
@@ -51,9 +52,20 @@ export async function loader({request}: LoaderFunctionArgs) {
 }
 
 function App() {
-  const {theme} = useTheme();
+  // const {theme} = useTheme();
+  useEffect(() => {
+    themeChange(false);
+    // 👆 false parameter is required for react project
+  }, []);
+  // const currentStorageTheme = localStorage.getItem("theme") ?? "retro";
+  // const [theme, setTheme] = React.useState<string>("retro");
+  // useEffect(() => {
+  //   setTheme(localStorage.getItem("theme") ?? "retro");
+  //   console.log("Root: " + localStorage.getItem("theme"));
+  // }, []);
+  // const theme = "retro";
   return (
-    <html lang="en" data-theme={theme}>
+    <html lang="en" id="html">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,11 +73,21 @@ function App() {
         <Links />
         <title>Pineapple Studio</title>
       </head>
-      <body>
+      <body id="body">
         <Outlet />
+        {/*<div className="hidden">*/}
+        {/*  <ThemeToggle />*/}
+        {/*</div>*/}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {/*<script>*/}
+        {/*  {'const currentStorageTheme = localStorage.getItem("theme") ?? "retro";' +*/}
+        {/*    "const container = document.getElementById('html');" +*/}
+        {/*    "(function(){" +*/}
+        {/*    "container.setAttribute('data-theme', \"retro\");" +*/}
+        {/*    "})();"}*/}
+        {/*</script>*/}
       </body>
     </html>
   );
@@ -73,8 +95,8 @@ function App() {
 
 export default function Root() {
   return (
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    // <ThemeProvider>
+    <App />
+    // </ThemeProvider>
   );
 }
