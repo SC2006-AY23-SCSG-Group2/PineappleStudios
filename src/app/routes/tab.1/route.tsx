@@ -285,6 +285,34 @@ export default function tab_index(): React.JSX.Element {
         </span>
       </h1>
 
+      {funcContent(loaderData.data)}
+
+      {(!loaderData.data ||
+        loaderData.data.length +
+          loaderData.data.length +
+          loaderData.data.length ===
+          0) && (
+        <>
+          <div className="hero">
+            <div className="hero-content text-center">
+              <div className="max-w-md">
+                <h1 className="text-xl font-bold text-error">
+                  {!recommendation
+                    ? "There is no recommendation result for this user, " +
+                      "you can browser more and add more items to your " +
+                      "library first."
+                    : recommendation.error
+                      ? recommendation.error?.msg.toString()
+                      : "There is no recommendation result for this user, " +
+                        "you can browser more and add more items to your " +
+                        "library first."}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {getRecommendation &&
         isIdle &&
         (!loaderData.data ||

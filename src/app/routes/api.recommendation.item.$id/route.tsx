@@ -6,17 +6,18 @@ import {
   redirect,
 } from "@remix-run/node";
 
-import {
-  ErrorResponse,
-  RecommendationResponse,
-  fetchRecommendations,
-} from "../../../lib/dataRetrieve/fetchRecent3Items";
+import {fetchRecommendations} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
   handleBookSearchAPI,
   handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
-import {ItemType, SimpleItem} from "../../../lib/interfaces";
+import {
+  ErrorResponse,
+  ItemType,
+  RecommendationResponse,
+  SimpleItem,
+} from "../../../lib/interfaces";
 import {
   SessionData,
   SessionFlashData,

@@ -364,6 +364,25 @@ export default function tab_index(): React.JSX.Element {
         </>
       )}
       <ToastList data={toasts} removeToast={removeToast} />
+      <a href="/library/folder/create" className="toast">
+        <div className="btn btn-info mb-16 mr-2 lg:mb-4 lg:mr-6">
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <path
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 19H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4l3 3h7a2 2 0 0 1 2 2v3.5M16 19h6m-3-3v6"
+            />
+          </svg>
+          Create Folder
+        </div>
+      </a>
     </>
   );
 }
