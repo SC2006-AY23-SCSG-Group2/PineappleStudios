@@ -180,13 +180,14 @@ export async function getItemInfoBySrcId(
         resultItem = await createBookItem(bookData);
         break;
       case "movie":
-        console.log("Creating Movie Item LEGELELGELGL");
+        console.log("Creating Movie Item");
         const movieData = await getMovieDetailsRequestById(srcId);
         resultItem = await createMovieItem(movieData);
         break;
       case "song":
         console.log("Creating song Item");
         const songData = await getSongDetailsRequestById(srcId);
+        console.log(songData);
         resultItem = await createSongItem(songData);
         break;
     }
