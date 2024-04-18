@@ -5,17 +5,15 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
+import {fetchRecommendationsBasedOnUserPreferences} from "src/lib/dataRetrieve/recommendedItems";
 
-import {
-  ErrorResponse,
-  RecommendationResponse,
-  fetchRecommendationsForRecentItems,
-} from "../../../lib/dataRetrieve/fetchRecent3Items";
+import {fetchRecommendationsForRecentItems} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
   handleBookSearchAPI,
   handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
+import {ErrorResponse, RecommendationResponse} from "../../../lib/interfaces";
 import {ItemType, SimpleItem} from "../../../lib/interfaces";
 import {
   SessionData,
@@ -68,16 +66,47 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  const recommendationResult: RecommendationResponse | ErrorResponse =
-    await fetchRecommendationsForRecentItems(+session.data.userId);
+  const recommendationResultForRecentItems:
+    | RecommendationResponse
+    | ErrorResponse = await fetchRecommendationsForRecentItems(
+    +session.data.userId,
+  );
 
-  if ("error" in recommendationResult) {
+  const recommendationResultBasedOnPreferences:
+    | RecommendationResponse
+    | ErrorResponse = await fetchRecommendationsBasedOnUserPreferences(
+    +session.data.userId,
+  );
+
+  // Combine the results using Promise.all
+  const combinedRecommendations: [
+    RecommendationResponse | ErrorResponse,
+    RecommendationResponse | ErrorResponse,
+  ] = await Promise.all([
+    recommendationResultForRecentItems,
+    recommendationResultBasedOnPreferences,
+  ]);
+
+  // Extract individual results
+  const [resultForRecentItems, resultBasedOnPreferences] =
+    combinedRecommendations;
+
+  // Handle error responses
+  if ("error" in resultForRecentItems || "error" in resultBasedOnPreferences) {
+    const errorMessages: string[] = [];
+    if ("error" in resultForRecentItems) {
+      errorMessages.push(resultForRecentItems.error);
+    }
+    if ("error" in resultBasedOnPreferences) {
+      errorMessages.push(resultBasedOnPreferences.error);
+    }
+    const errorMessage = errorMessages.join(", ");
     return json(
       {
         success: false,
         data: null,
         error: {
-          msg: recommendationResult.error as string,
+          msg: errorMessage,
         },
       },
       {
@@ -88,28 +117,19 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     );
   }
 
-  if (!recommendationResult) {
-    return json(
-      {
-        success: false,
-        data: null,
-        error: {
-          msg:
-            "There is no recommendation result for this user, " +
-            "you can browser more and add more items to your library first.",
-        },
-      },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      },
-    );
-  }
+  // Combine the recommendations from both responses
+  const combinedRecommendationResult: RecommendationResponse = {
+    books: [...resultForRecentItems.books, ...resultBasedOnPreferences.books],
+    movies: [
+      ...resultForRecentItems.movies,
+      ...resultBasedOnPreferences.movies,
+    ],
+    songs: [...resultForRecentItems.songs, ...resultBasedOnPreferences.songs],
+  };
 
   const returnResult: SimpleItem[] = [];
 
-  for (const i of recommendationResult.books) {
+  for (const i of combinedRecommendationResult.books) {
     const bookResult = await handleBookSearchAPI(i);
     if (bookResult.length >= 1) {
       const e = bookResult[0];
@@ -123,7 +143,7 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     }
   }
 
-  for (const i of recommendationResult.songs) {
+  for (const i of combinedRecommendationResult.songs) {
     const bookResult = await handleSongSearchAPI(i);
     if (bookResult.length >= 1) {
       const e = bookResult[0];
@@ -137,7 +157,7 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     }
   }
 
-  for (const i of recommendationResult.movies) {
+  for (const i of combinedRecommendationResult.movies) {
     const bookResult = await handleMovieSearchAPI(i);
     if (bookResult.length >= 1) {
       const e = bookResult[0];

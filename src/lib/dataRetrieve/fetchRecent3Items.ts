@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 
 import {prismaClient} from "../database/prisma";
+import {ErrorResponse, RecommendationResponse} from "../interfaces";
 
 const prisma = prismaClient;
 
@@ -13,16 +14,6 @@ export async function getRecentItemNames(userId: number): Promise<string[]> {
   });
 
   return recentItems.map((item) => item.item.title);
-}
-
-interface RecommendationResponse {
-  books: string[];
-  movies: string[];
-  songs: string[];
-}
-
-interface ErrorResponse {
-  error: string;
 }
 
 export async function fetchRecommendations(

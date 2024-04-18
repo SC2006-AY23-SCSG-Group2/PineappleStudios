@@ -87,3 +87,13 @@ export type BookContent = {
   pageCount?: number;
   description?: string;
 };
+
+export interface RecommendationResponse {
+  books: string[];
+  movies: string[];
+  songs: string[];
+}
+
+export interface ErrorResponse {
+  error: string;
+}

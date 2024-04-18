@@ -1,17 +1,8 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 
 import {prismaClient} from "../database/prisma";
+import {ErrorResponse, RecommendationResponse} from "../interfaces";
 import {getPreferencesOfUser} from "./handleUserPreferences";
-
-interface ErrorResponse {
-  error: string;
-}
-
-interface RecommendationResponse {
-  books: string[];
-  movies: string[];
-  songs: string[];
-}
 
 export async function fetchRecommendationsBasedOnSinglePreference(
   preference: string,
