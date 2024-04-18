@@ -1,3 +1,4 @@
+import {MAX_SLOTS_PER_USER_FOR_HISTORY_ITEM} from "../constants";
 import {getItemById} from "./item";
 import {prismaClient} from "./prisma";
 import {getProfileById} from "./profile";
@@ -7,6 +8,31 @@ export const createItemInProfileAssignments = async (
   itemId: number,
 ) => {
   try {
+    const historyItemCount = await prismaClient.itemsInProfiles.count({
+      where: {
+        profileId: profileId,
+      },
+    });
+
+    // If the number of entries exceeds the maximum slots, remove the oldest entry
+    if (historyItemCount >= MAX_SLOTS_PER_USER_FOR_HISTORY_ITEM) {
+      const oldestAssignment = await prismaClient.itemsInProfiles.findFirst({
+        where: {
+          profileId: profileId,
+        },
+        orderBy: {
+          addedAt: "asc",
+        },
+      });
+      // Remove the oldest assignment
+      if (oldestAssignment) {
+        await deleteItemInProfileAssignment(
+          oldestAssignment.profileId,
+          oldestAssignment.itemId,
+        );
+      }
+    }
+
     const assignment = await prismaClient.itemsInProfiles.create({
       data: {
         profileId: profileId,
@@ -67,6 +93,9 @@ export const getHistoryItemsInProfile = async (profileId: number) => {
       where: {
         profileId: profileId,
       },
+      orderBy: {
+        addedAt: "desc", // Order by addedAt attribute in descending order
+      },
     });
 
     const itemIds = itemAssignments.map((assigment) => assigment.itemId);
@@ -100,5 +129,28 @@ export const getProfileFromHistoryItem = async (itemId: number) => {
   } catch (e) {
     console.error("Error fetching profile for history items:", e);
     throw e;
+  }
+};
+
+//update "addedAt"
+export const updateItemInProfileAssignmentToCurrentDate = async (
+  profileId: number,
+  itemId: number,
+) => {
+  try {
+    const assignment = await prismaClient.itemsInProfiles.update({
+      where: {
+        profileId_itemId: {
+          profileId: profileId,
+          itemId: itemId,
+        },
+      },
+      data: {
+        addedAt: new Date(), // current date and time
+      },
+    });
+    return assignment;
+  } catch (error) {
+    console.error("Error updating history items:", error);
   }
 };

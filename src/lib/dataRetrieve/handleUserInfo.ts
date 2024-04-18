@@ -3,6 +3,7 @@ import {
   createItemInProfileAssignments,
   deleteItemInProfileAssignment,
   getItemInProfileAssignment,
+  updateItemInProfileAssignmentToCurrentDate,
 } from "../database/itemsInProfiles";
 import {
   decrementLikedItems,
@@ -166,6 +167,10 @@ export async function addHistoryItemForUser(userId: number, itemId: number) {
     );
     console.log("The history item for user is created.");
   } else {
+    await updateItemInProfileAssignmentToCurrentDate(
+      assignmentCheck.profileId,
+      assignmentCheck.itemId,
+    );
     console.log("The history item for user is ALREADY created.");
   }
   return assignmentCheck;

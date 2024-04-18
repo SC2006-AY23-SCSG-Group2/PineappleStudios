@@ -1,4 +1,5 @@
 export const MAX_SLOTS_PER_USER_FOR_RECENT_ITEM = 5;
+export const MAX_SLOTS_PER_USER_FOR_HISTORY_ITEM = 9;
 export const SPOTIFY_CLIENT_ID =
   process.env.SPOTIFY_CLIENT_ID ?? "8cdca6a867134003b59e00ba30b939e5";
 export const SPOTIFY_CLIENT_SECRET =
