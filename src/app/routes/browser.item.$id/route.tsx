@@ -311,9 +311,9 @@ export default function tab_index(): React.JSX.Element {
 
           // Construct the formatted duration string
           const formattedDuration =
-            hours > 0 ? `${hours} hour${hours !== 1 ? "s" : ""}` : "";
+            hours > 0 ? `${hours} minute${hours !== 1 ? "s" : ""}` : "";
           const minutesString =
-            minutes > 0 ? `${minutes} minute${minutes !== 1 ? "s" : ""}` : "";
+            minutes > 0 ? `${minutes} second${minutes !== 1 ? "s" : ""}` : "";
 
           // Combine the hours and minutes strings
           finalDuration =
