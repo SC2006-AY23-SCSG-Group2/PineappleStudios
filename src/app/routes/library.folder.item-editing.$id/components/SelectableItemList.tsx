@@ -32,29 +32,30 @@ export const SelectableItemList: React.FC<SelectableItemListProps> = ({
   );
 
   return (
-    <div className="card w-full shadow-none">
-      <div className="card-body">
-        <h2 className="card-title mx-2 text-2xl lg:text-3xl">
-          {title}
-          <InfoHover info={info} />
-        </h2>
-        <div className="m-6 grid grid-cols-4 gap-1 max-md:m-0 max-md:grid-cols-3 lg:m-0 lg:grid-cols-3 xl:grid-cols-3">
-          {items.map((item: SimpleItem, index: number) => (
-            <div key={index} className="my-2 lg:my-4">
-              <SelectableItemSmallCard
-                data={item}
-                selected={selectedList.get(item.id) ?? false}
-                clickIt={() => {
-                  console.log("click click: " + item.id);
-                  setSelectedList(
-                    selectedList.set(item.id, !selectedList.get(item.id)),
-                  );
-                  clickIt(item.id);
-                }}
-              />
-            </div>
-          ))}
-        </div>
+    <div className="card w-full shadow-none ">
+      {/*<div className="card-body">*/}
+      <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+        {title}
+        <InfoHover info={info} />
+      </h2>
+      <div className="m-6 ml-8 grid grid-cols-4 gap-1 max-md:m-0 max-md:ml-2 max-md:grid-cols-3 lg:m-0 lg:grid-cols-4 xl:grid-cols-5">
+        {items.map((item: SimpleItem, index: number) => (
+          // <div key={index} className="my-2 lg:my-4">
+          <SelectableItemSmallCard
+            key={index}
+            data={item}
+            selected={selectedList.get(item.id) ?? false}
+            clickIt={() => {
+              console.log("click click: " + item.id);
+              setSelectedList(
+                selectedList.set(item.id, !selectedList.get(item.id)),
+              );
+              clickIt(item.id);
+            }}
+          />
+          // </div>
+        ))}
+        {/*</div>*/}
       </div>
     </div>
   );

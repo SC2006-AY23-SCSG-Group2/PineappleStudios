@@ -5,8 +5,13 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import {Form, useLoaderData} from "@remix-run/react";
-import React, {useState} from "react";
+import {
+  NavigateFunction,
+  useFetcher,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
+import React, {useEffect, useState} from "react";
 
 import {
   getItemInfoByItemId,
@@ -20,6 +25,7 @@ import {
   destroySession,
   getSession,
 } from "../../session";
+import {ToastList} from "../_components/ToastList";
 import {ItemInfoMutex} from "../browser/MUTEX";
 import {PrefListChoose} from "./components/PrefListChoose";
 
@@ -181,6 +187,76 @@ export default function TabIndex(): React.JSX.Element {
     }
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcherAddToLibrary = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "add-to-library"});
+  fetcherAddToLibrary.formAction = "post";
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [toasts, setToasts] = useState<
+    {
+      id: number;
+      message: string;
+      type: string;
+    }[]
+  >([]);
+  const autoClose = true;
+  const autoCloseDuration = 5;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const showToast = (message: string, type: string) => {
+    const toast: {id: number; message: string; type: string} = {
+      id: Date.now(),
+      message,
+      type,
+    };
+
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) => [
+      ...prevToasts,
+      toast,
+    ]);
+
+    if (autoClose) {
+      setTimeout(() => {
+        removeToast(toast.id);
+      }, autoCloseDuration * 1000);
+    }
+  };
+
+  function removeToast(id: number) {
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) =>
+      prevToasts.filter(
+        (toast: {id: number; message: string; type: string}) => toast.id !== id,
+      ),
+    );
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const navigate: NavigateFunction = useNavigate();
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (
+      fetcherAddToLibrary.state === "idle" &&
+      fetcherAddToLibrary.data &&
+      !fetcherAddToLibrary.data.success
+    ) {
+      showToast(fetcherAddToLibrary.data.error.msg, "error");
+      fetcherAddToLibrary.data = undefined;
+    }
+    if (
+      fetcherAddToLibrary.state === "idle" &&
+      fetcherAddToLibrary.data &&
+      fetcherAddToLibrary.data.success
+    ) {
+      console.log("go back");
+      // navigate("/library/folder/" + loaderData.data?.folder?.id);
+      window.location.href = "/library/item/" + loaderData.data?.id;
+    }
+  }, [fetcherAddToLibrary, loaderData.data?.id, navigate, showToast]);
+
   return (
     <>
       <div className="container mx-auto px-4 py-8">
@@ -227,7 +303,7 @@ export default function TabIndex(): React.JSX.Element {
           </div>
         </div>
 
-        <Form
+        <fetcherAddToLibrary.Form
           className={"w-full"}
           method={"POST"}
           action={"/api/item/set-tags"}>
@@ -241,8 +317,9 @@ export default function TabIndex(): React.JSX.Element {
             from-orange-500 to-red-500 px-6 text-lg text-black hover:scale-95">
             Finish
           </button>
-        </Form>
+        </fetcherAddToLibrary.Form>
       </div>
+      <ToastList data={toasts} removeToast={removeToast} />
     </>
   );
 }

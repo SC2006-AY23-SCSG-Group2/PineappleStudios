@@ -232,14 +232,12 @@ export default function tab_index(): React.JSX.Element {
   const data: Folder = loaderData.data;
   const items: SimpleItem[] = data.items;
 
-  // const type: string[] = ["Book", "Song", "Movie"];
-
   return (
     <>
       <div className="hero min-h-screen">
-        <div className="hero-content max-lg:m-2 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end ">
+        <div className="hero-content max-lg:m-2 max-lg:flex-col lg:m-0 lg:flex-row lg:items-start lg:justify-start ">
           {/*Left Card Begin*/}
-          <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:bottom-[16px] lg:max-w-md">
+          <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:top-[88px] lg:max-w-md ">
             <div className="card items-center bg-base-200 shadow-xl">
               <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
                 <img

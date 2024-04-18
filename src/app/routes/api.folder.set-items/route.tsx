@@ -154,6 +154,6 @@ export async function action({
   // return redirect("/library/folder/" + numID, {status: 302});
   return json({
     success: true,
-    error: {msg: "able to add some items to libraries"},
+    error: {msg: "able to set some items of libraries"},
   });
 }

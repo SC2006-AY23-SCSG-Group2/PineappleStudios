@@ -97,6 +97,7 @@ export async function action({request}: LoaderFunctionArgs) {
     if (aResult) {
       return json({
         success: false,
+        data: -1,
         error: {msg: aResult.error},
       });
     }
@@ -105,10 +106,15 @@ export async function action({request}: LoaderFunctionArgs) {
     if (aResult) {
       return json({
         success: false,
+        data: -1,
         error: {msg: aResult.error},
       });
     }
   }
 
-  return redirect("/library/folder/" + folderResult.id);
+  return json({
+    success: true,
+    data: folderResult.id,
+    error: {msg: "able to create the folder"},
+  });
 }

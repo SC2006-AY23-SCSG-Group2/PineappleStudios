@@ -12,12 +12,14 @@ import {
   handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
+import {getUserInfoByUserId} from "../../../lib/dataRetrieve/getUserInfo";
 import {fetchRecommendationsBasedOnUserPreferences} from "../../../lib/dataRetrieve/recommendedItems";
 import {
   ErrorResponse,
   ItemType,
   RecommendationResponse,
   SimpleItem,
+  User,
 } from "../../../lib/interfaces";
 import {
   SessionData,
@@ -26,17 +28,6 @@ import {
   destroySession,
   getSession,
 } from "../../session";
-
-export async function action(loaderArgs: LoaderFunctionArgs): Promise<
-  | TypedResponse<never>
-  | TypedResponse<{
-      success: boolean;
-      data: {data: SimpleItem[]} | null;
-      error: {msg: string} | null;
-    }>
-> {
-  return loader(loaderArgs);
-}
 
 export async function loader({request}: LoaderFunctionArgs): Promise<
   | TypedResponse<never>
@@ -73,10 +64,24 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
   const resultForRecentItems: RecommendationResponse | ErrorResponse =
     await fetchRecommendationsForRecentItems(+session.data.userId);
 
+  const user: User = await getUserInfoByUserId(+session.data.userId);
+
+  if (!user) {
+    session.flash("error", "User not login");
+
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await destroySession(session),
+      },
+    });
+  }
+
+  const newUser = user.countItemsInLibrary < 3;
+
   const resultBasedOnPreferences: RecommendationResponse | ErrorResponse =
     await fetchRecommendationsBasedOnUserPreferences(
       +session.data.userId,
-      false,
+      newUser,
     );
 
   // Handle error responses

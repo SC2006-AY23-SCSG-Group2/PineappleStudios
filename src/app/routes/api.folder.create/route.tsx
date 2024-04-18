@@ -76,7 +76,7 @@ export async function action({request}: LoaderFunctionArgs) {
   ) {
     return json({
       success: false,
-      data: undefined,
+      data: -1,
       error: {msg: "no form data provided"},
     });
   }
@@ -93,6 +93,7 @@ export async function action({request}: LoaderFunctionArgs) {
 
     return json({
       success: false,
+      data: -1,
       error: {msg: "Unable to create the folder"},
     });
   }
@@ -135,12 +136,17 @@ export async function action({request}: LoaderFunctionArgs) {
 
   if (!result) {
     console.log(result);
-
     return json({
       success: false,
+      data: -1,
       error: {msg: "Unable to create the folder"},
     });
   }
 
-  return redirect("/library/folder/" + folderResult.id);
+  // return redirect("/library/folder/" + folderResult.id);
+  return json({
+    success: true,
+    data: folderResult.id,
+    error: {msg: "able to create the folder"},
+  });
 }

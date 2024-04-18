@@ -87,5 +87,9 @@ export async function action({request}: LoaderFunctionArgs) {
     });
   }
 
-  return redirect("/library/folder/" + id);
+  // return redirect("/library/folder/" + id);
+  return json({
+    success: true,
+    error: {msg: "able to delete item from the folder"},
+  });
 }

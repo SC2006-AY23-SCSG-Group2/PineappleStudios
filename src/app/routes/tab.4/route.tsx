@@ -90,29 +90,36 @@ export default function tab_index(): React.JSX.Element {
           <div className="self-center">
             <UserProfileCard user={userData} />
           </div>
+          <div>
+            <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
+              <div className="card-body">
+                {loaderData && loaderData.user.preference && (
+                  <>
+                    <h2 className="card-title mx-2 text-2xl lg:text-3xl">
+                      Preferences
+                    </h2>
+                    <TagList
+                      tag={loaderData.user.preference}
+                      colors={colors}
+                      buttonType="none"
+                    />
+                  </>
+                )}
+              </div>
 
-          <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
-            <div className="card-body">
-              {loaderData && loaderData.user.preference && (
-                <>
-                  <h2 className="card-title mx-2 text-2xl lg:text-3xl">
-                    Preferences
-                  </h2>
-                  <TagList
-                    tag={loaderData.user.preference}
-                    colors={colors}
-                    buttonType="none"
-                  />
-                </>
+              {loaderData && loaderData.user.history && (
+                <HistoryItemList
+                  title="View History"
+                  items={loaderData.user.history}
+                />
               )}
             </div>
-
-            {loaderData && loaderData.user.history && (
-              <HistoryItemList
-                title="View History"
-                items={loaderData.user.history}
-              />
-            )}
+            <div className={"max-lg:mt-4 lg:mt-8"}></div>
+            <a
+              href={"/logout"}
+              className="btn btn-neutral btn-wide my-1 min-w-full">
+              Logout
+            </a>
           </div>
         </div>
       </div>

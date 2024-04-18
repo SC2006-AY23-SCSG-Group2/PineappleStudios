@@ -16,5 +16,9 @@ export function getPicsumURL(id?: number): string {
     id = id + 100;
   }
 
+  if (id === 105) {
+    id = 106;
+  }
+
   return `https://picsum.photos/id/${id}/400/600.webp`;
 }

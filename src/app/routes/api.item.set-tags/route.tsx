@@ -1,4 +1,4 @@
-import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
+import {ActionFunctionArgs, Session, json, redirect} from "@remix-run/node";
 import {ItemInfo} from "src/lib/interfaces";
 
 import {
@@ -18,7 +18,7 @@ import {
 } from "../../session";
 import {ItemInfoMutex} from "../browser/MUTEX";
 
-export async function action({request}: LoaderFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
   const session: Session<SessionData, SessionFlashData> = await getSession(
     request.headers.get("cookie"),
   );
@@ -158,5 +158,10 @@ export async function action({request}: LoaderFunctionArgs) {
     });
   }
 
-  return redirect("/library/item/" + id);
+  // return redirect("/library/item/" + id);
+
+  return json({
+    success: true,
+    error: {msg: "able to add item to tags: " + tags.toString()},
+  });
 }

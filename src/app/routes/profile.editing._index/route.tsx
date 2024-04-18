@@ -3,17 +3,15 @@ import {
   Session,
   TypedResponse,
   json,
-  redirect,
 } from "@remix-run/node";
 import {NavLink, useFetcher, useLoaderData} from "@remix-run/react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   updateUserEmail,
   updateUserName,
 } from "src/lib/dataRetrieve/handleUserInfo";
 import {
-  addPreferenceForUser,
   getPreferencesOfUser,
   removePreferenceForUser,
 } from "src/lib/dataRetrieve/handleUserPreferences";
@@ -27,6 +25,7 @@ import {
   getSession,
 } from "../../session";
 import InfoHover from "../_components/InfoHover";
+import {ToastList} from "../_components/ToastList";
 import {PrefListChoose} from "../profile.editing.first-time/components/PrefListChoose";
 
 interface EditData {
@@ -47,11 +46,10 @@ export async function action({request}: LoaderFunctionArgs) {
   const formData: FormData = await request.formData();
 
   // Extract userName and email from the form data.
-  const newUserName = formData.get("name")?.toString() || user?.userName; // Notice
-  // we're
-  // using
-  // 'userName'
-  // here
+  const newUserName: string | undefined =
+    formData.get("name")?.toString() || user?.userName; // Notice we're using
+  // `userName` here
+
   const newEmail = formData.get("email")?.toString() || user?.email;
 
   const preferences = formData.get("preferences");
@@ -72,7 +70,10 @@ export async function action({request}: LoaderFunctionArgs) {
     const userOldPreferences = await getPreferencesOfUser(user.id);
     if (!userOldPreferences) {
       console.log("User preferences is empty.");
-      return redirect("/tab/4");
+      return json({
+        success: true,
+        error: {msg: "User preferences added successfully."},
+      });
     }
 
     // If oldPreference is not found in preferencesArray, remove it for the user
@@ -83,7 +84,10 @@ export async function action({request}: LoaderFunctionArgs) {
     }
   }
 
-  return redirect("/tab/4");
+  return json({
+    success: true,
+    error: {msg: "User preferences added successfully."},
+  });
 }
 
 export async function loader({request}: LoaderFunctionArgs): Promise<
@@ -136,8 +140,7 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
 export default function tab_index(): React.JSX.Element {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loaderData = useLoaderData<typeof loader>();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const fetcher = useFetcher();
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [emailError, setEmailError] = useState("");
 
@@ -214,6 +217,64 @@ export default function tab_index(): React.JSX.Element {
       // Add your form submission logic here
     }
   };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fetcher = useFetcher<{
+    success: false;
+    error: {msg: string};
+  }>({key: "add-to-library"});
+  fetcher.formAction = "post";
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [toasts, setToasts] = useState<
+    {
+      id: number;
+      message: string;
+      type: string;
+    }[]
+  >([]);
+  const autoClose = true;
+  const autoCloseDuration = 5;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const showToast = (message: string, type: string) => {
+    const toast: {id: number; message: string; type: string} = {
+      id: Date.now(),
+      message,
+      type,
+    };
+
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) => [
+      ...prevToasts,
+      toast,
+    ]);
+
+    if (autoClose) {
+      setTimeout(() => {
+        removeToast(toast.id);
+      }, autoCloseDuration * 1000);
+    }
+  };
+
+  function removeToast(id: number) {
+    setToasts((prevToasts: {id: number; message: string; type: string}[]) =>
+      prevToasts.filter(
+        (toast: {id: number; message: string; type: string}) => toast.id !== id,
+      ),
+    );
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data && !fetcher.data.success) {
+      showToast(fetcher.data.error.msg, "error");
+      fetcher.data = undefined;
+    }
+    if (fetcher.state === "idle" && fetcher.data && fetcher.data.success) {
+      console.log("go back");
+      window.location.href = "/tab/4";
+    }
+  }, [fetcher, showToast]);
 
   return (
     <>
@@ -296,6 +357,7 @@ export default function tab_index(): React.JSX.Element {
           </div>
         </div>
       </div>
+      <ToastList data={toasts} removeToast={removeToast} />
     </>
   );
 }
