@@ -253,7 +253,7 @@ export default function tab_index(): React.JSX.Element {
                 className="btn btn-neutral btn-wide my-1 min-w-full">
                 Edit Items
               </NavLink>
-              <Form ref={formRef} method="post" action="/api/folder/delete">
+              <Form ref={formRef} method="post" action={"/api/folder/delete"}>
                 <input
                   type="hidden"
                   name="folder"
