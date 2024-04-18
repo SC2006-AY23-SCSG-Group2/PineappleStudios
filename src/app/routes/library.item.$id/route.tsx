@@ -291,14 +291,21 @@ export default function tab_index(): React.JSX.Element {
 
   const type: string[] = ["Book", "Song", "Movie"];
 
-  function funcContent(): React.JSX.Element | null {
+  function funcContent() {
     switch (data.type) {
       case ItemType.Book: {
         return (
           <>
             {(content as BookContent).pageCount && (
               <p className="mt-2 block text-lg">
-                Page Count: {(content as BookContent).pageCount}
+                <span className="font-bold"> Page Count: </span>
+                {(content as BookContent).pageCount}
+              </p>
+            )}
+            {(content as BookContent).description && (
+              <p className="mt-2 block text-lg">
+                <span className="font-bold"> Description: </span>
+                {(content as BookContent).description}
               </p>
             )}
           </>
@@ -306,16 +313,49 @@ export default function tab_index(): React.JSX.Element {
       }
 
       case ItemType.Movie: {
+        const movieContent = content as MovieContent;
+
+        // Initialize duration variables
+        let finalDuration = "";
+
+        // Check if duration is defined
+        if (movieContent.duration !== undefined) {
+          // Calculate the number of hours and remaining minutes
+          const hours = Math.floor(movieContent.duration / 60);
+          const minutes = movieContent.duration % 60;
+
+          // Construct the formatted duration string
+          const formattedDuration =
+            hours > 0 ? `${hours} hour${hours !== 1 ? "s" : ""}` : "";
+          const minutesString =
+            minutes > 0 ? `${minutes} minute${minutes !== 1 ? "s" : ""}` : "";
+
+          // Combine the hours and minutes strings
+          finalDuration =
+            formattedDuration +
+            (formattedDuration && minutesString ? " and " : "") +
+            minutesString;
+        }
+
         return (
           <>
             {(content as MovieContent).duration && (
               <p className="mt-2 block text-lg">
-                Duration: {(content as MovieContent).duration} minutes
+                <span className="font-bold"> Duration: </span>
+                {/* {(content as MovieContent).duration} minutes */}
+                {finalDuration}
               </p>
             )}
             {(content as MovieContent).country && (
               <p className="mt-2 block text-lg">
-                Country: {(content as MovieContent).country}
+                <span className="font-bold">Country: </span>
+                {(content as MovieContent).country}
+              </p>
+            )}
+            {(content as MovieContent).description && (
+              <p className="mt-2 block text-lg ">
+                <span className="font-bold">Description: </span>
+                {(content as MovieContent).description}
               </p>
             )}
           </>
@@ -323,16 +363,42 @@ export default function tab_index(): React.JSX.Element {
       }
 
       case ItemType.Song: {
+        const songContent = content as SongContent;
+
+        // Initialize duration variable
+        let finalDuration = "";
+
+        // Check if duration is defined
+        if (songContent.duration !== undefined) {
+          // Calculate the number of hours and remaining minutes
+          const hours = Math.floor(songContent.duration / 60);
+          const minutes = songContent.duration % 60;
+
+          // Construct the formatted duration string
+          const formattedDuration =
+            hours > 0 ? `${hours} minute${hours !== 1 ? "s" : ""}` : "";
+          const minutesString =
+            minutes > 0 ? `${minutes} second${minutes !== 1 ? "s" : ""}` : "";
+
+          // Combine the hours and minutes strings
+          finalDuration =
+            formattedDuration +
+            (formattedDuration && minutesString ? " and " : "") +
+            minutesString;
+        }
         return (
           <>
             {(content as SongContent).album && (
               <p className="mt-2 block text-lg">
-                Album: {(content as SongContent).album}
+                <span className="font-bold"> Album: </span>
+                {(content as SongContent).album}
               </p>
             )}
             {(content as SongContent).duration && (
               <p className="mt-2 block text-lg">
-                Duration: {(content as SongContent).duration} minutes
+                <span className="font-bold"> Duration: </span>
+                {/* {(content as SongContent).duration} minutes */}
+                {finalDuration}
               </p>
             )}
           </>
