@@ -1,4 +1,4 @@
-import {countItems, getItemById} from "../database/item";
+import {countItems, getItemById, getLastItemId} from "../database/item";
 import {SimpleItem} from "../interfaces";
 import {getSimpleItemInfoByItemId} from "./getItemInfo";
 
@@ -28,7 +28,7 @@ async function getRandomItemsByType(
 ): Promise<SimpleItem[]> {
   const Items: SimpleItem[] = [];
   const allItems: SimpleItem[] = [];
-  const totalItemCount: number | undefined = await countItems();
+  const totalItemCount: number | undefined = await getLastItemId();
 
   if (!totalItemCount) {
     return Items;
@@ -44,7 +44,7 @@ async function getRandomItemsByType(
   }
 
   // If the total number of items is less than the required number, return all items
-  if (allItems.length <= numberOfItem) {
+  if (allItems.length < numberOfItem) {
     return allItems;
   }
 

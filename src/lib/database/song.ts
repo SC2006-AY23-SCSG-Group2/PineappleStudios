@@ -434,10 +434,10 @@ export const getSongDetailsRequest = async (songTitle: string) => {
         album: song.album.name,
         srcId: "song+" + song.id,
         itemTitle: song.name,
-        artist: song.artists.map((artist: any) => artist.name).join(", "),
+        // artist: song.artists.map((artist: any) => artist.name).join(", "),
         thumbnailUrl:
           song.album.images.length > 0 ? song.album.images[0].url : "", // Use the first image as thumbnail
-        genre: song.album.genres ? song.album.genres.join(", ") : "", // Check if genres exist before joining
+        // genre: song.album.genres ? song.album.genres.join(", ") : "", // Check if genres exist before joining
         releaseDate: song.album.release_date,
         language: "English", // Spotify doesn't provide language information directly
         duration: millisToSeconds(song.duration_ms), // Duration in milliseconds
@@ -474,7 +474,7 @@ export const getSongDetailsRequestById = async (srcId: string) => {
     // console.log("Response status:", response.ok);
 
     const responseData = await response.json();
-    const artist_id = responseData?.artists.map((artist: any) => artist.id);
+    const artist_id = responseData?.artists?.map((artist: any) => artist.id);
     const url2 = `https://api.spotify.com/v1/artists/${encodeURIComponent(artist_id)}`;
     const response2 = await fetch(url2, {
       headers: {
@@ -494,7 +494,7 @@ export const getSongDetailsRequestById = async (srcId: string) => {
           responseData?.artists?.map((artist: any) => artist.name).join(", ") ||
           "",
         thumbnailUrl: responseData?.album?.images?.[0]?.url || "",
-        genre: responseData2?.genres.join(", "),
+        genre: responseData2?.genres?.join(", ") || "",
         //genre: responseData?.artists?.map((artist: any) => artist.genres).join(", ")|| responseData, // Check if artists and genres exist
         releaseDate: responseData?.album?.release_date || "",
         language: "English",
