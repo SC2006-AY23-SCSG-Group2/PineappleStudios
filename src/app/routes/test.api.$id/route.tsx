@@ -229,15 +229,11 @@
 //   handleMovieSearchAPI,
 //   handleSongSearchAPI,
 // } from "src/lib/dataRetrieve/getAPIInfo";
-
 // import {getAverageRatingByItemId} from "../../../lib/database/rate";
-
 // export async function loader({params}: LoaderFunctionArgs) {
 //   const itemId: number = 2; // Provide the item ID for testing
-
 //   try {
 //     const averageRating = await getAverageRatingByItemId(itemId);
-
 //     console.log("Average Rating:", averageRating);
 //     // Fetch book data
 //     const books = await handleMovieSearchAPI("harry potter");
@@ -245,7 +241,6 @@
 //     // Pick a random book
 //     const randomBook = books[Math.floor(Math.random() * books.length)];
 //     // const averageRating = await handleCreateItem(books[1]);
-
 //     return json(
 //       {
 //         success: true,
@@ -272,16 +267,13 @@
 // import { LoaderFunctionArgs, json } from "@remix-run/node";
 // //import { createFolder } from "../../../lib/database/folder";
 // import { handleFolder } from "../../../lib/dataRetrieve/handleFolder";
-
 // export async function loader({ request }: LoaderFunctionArgs) {
 //   const libraryId: number = 2; // Provide the library ID where you want to create the folder
 //   const folderName: string = "Train"; // Provide the name for the folder
-
 //   try {
 //     // Create a new folder
 //     const newFolder = await handleFolder(folderName, libraryId);
 //     console.log("Created Folder:", newFolder);
-
 //     return json(
 //       {
 //         success: true,
@@ -303,17 +295,93 @@
 //   }
 // }
 // -----------------------handle api ------------------------------------------
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import {getBookRequest, getBookDetailsRequest} from "./../../../lib/database/book"
-import {getMovieRequest, getMovieDetailsRequest} from "./../../../lib/database/movie"
-import { getSearchAPI, handleBookSearchAPI, handleMovieSearchAPI,handleSongSearchAPI } from "./../../../lib/dataRetrieve/getAPIInfo"
-import { getSongDetailsRequest, getSongDetailsRequestById } from "src/lib/database/song";
+import {LoaderFunctionArgs, json} from "@remix-run/node";
+import {
+  getItemIdBySrcId,
+  getItemInfoBySrcId,
+} from "src/lib/dataRetrieve/getItemInfo";
+import {
+  getSongDetailsRequest,
+  getSongDetailsRequestById,
+} from "src/lib/database/song";
+import {createSongItem} from "src/lib/database/songAPI";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+import {
+  getSearchAPI,
+  handleBookSearchAPI,
+  handleMovieSearchAPI,
+  handleSongSearchAPI,
+} from "./../../../lib/dataRetrieve/getAPIInfo";
+import {
+  getBookDetailsRequest,
+  getBookRequest,
+} from "./../../../lib/database/book";
+import {
+  getMovieDetailsRequest,
+  getMovieRequest,
+} from "./../../../lib/database/movie";
+
+export async function loader({request}: LoaderFunctionArgs) {
   try {
     // Invoke the handleSearchAPI function
+    const songs: string[] = [
+      "Blinding Lights - The Weeknd",
+      "Levitating - Dua Lipa",
+      "Watermelon Sugar - Harry Styles",
+      "Dance Monkey - Tones and I",
+      "Savage Love - Jason Derulo",
+      "Bad Guy - Billie Eilish",
+      "Circles - Post Malone",
+      "Senorita - Shawn Mendes & Camila Cabello",
+      "Old Town Road - Lil Nas X ft. Billy Ray Cyrus",
+      "Mood - 24kGoldn ft. Iann Dior",
+    ];
+
+    for (const song of songs) {
+      const songData = await getSongDetailsRequest(song);
+      await getItemInfoBySrcId(songData[0].srcId, 1);
+    }
+
+    const books: string[] = [
+      "To Kill a Mockingbird by Harper Lee",
+      "1984 by George Orwell",
+      "Pride and Prejudice by Jane Austen",
+      "The Great Gatsby by F. Scott Fitzgerald",
+      "The Catcher in the Rye by J.D. Salinger",
+      "The Hobbit by J.R.R. Tolkien",
+      "Moby-Dick by Herman Melville",
+      "War and Peace by Leo Tolstoy",
+      "The Lord of the Rings by J.R.R. Tolkien",
+      "The Adventures of Huckleberry Finn by Mark Twain",
+    ];
+
+    for (const book of books) {
+      const bookData = await getBookDetailsRequest(book);
+      await getItemInfoBySrcId(bookData[0].srcId, 1);
+    }
+
+    const movies: string[] = [
+      "The Shawshank Redemption",
+      "The Godfather",
+      "The Dark Knight",
+      "Pulp Fiction",
+      "Forrest Gump",
+      "The Lord of the Rings: The Return of the King",
+      "Inception",
+      "Fight Club",
+      "The Matrix",
+      "Gladiator",
+    ];
+
+    for (const movie of movies) {
+      const movieData = await getMovieDetailsRequest(movie);
+      await getItemInfoBySrcId(movieData[0].srcId, 1);
+    }
+
     const id = "song+11dFghVXANMlKmJXsNCbNl";
     const searchData = await getSongDetailsRequestById(id);
+    // const songData = await getSongDetailsRequest("Maze Runner");
+    // await createSongItem(songData[0]);
 
     // Log the search data
     console.log("Search Data:", searchData);
@@ -325,7 +393,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         data: searchData,
         error: {},
       },
-      { status: 200 }
+      {status: 200},
     );
   } catch (error) {
     console.error("Error:", error);
@@ -333,9 +401,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         success: false,
         data: {},
-        error: { msg: "An error occurred while fetching search results" },
+        error: {msg: "An error occurred while fetching search results"},
       },
-      { status: 500 }
+      {status: 500},
     );
   }
 }
