@@ -74,7 +74,10 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     await fetchRecommendationsForRecentItems(+session.data.userId);
 
   const resultBasedOnPreferences: RecommendationResponse | ErrorResponse =
-    await fetchRecommendationsBasedOnUserPreferences(+session.data.userId);
+    await fetchRecommendationsBasedOnUserPreferences(
+      +session.data.userId,
+      false,
+    );
 
   // Handle error responses
   if ("error" in resultForRecentItems || "error" in resultBasedOnPreferences) {
