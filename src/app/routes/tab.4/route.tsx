@@ -89,6 +89,22 @@ export default function tab_index(): React.JSX.Element {
         <div className="hero-content max-lg:m-0 max-lg:flex-col max-md:w-96 lg:m-0 lg:flex-row lg:items-end lg:justify-between">
           <div className="self-center">
             <UserProfileCard user={userData} />
+            <div className={"max-lg:mt-4 lg:mt-8"}></div>
+            <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
+              <div className="card-body">
+                <div className="card-title">Theme Changer</div>
+                <select
+                  data-choose-theme
+                  className="select min-w-full"
+                  defaultValue="theme">
+                  <option value="theme" disabled>
+                    Theme
+                  </option>
+                  <option value="forest">forest</option>
+                  <option value="retro">retro</option>
+                </select>
+              </div>
+            </div>
           </div>
           <div>
             <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
@@ -117,7 +133,7 @@ export default function tab_index(): React.JSX.Element {
             <div className={"max-lg:mt-4 lg:mt-8"}></div>
             <a
               href={"/logout"}
-              className="btn btn-neutral btn-wide my-1 min-w-full">
+              className="btn btn-error btn-wide my-1 min-w-full">
               Logout
             </a>
           </div>

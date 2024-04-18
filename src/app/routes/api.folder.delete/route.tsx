@@ -1,12 +1,7 @@
 import {LoaderFunctionArgs, Session, json, redirect} from "@remix-run/node";
 
-import {createFolder, deleteFolder} from "../../../lib/dataRetrieve/createFolder";
+import {deleteFolder} from "../../../lib/dataRetrieve/createFolder";
 import {getUserInfoByUserId} from "../../../lib/dataRetrieve/getUserInfo";
-import {
-  setFolderToSeries,
-  unSetFolderFromSeries,
-  updateFolderWithNewName,
-} from "../../../lib/dataRetrieve/handleFolder";
 import {
   SessionData,
   SessionFlashData,
@@ -118,5 +113,5 @@ export async function action({request}: LoaderFunctionArgs) {
   //   data: folderId,
   //   error: {msg: "able to delete the folder"},
   // });
-  return redirect("/tab/2")
+  return redirect("/tab/2");
 }

@@ -280,7 +280,11 @@ export default function tab_index(): React.JSX.Element {
   const hanldeChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (window.confirm("Your changes in this page will not be saved. Do you want to skip?")) {
+    if (
+      window.confirm(
+        "Your changes in this page will not be saved. Do you want to skip?",
+      )
+    ) {
       formRef.current?.submit();
     }
   };
@@ -362,12 +366,15 @@ export default function tab_index(): React.JSX.Element {
                 {" "}
                 Click to add more preferences
               </NavLink> */}
-              <Form ref={formRef} method="get" action="/profile/editing/first-time">
+              <Form
+                ref={formRef}
+                method="get"
+                action="/profile/editing/first-time">
                 <button
                   className="btn btn-primary w-full"
                   type="submit"
                   onClick={hanldeChange}>
-                    Click to add more preferences
+                  Click to add more preferences
                 </button>
               </Form>
             </div>
