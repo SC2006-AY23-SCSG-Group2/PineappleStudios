@@ -5,7 +5,6 @@ import {
   json,
   redirect,
 } from "@remix-run/node";
-import {fetchRecommendationsBasedOnUserPreferences} from "src/lib/dataRetrieve/recommendedItems";
 
 import {fetchRecommendationsForRecentItems} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
@@ -13,8 +12,13 @@ import {
   handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
-import {ErrorResponse, RecommendationResponse} from "../../../lib/interfaces";
-import {ItemType, SimpleItem} from "../../../lib/interfaces";
+import {fetchRecommendationsBasedOnUserPreferences} from "../../../lib/dataRetrieve/recommendedItems";
+import {
+  ErrorResponse,
+  ItemType,
+  RecommendationResponse,
+  SimpleItem,
+} from "../../../lib/interfaces";
 import {
   SessionData,
   SessionFlashData,
@@ -66,39 +70,20 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  const recommendationResultForRecentItems:
-    | RecommendationResponse
-    | ErrorResponse = await fetchRecommendationsForRecentItems(
-    +session.data.userId,
-  );
+  const resultForRecentItems: RecommendationResponse | ErrorResponse =
+    await fetchRecommendationsForRecentItems(+session.data.userId);
 
-  const recommendationResultBasedOnPreferences:
-    | RecommendationResponse
-    | ErrorResponse = await fetchRecommendationsBasedOnUserPreferences(
-    +session.data.userId,
-  );
-
-  // Combine the results using Promise.all
-  const combinedRecommendations: [
-    RecommendationResponse | ErrorResponse,
-    RecommendationResponse | ErrorResponse,
-  ] = await Promise.all([
-    recommendationResultForRecentItems,
-    recommendationResultBasedOnPreferences,
-  ]);
-
-  // Extract individual results
-  const [resultForRecentItems, resultBasedOnPreferences] =
-    combinedRecommendations;
+  const resultBasedOnPreferences: RecommendationResponse | ErrorResponse =
+    await fetchRecommendationsBasedOnUserPreferences(+session.data.userId);
 
   // Handle error responses
   if ("error" in resultForRecentItems || "error" in resultBasedOnPreferences) {
     const errorMessages: string[] = [];
     if ("error" in resultForRecentItems) {
-      errorMessages.push(resultForRecentItems.error);
+      errorMessages.push(resultForRecentItems.error as string);
     }
     if ("error" in resultBasedOnPreferences) {
-      errorMessages.push(resultBasedOnPreferences.error);
+      errorMessages.push(resultBasedOnPreferences.error as string);
     }
     const errorMessage = errorMessages.join(", ");
     return json(
