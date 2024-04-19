@@ -107,18 +107,6 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  if (itemInfo.isInLibrary && itemInfo.id) {
-    return redirect("/library/item/" + itemInfo.id, {
-      headers: {"Set-Cookie": await commitSession(session)},
-    });
-  }
-
-  if (id !== itemInfo.id.toString()) {
-    return redirect("/browser/item/" + itemInfo.id, {
-      headers: {"Set-Cookie": await commitSession(session)},
-    });
-  }
-
   const recommendationResult: RecommendationResponse | ErrorResponse =
     await fetchRecommendations(id.replaceAll("-", "/"));
 

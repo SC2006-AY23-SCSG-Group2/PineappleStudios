@@ -1,7 +1,6 @@
-import { getFolderByName } from "../database/folder";
-import { prismaClient } from "../database/prisma";
-import { getUserById } from "../database/user";
-
+import {getFolderByName} from "../database/folder";
+import {prismaClient} from "../database/prisma";
+import {getUserById} from "../database/user";
 
 export const createFolder = async (name: string, userId: number) => {
   try {
@@ -50,8 +49,8 @@ export const deleteFolder = async (folderId: number, userId: number) => {
       where: {
         AND: [
           {id: folderId},
-          {Library: {user: {id: user,// Ensure the folder belongs to the
-                                           // userhe user
+          {Library: {user: {id: userId}}}, // Ensure the folder belongs to the
+          // userr
         ],
       },
     });

@@ -114,14 +114,14 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  if (itemInfo.isInLibrary && itemInfo.id) {
-    return redirect("/library/item/" + itemInfo.id, {
+  if (!paramId && itemInfo.isInLibrary && itemInfo.id) {
+    return redirect("/library/item-page/?id=" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
 
-  if (id !== itemInfo.id.toString()) {
-    return redirect("/browser/item/" + itemInfo.id, {
+  if (!paramId && id !== itemInfo.id.toString()) {
+    return redirect("/browser/item-page/?id=" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
