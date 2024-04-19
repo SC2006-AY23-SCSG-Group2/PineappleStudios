@@ -139,13 +139,13 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     });
   }
 
-  if (!itemInfo.isInLibrary && itemInfo.id) {
+  if (!paramId && !itemInfo.isInLibrary && itemInfo.id) {
     return redirect("/browser/item-page/?id=" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
   }
 
-  if (id !== itemInfo.id.toString()) {
+  if (!paramId && id !== itemInfo.id.toString()) {
     return redirect("/library/item-page/?id=" + itemInfo.id, {
       headers: {"Set-Cookie": await commitSession(session)},
     });
@@ -520,7 +520,7 @@ export default function tab_index(): React.JSX.Element {
               <SmallPeopleList items={data.people} />
             </div>
             <Link
-              to={"/browser/item-page/" + loaderData.data?.id}
+              to={"/library/item-page/" + loaderData.data?.id}
               className="btn btn-neutral btn-wide my-1 min-w-full">
               View Recommendation
             </Link>
