@@ -35,12 +35,8 @@ export const ItemFolderList: React.FC<ItemsListProps> = ({
       <div className="relative">
         {currentPage > 0 && (
           <button
-            className="absolute left-0 z-30 flex h-full items-center justify-center p-4"
-            onClick={prevPage}
-            style={{
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}>
+            className="btn btn-circle btn-outline no-animation absolute left-0 top-[2%] z-30 flex h-full items-center justify-center p-4"
+            onClick={prevPage}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -58,7 +54,7 @@ export const ItemFolderList: React.FC<ItemsListProps> = ({
         )}
         <div className="overflow-visible">
           <div
-            className="flex transition-transform duration-700 ease-in-out"
+            className="flex overflow-visible transition-transform duration-700 ease-in-out"
             style={{
               transform: `translateX(-${
                 currentPage * (100 / itemsPerPage) * nMinusOne
@@ -76,12 +72,8 @@ export const ItemFolderList: React.FC<ItemsListProps> = ({
         </div>
         {currentPage < maxPage && (
           <button
-            className="absolute right-0 z-30 flex h-full items-center justify-center p-4"
-            onClick={nextPage}
-            style={{
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}>
+            className="btn btn-circle btn-outline no-animation absolute right-0 top-[2%] z-30 flex h-full items-center justify-center p-4"
+            onClick={nextPage}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

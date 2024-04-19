@@ -15,11 +15,20 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider = ({children}: ThemeProviderProps) => {
-  const [theme, setTheme] = useState("retro");
+  // const currentStorageTheme = localStorage.getItem("theme");
+  // function setLocalStorage(currentTheme: string) {
+  //   localStorage.setItem(
+  //     "theme",
+  //     currentTheme === "forest" ? "retro" : "forest",
+  //   );
+  // }
+  const currentStorageTheme = null;
+  const [theme, setTheme] = useState(currentStorageTheme ?? "retro");
 
   const toggleTheme = () => {
     setTheme((currentTheme) => {
       console.log("Toggling theme from", currentTheme);
+      // setLocalStorage(currentTheme);
       return currentTheme === "forest" ? "retro" : "forest";
     });
   };

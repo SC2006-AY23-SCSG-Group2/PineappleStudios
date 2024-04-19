@@ -4,8 +4,8 @@ import {
   TypedResponse,
   json,
 } from "@remix-run/node";
-import {NavLink, useFetcher, useLoaderData} from "@remix-run/react";
-import React, {useEffect, useState} from "react";
+import {Form, NavLink, useFetcher, useLoaderData} from "@remix-run/react";
+import React, {useEffect, useRef, useState} from "react";
 import {getUserInfoByUserId} from "src/lib/dataRetrieve/getUserInfo";
 import {
   updateUserEmail,
@@ -275,6 +275,19 @@ export default function tab_index(): React.JSX.Element {
       window.location.href = "/tab/4";
     }
   }, [fetcher, showToast]);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const hanldeChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    if (
+      window.confirm(
+        "Your changes in this page will not be saved. Do you want to skip?",
+      )
+    ) {
+      formRef.current?.submit();
+    }
+  };
 
   return (
     <>
@@ -347,12 +360,23 @@ export default function tab_index(): React.JSX.Element {
                   />
                 ))}
               </div>
-              <NavLink
+              {/* <NavLink
                 className="btn btn-primary"
                 to={"/profile/editing/first-time"}>
                 {" "}
                 Click to add more preferences
-              </NavLink>
+              </NavLink> */}
+              <Form
+                ref={formRef}
+                method="get"
+                action="/profile/editing/first-time">
+                <button
+                  className="btn btn-primary w-full"
+                  type="submit"
+                  onClick={hanldeChange}>
+                  Click to add more preferences
+                </button>
+              </Form>
             </div>
           </div>
         </div>

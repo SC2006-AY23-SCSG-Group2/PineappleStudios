@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
-
+import asyncio
+import cProfile
 import os
 import random
 import re
@@ -13,14 +14,14 @@ from async_lru import alru_cache
 from dotenv import load_dotenv
 from fuzzywuzzy import fuzz, process
 from joblib import Memory
-from openai import OpenAI
+from openai import AsyncOpenAI, OpenAI
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.neighbors import NearestNeighbors
-from openai import AsyncOpenAI
-import asyncio
 
 # print('Start1')
+pr = cProfile.Profile()
+pr.enable()
 
 # Load data
 movies = pd.read_csv('Datasets_for_content_recommendation/movies.csv', low_memory=False)
@@ -53,7 +54,7 @@ songs_df['text'] = preprocess_text(songs_df['text'])
 
 # print('Start2')
 # Initialize joblib Memory to cache results
-mem = Memory(location='./joblib_cache', verbose=0)
+mem = Memory(location='./joblib_cache', verbose=10)
 
 # Define function to load precomputed data structures
 def load_data_structures():
@@ -74,7 +75,8 @@ def get_cached_best_match(title, choice_keys):
 
 # @alru_cache(maxsize=32)
 # @mem.cache
-def get_recommendations(model_nn, media_title, data_frame, indices, column_name, vectorizer, tfidf_matrix=None, is_book=False):
+@alru_cache
+async def get_recommendations(model_nn, media_title, data_frame, indices, column_name, vectorizer, tfidf_matrix=None, is_book=False):
     # title = media_title.lower().strip()
     # choice_keys = indices.index.tolist()
     # print("ENTERED getRecommendation")
@@ -141,7 +143,7 @@ def get_recommendations(model_nn, media_title, data_frame, indices, column_name,
                 recommendations.append(rec)
 
     return recommendations
-@alru_cache(maxsize=32)
+@alru_cache(maxsize=None)
 async def get_all_recommendations(media_title):
     try:
         # print("Starting book recommendations.")
@@ -185,7 +187,7 @@ def clean_item(item, cleaning_patterns):
         item = pattern.sub('', item)
     return item.strip()
 
-@alru_cache(maxsize=32)
+@alru_cache(maxsize=None)
 async def generate_LLM_recommendation(media_name):
     load_dotenv()
     client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -209,7 +211,7 @@ async def generate_LLM_recommendation(media_name):
 
 # Define function to combine recommendations
 # @mem.cache
-@alru_cache(maxsize=32)
+@alru_cache(maxsize=None)
 async def combined_recommendations(media_title):
     # Fetch LLM recommendations
     llm_books, llm_movies, llm_songs = await generate_LLM_recommendation(media_title)
@@ -240,6 +242,5 @@ async def combined_recommendations(media_title):
 
     return combined_books, combined_movies, combined_songs
 
-
-
-
+pr.disable()
+pr.print_stats(sort='time')

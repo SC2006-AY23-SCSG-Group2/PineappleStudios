@@ -139,7 +139,7 @@ export const deleteMovie = async (request: any) => {
 export const getMovieRequest = async (searchValue: string) => {
   const url = `http://www.omdbapi.com/?s=${encodeURIComponent(
     searchValue,
-  )}&apikey=380dd9ef`;
+  )}&apikey=1384299c`;
   try {
     const response = await fetch(url);
     const responseJson = await response.json();
@@ -196,10 +196,12 @@ export const getMovieRequest = async (searchValue: string) => {
 //   }
 // };
 // api key = 411ddaa2
+// api key = 380dd9ef
+// api key = 1384299c
 export const getMovieDetailsRequest = async (searchValue: string) => {
   const url = `http://www.omdbapi.com/?s=${encodeURIComponent(
     searchValue,
-  )}&apikey=380dd9ef&type=movie`;
+  )}&apikey=1384299c&type=movie`;
 
   try {
     const response = await fetch(url);
@@ -209,7 +211,7 @@ export const getMovieDetailsRequest = async (searchValue: string) => {
       const movieData: any[] = [];
       for (const movie of responseData.Search.slice(0, 10)) {
         const detailResponse = await fetch(
-          `http://www.omdbapi.com/?i=${movie.imdbID}&apikey=380dd9ef`,
+          `http://www.omdbapi.com/?i=${movie.imdbID}&apikey=1384299c`,
         );
         const detailData = await detailResponse.json();
 
@@ -248,7 +250,7 @@ export const getMovieDetailsRequestById = async (srcId: string) => {
   //Split the input
   const parts = srcId.split("+");
   const id = parts[1];
-  const url = `http://www.omdbapi.com/?i=${encodeURIComponent(id)}&apikey=380dd9ef`;
+  const url = `http://www.omdbapi.com/?i=${encodeURIComponent(id)}&apikey=1384299c`;
 
   try {
     const response = await fetch(url);
