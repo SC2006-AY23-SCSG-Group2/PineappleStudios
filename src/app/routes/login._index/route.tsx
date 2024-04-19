@@ -139,13 +139,16 @@ export default function Login(): React.JSX.Element {
             ) : null}
 
             <p className="form-control">
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
               <label htmlFor={"forget-password"} className="label">
-                <Link
-                  id="forget-password"
-                  to="/login/forgot_password"
-                  className="link-hover link label-text-alt">
-                  Forget password?
-                </Link>
+                <div className="tooltip" data-tip="Not Implemented Yet">
+                  <Link
+                    id="forget-password"
+                    to="#"
+                    className="link-diabled link-hover link label-text-alt">
+                    Forget password?
+                  </Link>
+                </div>
               </label>
             </p>
             <p className="form-control mb-3 mt-3">
@@ -167,10 +170,14 @@ export default function Login(): React.JSX.Element {
         <div className="divider">OR</div>
         <div className="card w-full shrink-0 bg-base-100 shadow-2xl">
           <Form className="card-body">
-            <div className="form-control mt-6">
-              <NavLink className="btn disabled btn-neutral" to="/login/gmail">
-                Login with Gmail
-              </NavLink>
+            <div className="form-control">
+              <div className="tooltip w-full" data-tip="Not Implemented Yet">
+                <NavLink
+                  className="btn btn-disabled btn-neutral btn-wide min-w-full"
+                  to="/login/gmail">
+                  Login with Gmail
+                </NavLink>
+              </div>
             </div>
           </Form>
         </div>
