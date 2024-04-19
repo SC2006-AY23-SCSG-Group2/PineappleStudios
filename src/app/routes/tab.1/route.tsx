@@ -234,7 +234,7 @@ export default function tab_index(): React.JSX.Element {
       <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-4xl font-extrabold text-transparent">
         For you
         <span className="pl-2 text-neutral">
-          <InfoHover info="This is based on your recent viewing history." />
+          <InfoHover info="Recommended based on your viewed items, library and preferences." />
         </span>
       </h1>
 
@@ -279,9 +279,9 @@ export default function tab_index(): React.JSX.Element {
         recommendation.success && <>{funcContent(recommendation.data?.data)}</>}
       <div className="divider"></div>
       <h1 className="mx-6 mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text pb-1 text-4xl font-extrabold text-transparent">
-        What others viewing
+        Others are watching
         <span className="pl-2 text-neutral">
-          <InfoHover info="This is based on all our users' viewing history." />
+          <InfoHover info="Based on users related to you." />
         </span>
       </h1>
 

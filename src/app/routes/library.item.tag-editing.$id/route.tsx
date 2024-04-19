@@ -25,6 +25,7 @@ import {
   destroySession,
   getSession,
 } from "../../session";
+import InfoHover from "../_components/InfoHover";
 import {ToastList} from "../_components/ToastList";
 import {ItemInfoMutex} from "../browser/MUTEX";
 import {PrefListChoose} from "./components/PrefListChoose";
@@ -284,9 +285,10 @@ export default function TabIndex(): React.JSX.Element {
         <div className="hero">
           <div className="hero-content">
             <div className="card">
-              <h2 className="card-title my-2">Add tags</h2>
+              <h2 className="card-title my-2">
+                Add tags <InfoHover info="Click on a tag to remove it" />{" "}
+              </h2>
               <label className="input input-bordered my-2 flex items-center gap-1">
-                New Tag
                 <input
                   type="text"
                   className="grow"
