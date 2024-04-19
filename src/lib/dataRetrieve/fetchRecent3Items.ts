@@ -52,6 +52,42 @@ export async function fetchRecommendations(
   }
 }
 
+export async function fetchRecommendationsLLM(
+  itemTitle: string,
+): Promise<RecommendationResponse | ErrorResponse> {
+  try {
+    const response: AxiosResponse<RecommendationResponse> = await axios.post(
+      "http://127.0.0.1:5000/recommend/llm",
+      {
+        media_name: itemTitle,
+      },
+    );
+
+    // Check if the request was successful
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      const errorMessage = `Failed to fetch recommendations. Status code: ${response.status} (${response.statusText})`;
+      console.error(errorMessage);
+      console.error("Response data:", response.data);
+      return {error: errorMessage};
+    }
+  } catch (error) {
+    // Log detailed error message
+    if (axios.isAxiosError(error)) {
+      const axiosError: AxiosError = error;
+      const errorMessage = `Error while fetching recommendations. Status code: ${axiosError.response?.status} (${axiosError.response?.statusText})`;
+      console.error(errorMessage);
+      console.error("Response data:", axiosError.response?.data);
+      return {error: errorMessage};
+    } else {
+      const errorMessage = `Unexpected error while fetching recommendations:`;
+      console.error(errorMessage);
+      return {error: errorMessage};
+    }
+  }
+}
+
 export async function fetchRecommendationsForRecentItems(
   userId: number,
 ): Promise<RecommendationResponse> {

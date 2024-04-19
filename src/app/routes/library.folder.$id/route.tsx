@@ -203,7 +203,7 @@ export default function tab_index(): React.JSX.Element {
   const handleLogout = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (window.confirm("Are you sure you want to log out?")) {
+    if (window.confirm("Are you sure you want to delete the folder?")) {
       formRef.current?.submit();
     }
   };

@@ -10,7 +10,6 @@ import React, {useEffect, useState} from "react";
 
 import {
   handleBookSearchAPI,
-  handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
 import {ItemType, SimpleItem} from "../../../lib/interfaces";
@@ -94,24 +93,24 @@ export async function action({request}: LoaderFunctionArgs): Promise<
     returnData = returnData.concat(searchData);
   }
 
-  if (
-    data.type === undefined ||
-    data.type === null ||
-    data.type === ItemType.All ||
-    data.type === ItemType.Movie
-  ) {
-    const searchData: SimpleSimpleItem[] = (
-      await handleMovieSearchAPI(data.query)
-    ).map((e): SimpleSimpleItem => {
-      return {
-        srcID: e.srcId,
-        title: e.itemTitle,
-        type: ItemType.Movie,
-        img: e.thumbnailUrl,
-      };
-    });
-    returnData = returnData.concat(searchData);
-  }
+  // if (
+  //   data.type === undefined ||
+  //   data.type === null ||
+  //   data.type === ItemType.All ||
+  //   data.type === ItemType.Movie
+  // ) {
+  //   const searchData: SimpleSimpleItem[] = (
+  //     await handleMovieSearchAPI(data.query)
+  //   ).map((e): SimpleSimpleItem => {
+  //     return {
+  //       srcID: e.srcId,
+  //       title: e.itemTitle,
+  //       type: ItemType.Movie,
+  //       img: e.thumbnailUrl,
+  //     };
+  //   });
+  //   returnData = returnData.concat(searchData);
+  // }
 
   if (
     data.type === undefined ||

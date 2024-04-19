@@ -9,7 +9,6 @@ import {
 import {fetchRecommendationsForRecentItems} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
   handleBookSearchAPI,
-  handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
 import {getUserInfoByUserId} from "../../../lib/dataRetrieve/getUserInfo";
@@ -163,19 +162,19 @@ export async function loader({request}: LoaderFunctionArgs): Promise<
     }
   }
 
-  for (const i of combinedRecommendationResult.movies) {
-    const bookResult = await handleMovieSearchAPI(i);
-    if (bookResult.length >= 1) {
-      const e = bookResult[0];
-      returnResult.push({
-        tag: [],
-        id: e.srcId,
-        title: e.itemTitle,
-        type: ItemType.Movie,
-        img: e.thumbnailUrl,
-      });
-    }
-  }
+  // for (const i of combinedRecommendationResult.movies) {
+  //   const bookResult = await handleMovieSearchAPI(i);
+  //   if (bookResult.length >= 1) {
+  //     const e = bookResult[0];
+  //     returnResult.push({
+  //       tag: [],
+  //       id: e.srcId,
+  //       title: e.itemTitle,
+  //       type: ItemType.Movie,
+  //       img: e.thumbnailUrl,
+  //     });
+  //   }
+  // }
 
   if (returnResult.length === 0) {
     return json(
