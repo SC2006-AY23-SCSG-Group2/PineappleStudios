@@ -353,10 +353,10 @@ export default function tab_index(): React.JSX.Element {
             <div className="hero-content text-center">
               <div className="max-w-md">
                 <h1 className="text-3xl font-bold text-error">
-                  There is no item in your library yet, browser more.
+                  There is no item in your library yet, browse more.
                 </h1>
-                <NavLink className="btn btn-primary" to="/tab/2">
-                  Browser More
+                <NavLink className="btn btn-primary" to="/tab/1">
+                  Browse More
                 </NavLink>
               </div>
             </div>
