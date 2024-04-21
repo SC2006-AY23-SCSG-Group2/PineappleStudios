@@ -51,15 +51,17 @@ npm run foramt:lint
 
 ```
 .
-├── docs            # Docs for development
-├── prisma          # prisma schema and migrations
-├── public          # static assets
-└── src             # source folder
-    ├── app         # app directory
-    │   └── routes  # routes
-    ├── components  # components
-    ├── database    # database
-    └── ml          # machine learning
+├── docs                     # Docs for development
+├── prisma                   # prisma schema and migrations
+├── public                   # static assets
+├─ recommendation_engine     # AI
+└── src                      # source folder
+    ├── app                  # app directory
+    │   └── routes           # routes
+    │       └── _components  # components
+    └─── lib                 # lib directory
+        ├── database         # database
+        └── dataRetrieve     # database and UI communication
 ```
 
 ## Starting Recommendation engine
@@ -68,16 +70,14 @@ Head over to recommendation_engine file for the server and scripts
 
 ```
 .
-├── docs            # Docs for development
-├── prisma          # prisma schema and migrations
+│
 ...
 ├── recommendation_engine       # directory containing all essential files for recommendation system to function
-    │
-    ├── Recommendation_System.py
-    ├── Recommendation_System_server.py
-    ├── .env file
-    ├── requirements.txt
-    ├── .joblib files and .pkl files in google drive link (must be loaded into the same directory where the  Recommendation_System.py, Recommendation_System_server.py and .env files are located)
+│   ├── Recommendation_System.py
+│   ├── Recommendation_System_server.py
+│   ├── .env file
+│   ├── requirements.txt
+│   └── .joblib files and .pkl files in google drive link (must be loaded into the same directory where the  Recommendation_System.py, Recommendation_System_server.py and .env files are located)
 ```
 
 ues google drive link for .joblib files and .pkl files
@@ -99,13 +99,12 @@ python Recommendation_System_server.py
 - `src`
   - `app`
     - `routes`: (folder) [Routes Naming](https://remix.run/docs/en/main/file-conventions/routes)
+      - `components`: [React Components](https://react.dev/learn/your-first-component)
     - `entry.client.tsx`: [Client Entry](https://remix.run/docs/en/main/file-conventions/entry.client)
     - `entry.server.tsx`: [Server Entry](https://remix.run/docs/en/main/file-conventions/entry.server)
     - `root.tsx`: [Root Route](https://remix.run/docs/en/main/file-conventions/root)
     - `tailwind.css`: [Tailwind entry](https://remix.run/docs/en/main/styling/tailwind)
-  - `components`: [React Components](https://react.dev/learn/your-first-component)
   - `database`: [Prisma with Remix](https://github.com/prisma/prisma-examples/tree/latest/typescript/remix)
-  - `ml`
 - `package.json`
 - `PineappleStudios.code-workspace`
 - `production.env`: [Check out paragraph 3: Because the SQLite...](https://www.prisma.io/docs/getting-started/quickstart#3-run-a-migration-to-create-your-database-tables-with-prisma-migrate)
