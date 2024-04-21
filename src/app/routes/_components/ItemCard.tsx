@@ -30,23 +30,24 @@ export const ItemCard: React.FC<ItemCardProps> = ({
   const type = ["Book", "Song", "Movie"];
 
   return (
-    <div className="col-span group relative m-3 h-[12vw]">
-      <a href={`/browser/item/${data.id}`}>
+    <div className="col-span group relative m-3 h-[12vw] overflow-visible">
+      <a
+        href={`/browser/item/${data.id} -z-40`}
+        className="relative h-[12vw] w-full">
         <img
           src={data.img}
           alt={data.title || "Item"}
           draggable={false}
-          className="h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
+          className="-z-40 h-[12vw] w-full cursor-pointer rounded-md object-cover shadow-xl transition group-hover:opacity-90 sm:group-hover:opacity-0"
         />
+        {data.tag.find((str) => str === "favourite") && (
+          <span className="absolute right-1 top-7 flex h-1 w-full flex-row items-end transition group-hover:opacity-90 sm:group-hover:opacity-0">
+            <HeartButton onClick={() => setFav(!fav)} type={data.type} />
+          </span>
+        )}
       </a>
-      {data.tag.find((str) => str === "favorite") && (
-        <div className="absolute right-2 top-2">
-          <HeartButton onClick={() => setFav(!fav)} />
-        </div>
-      )}
-      <div
-        className="duration-400 invisible absolute top-0 z-50 w-full scale-0 opacity-0 transition
-          delay-100 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
+
+      <div className="duration-400 invisible absolute top-0 w-full scale-0 opacity-0 transition delay-100 hover:z-50 group-hover:z-50 group-hover:-translate-y-[6vw] group-hover:scale-110 group-hover:opacity-100 sm:visible">
         <a href={`/browser/item/${data.id}`}>
           <img
             src={data.img}

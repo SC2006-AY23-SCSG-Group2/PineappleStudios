@@ -10,6 +10,7 @@ import React, {useEffect, useState} from "react";
 
 import {
   handleBookSearchAPI,
+  handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
 import {ItemType, SimpleItem} from "../../../lib/interfaces";
@@ -93,24 +94,24 @@ export async function action({request}: LoaderFunctionArgs): Promise<
     returnData = returnData.concat(searchData);
   }
 
-  // if (
-  //   data.type === undefined ||
-  //   data.type === null ||
-  //   data.type === ItemType.All ||
-  //   data.type === ItemType.Movie
-  // ) {
-  //   const searchData: SimpleSimpleItem[] = (
-  //     await handleMovieSearchAPI(data.query)
-  //   ).map((e): SimpleSimpleItem => {
-  //     return {
-  //       srcID: e.srcId,
-  //       title: e.itemTitle,
-  //       type: ItemType.Movie,
-  //       img: e.thumbnailUrl,
-  //     };
-  //   });
-  //   returnData = returnData.concat(searchData);
-  // }
+  if (
+    data.type === undefined ||
+    data.type === null ||
+    data.type === ItemType.All ||
+    data.type === ItemType.Movie
+  ) {
+    const searchData: SimpleSimpleItem[] = (
+      await handleMovieSearchAPI(data.query)
+    ).map((e): SimpleSimpleItem => {
+      return {
+        srcID: e.srcId,
+        title: e.itemTitle,
+        type: ItemType.Movie,
+        img: e.thumbnailUrl,
+      };
+    });
+    returnData = returnData.concat(searchData);
+  }
 
   if (
     data.type === undefined ||
@@ -267,7 +268,7 @@ export default function tab_index(): React.JSX.Element {
   return (
     <>
       <fetcher.Form
-        className={"join mt-2 w-full min-w-full"}
+        className={"join mt-2 w-full min-w-full pb-2"}
         method={"POST"}
         action={"/tab/3"}>
         <p className="form-control grow">
@@ -323,20 +324,6 @@ export default function tab_index(): React.JSX.Element {
 
       {isIdle && (
         <>
-          {items.filter((x: SimpleItem): boolean => x.type === ItemType.Movie)
-            .length !== 0 && (
-            <>
-              <div className="divider"></div>
-              <ItemList
-                title="Movies & TV Shows"
-                items={items.filter(
-                  (x: SimpleItem): boolean => x.type === ItemType.Movie,
-                )}
-                func={onItemAdd}
-              />
-            </>
-          )}
-
           {items.filter((x: SimpleItem): boolean => x.type === ItemType.Song)
             .length !== 0 && (
             <>
@@ -359,6 +346,20 @@ export default function tab_index(): React.JSX.Element {
                 title="Books"
                 items={items.filter(
                   (x: SimpleItem): boolean => x.type === ItemType.Book,
+                )}
+                func={onItemAdd}
+              />
+            </>
+          )}
+
+          {items.filter((x: SimpleItem): boolean => x.type === ItemType.Movie)
+            .length !== 0 && (
+            <>
+              <div className="divider"></div>
+              <ItemList
+                title="Movies & TV Shows"
+                items={items.filter(
+                  (x: SimpleItem): boolean => x.type === ItemType.Movie,
                 )}
                 func={onItemAdd}
               />

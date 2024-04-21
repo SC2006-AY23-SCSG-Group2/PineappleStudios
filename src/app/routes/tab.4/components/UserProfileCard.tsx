@@ -11,7 +11,7 @@ export interface userData {
   date: string;
   time: number;
   numOfItemInLibrary: number;
-  numOfavoriteItem: number;
+  numOfFavoriteItem: number;
 }
 
 interface UserProfileCardProps {
@@ -50,7 +50,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
           <div className="stat">
             <div className="stat-title">Favourites</div>
             <div className="stat-value max-xl:text-xl">
-              {user.numOfavoriteItem}
+              {user.numOfFavoriteItem}
             </div>
           </div>
         </div>

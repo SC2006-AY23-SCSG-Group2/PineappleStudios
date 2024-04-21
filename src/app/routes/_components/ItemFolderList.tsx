@@ -57,7 +57,8 @@ export const ItemFolderList: React.FC<ItemsListProps> = ({
             className="flex overflow-visible transition-transform duration-700 ease-in-out"
             style={{
               transform: `translateX(-${
-                currentPage * (100 / itemsPerPage) * nMinusOne
+                currentPage * (100 / itemsPerPage) * nMinusOne +
+                (currentPage === 0 ? 0 : 16.7)
               }%)`,
             }}>
             {items.map((item, index) => (

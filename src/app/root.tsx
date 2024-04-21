@@ -8,7 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {themeChange} from "theme-change";
 
 import {
@@ -72,9 +72,11 @@ function App() {
         <Meta />
         <Links />
         <title>Pineapple Studio</title>
+        {/*<style>{`html {overflow: -moz-scrollbars-none;scrollbar-width: none;}`}</style>*/}
       </head>
-      <body id="body">
+      <body id="body" className="overflow-x-hidden">
         <Outlet />
+
         {/*<div className="hidden">*/}
         {/*  <ThemeToggle />*/}
         {/*</div>*/}

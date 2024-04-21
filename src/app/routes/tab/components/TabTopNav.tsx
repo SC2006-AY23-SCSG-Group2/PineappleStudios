@@ -18,7 +18,7 @@ export default function TabTopNav({
     <>
       <nav
         className={
-          "navbar sticky top-0 z-40 bg-base-100 " + additionalClassName
+          "navbar absolute sticky top-0 z-40 bg-base-100 " + additionalClassName
         }
         {...rest}>
         <div className="navbar-start">

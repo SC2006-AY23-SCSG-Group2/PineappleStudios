@@ -186,6 +186,20 @@ export default function tab_index(): React.JSX.Element {
               />
             </>
           )}
+
+        {data &&
+          data.filter((x: SimpleItem) => x.type === ItemType.Book).length >
+            0 && (
+            <>
+              <div className="divider"></div>
+              <ItemList
+                items={data.filter((x: SimpleItem) => x.type === ItemType.Book)}
+                title="Top Books"
+                func={onItemAdd}
+              />
+            </>
+          )}
+
         {data &&
           data.filter((x: SimpleItem) => x.type === ItemType.Movie).length >
             0 && (
@@ -196,18 +210,6 @@ export default function tab_index(): React.JSX.Element {
                   (x: SimpleItem) => x.type === ItemType.Movie,
                 )}
                 title="Top Movies"
-                func={onItemAdd}
-              />
-            </>
-          )}
-        {data &&
-          data.filter((x: SimpleItem) => x.type === ItemType.Book).length >
-            0 && (
-            <>
-              <div className="divider"></div>
-              <ItemList
-                items={data.filter((x: SimpleItem) => x.type === ItemType.Book)}
-                title="Top Books"
                 func={onItemAdd}
               />
             </>

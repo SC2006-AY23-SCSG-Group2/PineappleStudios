@@ -80,21 +80,21 @@ export default function tab_index(): React.JSX.Element {
     date: loaderData?.user.dateJoined ?? "Date",
     time: loaderData?.user.timeUsedAppInMins ?? 0,
     numOfItemInLibrary: loaderData?.user.countItemsInLibrary ?? 0,
-    numOfavoriteItem: loaderData?.user.numberOfFavItem ?? 0,
+    numOfFavoriteItem: loaderData?.user.numberOfFavItem ?? 0,
   };
 
   return (
     <>
       <div className="hero min-h-screen">
-        <div className="hero-content max-lg:m-0 max-lg:flex-col max-md:w-96 lg:m-0 lg:flex-row lg:items-end lg:justify-between">
-          <div className="self-center">
+        <div className="hero-content max-lg:m-0 max-lg:flex-col max-md:w-96 lg:m-0 lg:flex-row lg:items-start lg:justify-start">
+          <div className="self-start">
             <UserProfileCard user={userData} />
             <div className={"max-lg:mt-4 lg:mt-8"}></div>
             <div className="card w-full self-start bg-base-200 shadow-xl xl:min-w-[40rem]">
               <div className="card-body">
-                <div className="card-title">Theme Changer</div>
+                <div className="card-title">Change Theme</div>
                 <select
-                  data-choose-theme
+                  data-choose-theme=""
                   className="select min-w-full"
                   defaultValue="theme">
                   <option value="theme" disabled>

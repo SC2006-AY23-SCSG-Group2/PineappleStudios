@@ -11,6 +11,7 @@ import React, {Suspense} from "react";
 import {fetchRecommendationsLLM} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
   handleBookSearchAPI,
+  handleMovieSearchAPI,
   handleSongSearchAPI,
 } from "../../../lib/dataRetrieve/getAPIInfo";
 import {
@@ -175,19 +176,19 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
     }
   }
 
-  // for (const i of recommendationResult.movies) {
-  //   const bookResult = await handleMovieSearchAPI(i);
-  //   if (bookResult.length >= 1) {
-  //     const e = bookResult[0];
-  //     returnResult.push({
-  //       tag: [],
-  //       id: e.srcId,
-  //       title: e.itemTitle,
-  //       type: ItemType.Movie,
-  //       img: e.thumbnailUrl,
-  //     });
-  //   }
-  // }
+  for (const i of recommendationResult.movies) {
+    const bookResult = await handleMovieSearchAPI(i);
+    if (bookResult.length >= 1) {
+      const e = bookResult[0];
+      returnResult.push({
+        tag: [],
+        id: e.srcId,
+        title: e.itemTitle,
+        type: ItemType.Movie,
+        img: e.thumbnailUrl,
+      });
+    }
+  }
 
   if (returnResult.length === 0) {
     return defer(
@@ -229,7 +230,6 @@ export default function RecommendationPage(): React.JSX.Element {
 
   return (
     <>
-      <h1>Recommendation</h1>
       <Suspense
         fallback={
           <>

@@ -5,6 +5,7 @@ import {
   redirect,
 } from "@remix-run/node";
 import {Link, Outlet, useFetcher, useLoaderData} from "@remix-run/react";
+import {default as strToReact} from "html-react-parser";
 import React, {useEffect, useState} from "react";
 
 import {
@@ -206,9 +207,9 @@ export default function tab_index(): React.JSX.Element {
   const data: ItemInfo = loaderData.data;
   const content: MovieContent | SongContent | BookContent = data.otherContent;
 
-  const type = ["Book", "Song", "Movie"];
+  const type: string[] = ["Book", "Song", "Movie"];
 
-  function funcContent() {
+  function funcContent(): React.JSX.Element | null {
     switch (data.type) {
       case ItemType.Book: {
         return (
@@ -219,12 +220,18 @@ export default function tab_index(): React.JSX.Element {
                 {(content as BookContent).pageCount}
               </p>
             )}
-            {(content as BookContent).description && (
-              <p className="mt-2 block text-lg">
-                <span className="font-bold"> Description: </span>
-                {(content as BookContent).description}
-              </p>
-            )}
+            {(content as BookContent).description &&
+              (content as BookContent).description !== "N/A" && (
+                <p className="mt-2 block text-lg">
+                  <span className="font-bold"> Description: </span>
+                  {strToReact(
+                    `<span>${
+                      (content as BookContent).description ??
+                      "No Description yet."
+                    }</span>`,
+                  )}
+                </p>
+              )}
           </>
         );
       }
@@ -253,25 +260,29 @@ export default function tab_index(): React.JSX.Element {
             (formattedDuration && minutesString ? " and " : "") +
             minutesString;
         }
+
         return (
           <>
-            {(content as MovieContent).duration && (
+            {movieContent.duration && (
               <p className="mt-2 block text-lg">
                 <span className="font-bold"> Duration: </span>
-                {/* {(content as MovieContent).duration} minutes */}
                 {finalDuration}
               </p>
             )}
-            {(content as MovieContent).country && (
+            {movieContent.country && (
               <p className="mt-2 block text-lg">
                 <span className="font-bold">Country: </span>
-                {(content as MovieContent).country}
+                {movieContent.country}
               </p>
             )}
-            {(content as MovieContent).description && (
+            {movieContent.description && movieContent.description !== "N/A" && (
               <p className="mt-2 block text-lg ">
                 <span className="font-bold">Description: </span>
-                {(content as MovieContent).description}
+                {strToReact(
+                  `<span>${
+                    movieContent.description ?? "No Description yet."
+                  }</span>`,
+                )}
               </p>
             )}
           </>
@@ -304,16 +315,15 @@ export default function tab_index(): React.JSX.Element {
         }
         return (
           <>
-            {(content as SongContent).album && (
+            {songContent.album && songContent.album !== "N/A" && (
               <p className="mt-2 block text-lg">
                 <span className="font-bold"> Album: </span>
                 {(content as SongContent).album}
               </p>
             )}
-            {(content as SongContent).duration && (
+            {songContent.duration && (
               <p className="mt-2 block text-lg">
                 <span className="font-bold"> Duration: </span>
-                {/* {(content as SongContent).duration} minutes */}
                 {finalDuration}
               </p>
             )}
@@ -321,16 +331,15 @@ export default function tab_index(): React.JSX.Element {
         );
       }
     }
-
     return null;
   }
 
   return (
     <>
       <div className="hero min-h-screen">
-        <div className="hero-content max-lg:m-2 max-lg:flex-col lg:m-0 lg:flex-row lg:items-end lg:justify-end ">
+        <div className="hero-content max-lg:m-2 max-lg:flex-col lg:m-0 lg:flex-row lg:items-start lg:justify-start">
           {/*Left Card Begin*/}
-          <div className="lg:m-sm min-w-[25rem] max-md:w-96 lg:sticky lg:bottom-[16px] lg:max-w-md">
+          <div className="lg:m-sm min-w-[25rem] self-start max-md:w-96 lg:max-w-md">
             <div className="card items-center bg-base-200 shadow-xl ">
               <figure className="mask mask-squircle mx-3 my-4  h-72 w-72 justify-items-center">
                 <img
@@ -387,9 +396,15 @@ export default function tab_index(): React.JSX.Element {
             <div className="card min-w-[25rem] bg-base-200 shadow-xl max-md:w-96">
               <div className="card-body">
                 <h2 className="card-title mx-2 text-2xl lg:text-3xl">Genres</h2>
-                <TagList tag={data.genre} />
+                {data.genre.length === 0 ||
+                data.genre.includes("N/A") ||
+                data.genre.includes("") ? (
+                  <p className="text-center">No Genre</p>
+                ) : (
+                  <TagList tag={data.genre} />
+                )}
               </div>
-              <SmallPeopleList items={data.people} />
+              {data.people && <SmallPeopleList items={data.people} />}
               {/*used as an item list */}
             </div>
             <div className={"max-lg:mt-12 lg:my-4"}></div>
