@@ -19,7 +19,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from sklearn.neighbors import NearestNeighbors
 
-# print('Start1')
+
 pr = cProfile.Profile()
 pr.enable()
 
@@ -52,7 +52,7 @@ songs_df['song'] = preprocess_text(songs_df['song'])
 songs_df['artist'] = preprocess_text(songs_df['artist'])
 songs_df['text'] = preprocess_text(songs_df['text'])
 
-# print('Start2')
+
 # Initialize joblib Memory to cache results
 mem = Memory(location='./joblib_cache', verbose=10)
 
@@ -64,19 +64,14 @@ def load_data_structures():
     return {s: joblib.load(f'{s}.joblib') for s in structures}
 
 data_structures = load_data_structures()
-# print('LOADED DATA STRUCTURES')
+
 # Define function to get cached best match
-#@alru_cache(maxsize=32)
 @mem.cache
 def get_cached_best_match(title, choice_keys):
     return process.extractOne(title, choice_keys, scorer=fuzz.WRatio)
 
 # Define function to get recommendations
-
-# @alru_cache(maxsize=32)
-# @mem.cache
-@alru_cache
-async def get_recommendations(model_nn, media_title, data_frame, indices, column_name, vectorizer, tfidf_matrix=None, is_book=False):
+def get_recommendations(model_nn, media_title, data_frame, indices, column_name, vectorizer, tfidf_matrix=None, is_book=False):
     # title = media_title.lower().strip()
     # choice_keys = indices.index.tolist()
     # print("ENTERED getRecommendation")
@@ -146,17 +141,11 @@ async def get_recommendations(model_nn, media_title, data_frame, indices, column
 @alru_cache(maxsize=None)
 async def get_all_recommendations(media_title):
     try:
-        # print("Starting book recommendations.")
         book_recommendations = get_recommendations(None, media_title, books_df, data_structures['book_indices'], "title", data_structures['tfidf_vectorizer_books'], tfidf_matrix=data_structures['tfidf_matrix_books'], is_book=True)
-        # print("Books recommended:", book_recommendations)
-
-        # print("Starting song recommendations.")
+     
         song_recommendations = get_recommendations(data_structures['model_nn_songs'], media_title, songs_df, data_structures['song_indices'], "song", data_structures['tfidf_vectorizer_songs'])
-        # print("Songs recommended:", song_recommendations)
 
-        # print("Starting movie recommendations.")
         movie_recommendations = get_recommendations(data_structures['model_nn_movies'], media_title, movies_df, data_structures['movie_indices'], "name", data_structures['tfidf_vectorizer_movies'])
-        # print("Movies recommended:", movie_recommendations)
 
         return book_recommendations, song_recommendations, movie_recommendations
     except Exception as e:
@@ -176,11 +165,7 @@ cleaning_patterns = [
 ]
 
 # Define function to generate LLM recommendation
-# @mem.cache   
-
-
-
-
+ 
 # Define the clean_item function outside so it's not redefined every call
 def clean_item(item, cleaning_patterns):
     for pattern in cleaning_patterns:
