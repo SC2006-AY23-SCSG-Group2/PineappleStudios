@@ -25,15 +25,21 @@ export const TagList: React.FC<TagsProps> = ({
   return (
     <>
       <div className="flex flex-row flex-wrap justify-around overflow-x-auto">
-        {tag.map((tag, i) => (
-          <Tag
-            key={"tag-" + i}
-            color={colors[randomInteger(0, colors.length - 1)]}
-            buttonType={buttonType} // Pass the button type to each TagEditing
-          >
-            {tag}
-          </Tag>
-        ))}
+        {tag.map((tag, i) => {
+          if (tag !== "") {
+            return (
+              <Tag
+                key={"tag-" + i}
+                color={colors[randomInteger(0, colors.length - 1)]}
+                buttonType={buttonType} // Pass the button type to each
+                // TagEditing
+              >
+                {tag}
+              </Tag>
+            );
+          }
+          return null;
+        })}
       </div>
     </>
   );

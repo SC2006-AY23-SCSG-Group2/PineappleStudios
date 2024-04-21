@@ -6,25 +6,6 @@ import Logout from "../../_components/Logout";
 import Pineapple from "../../_components/Pineapple";
 import ThemeToggle from "./ThemeToggle";
 
-// function Logout():
-// React.JSX.Element {
-
-// function Logout(): React.JSX.Element {
-
-// function Logout(): React.JSX.Element {
-
-// function Logout(): React.JSX.Element {
-//   return (
-//     <>
-//       <p>Are you sure you want to log out?</p>
-//       <Form method="post">
-//         <button type = "submit">Logout</button>
-//       </Form>
-//         <button><Link to="/tab/1">Never mind</Link></button>
-//     </>
-//   );
-// }
-
 interface TopNavLinkProps {
   email?: string;
 }
@@ -32,8 +13,14 @@ interface TopNavLinkProps {
 export default function TopNav({
   email = "",
 }: TopNavLinkProps): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
-  // const {toggleTheme} = useTheme();
+  const [isOpen, setIsOpen]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState(false);
+
+  // for eslint-disable to work
+  const ulClassName: string =
+    "menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow";
   return (
     <>
       <nav className="navbar sticky top-0 z-40 bg-base-100 max-lg:hidden lg:visible">
@@ -82,15 +69,10 @@ export default function TopNav({
             {isOpen && (
               <>
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-                <ul
-                  tabIndex={0}
-                  className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
+                <ul tabIndex={0} className={ulClassName}>
                   <li>
                     <a href="/tab/4">Account</a>
                   </li>
-                  {/*<li>*/}
-                  {/*  <a href="/settings/general">Settings</a>*/}
-                  {/*</li>*/}
                   <li>
                     <Logout />
                   </li>

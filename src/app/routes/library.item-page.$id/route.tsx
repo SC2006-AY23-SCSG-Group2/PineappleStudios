@@ -8,7 +8,7 @@ import {
 import {Await, useLoaderData} from "@remix-run/react";
 import React, {Suspense} from "react";
 
-import {fetchRecommendations} from "../../../lib/dataRetrieve/fetchRecent3Items";
+import {fetchRecommendationsLLM} from "../../../lib/dataRetrieve/fetchRecent3Items";
 import {
   handleBookSearchAPI,
   handleMovieSearchAPI,
@@ -108,7 +108,7 @@ export async function loader({params, request}: LoaderFunctionArgs): Promise<
   }
 
   const recommendationResult: RecommendationResponse | ErrorResponse =
-    await fetchRecommendations(id.replaceAll("-", "/"));
+    await fetchRecommendationsLLM(id.replaceAll("-", "/"));
 
   if ("error" in recommendationResult) {
     return defer(
@@ -230,7 +230,6 @@ export default function RecommendationPage(): React.JSX.Element {
 
   return (
     <>
-      <h1>Recommendation</h1>
       <Suspense
         fallback={
           <>

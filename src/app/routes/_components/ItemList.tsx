@@ -32,7 +32,7 @@ export const ItemList: React.FC<ItemsListProps> = ({
   const itemWidth = 100 / nMinusOne; // as a percentage
 
   return (
-    <div className="card w-full overflow-visible">
+    <div className="card w-full">
       <h2 className="card-title -z-50 mx-6 my-4 text-2xl lg:text-3xl">
         {title}
       </h2>
@@ -56,12 +56,13 @@ export const ItemList: React.FC<ItemsListProps> = ({
             </svg>
           </button>
         )}
-        <div className="overflow-visible">
+        <div className="-z-50 ">
           <div
-            className="flex transition-transform duration-700 ease-in-out"
+            className="-z-50 flex transition-transform duration-700 ease-in-out"
             style={{
               transform: `translateX(-${
-                currentPage * (100 / itemsPerPage) * nMinusOne
+                currentPage * (100 / itemsPerPage) * nMinusOne +
+                (currentPage === 0 ? 0 : 16.7)
               }%)`,
             }}>
             {items.map((item, index) => (
