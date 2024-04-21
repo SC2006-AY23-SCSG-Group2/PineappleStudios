@@ -8,3 +8,9 @@ python-Levenshtein
 joblib
 openai
 python-dotenv
+asyncio
+async-lru
+regex
+Quart
+quart-cors
+hypercorn
