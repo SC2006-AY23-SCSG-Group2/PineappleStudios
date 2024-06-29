@@ -2,6 +2,9 @@
 
 Software Engineering Group 2 for SCSG
 
+## Video Walkthrough
+https://www.youtube.com/watch?v=W-0Sp5LloUM
+
 ## Get Started
 
 Find the instructions in `./docs/get_started/README.md`
